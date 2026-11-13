@@ -9223,6 +9223,390 @@ have identical attainable power functions.
 \end{exercise}
 
 
+
+\clearpage
+\section{Neyman--Pearson theory and composite hypotheses}
+\label{sec:neyman-pearson-composite}
+
+\subsection{Optimal tests for two simple hypotheses}
+\label{subsec:neyman-pearson-lemma}
+
+\begin{definition}[Most powerful tests]
+\label{def:most-powerful-test}
+A level-$\alpha$ test is \emph{most powerful} against a specified
+alternative law if its power at that law is at least that of
+every level-$\alpha$ test for the same null. It is \emph{uniformly
+most powerful} (UMP) against an alternative family if the
+same test is most powerful at every law in that family.
+\end{definition}
+
+For a simple null law $P$ and alternative law $Q$, write $p,q$
+for their densities relative to $\mu=P+Q$. Define the extended
+likelihood ratio $\Lambda=q/p$ on $\{p>0\}$, set $\Lambda=+\infty$
+on $\{p=0<q\}$, and set $\Lambda=0$ where both densities vanish.
+\indexnotation{\Lambda=q/p}{Likelihood ratio of the alternative law to the null law.}
+
+\begin{theorem}[Neyman--Pearson lemma]
+\label{thm:neyman-pearson}
+Let $0<\alpha<1$. There are $k\geq0$ finite and $\gamma\in[0,1]$
+such that
+\[
+\phi^\star=\mathbf 1_{\{\Lambda>k\}}+
+\gamma\mathbf 1_{\{\Lambda=k\}},
+\qquad \int\phi^\star\,dP=\alpha .
+\]
+Every such test is most powerful for testing $P$ against $Q$
+at level $\alpha$. A level-$\alpha$ test $\phi$ has the same
+power as $\phi^\star$ exactly when it agrees with $\phi^\star$
+$\mu$-almost everywhere on $\{q\ne kp\}$ and
+$k(\alpha-\int\phi\,dP)=0$.
+\end{theorem}
+\begin{proof}
+Under $P$, $\Lambda$ is finite almost surely. Let $F$ be its
+distribution function and take
+$k=\inf\{t\geq0:F(t)\geq1-\alpha\}$. Since $F$ tends to one,
+$k$ is finite. Right continuity gives $F(k)\geq1-\alpha$ and
+the left limit satisfies $F(k-)\leq1-\alpha$, including at zero.
+Thus $P(\Lambda>k)\leq\alpha\leq P(\Lambda\geq k)$. If the tie
+has positive mass, choose $\gamma$ to fill the difference as in
+Proposition~\ref{prop:test-threshold-randomization}. If the
+tie has mass zero, the upper tail already has mass $\alpha$.
+
+For any level-$\alpha$ test $\phi$, subtract its power from
+that of $\phi^\star$ and write the difference as
+\[
+\int(\phi^\star-\phi)(q-kp)\,d\mu
++k\left(\alpha-\int\phi\,dP\right).
+\]
+The first integrand is nonnegative. Where $q>kp$ the threshold
+test is one, and where $q<kp$ it is zero. The second term is
+nonnegative by the size constraint. The sum is zero exactly
+when both terms vanish. The first term vanishes precisely
+when the tests agree almost everywhere on $\{q\ne kp\}$.
+\end{proof}
+
+\begin{example}[Randomization at a binomial likelihood ratio]
+\label{ex:np-two-bernoulli}
+For two iid Bernoulli observations, test $p=1/4$ against $p=3/4$
+at level $\alpha=1/4$. The likelihood ratios at counts zero,
+one, and two are $1/9,1,9$. Under the null the upper count
+has mass $1/16$ and the middle count has mass $6/16$, so a
+most powerful test rejects at count two and rejects with
+probability $1/2$ at count one. Its power is
+$9/16+(1/2)(6/16)=3/4$.
+\end{example}
+
+\begin{example}[An alternative with mass outside the null support]
+\label{ex:np-singular-alternative}
+Let $P$ be uniform on $[0,1]$ and let $Q$ be the equally weighted
+mixture of $P$ and the uniform law on $[2,3]$. The ratio is
+infinite on $[2,3]$ and $1/2$ on $[0,1]$, up to $\mu$-null sets.
+A most powerful level-$\alpha$ test rejects on $[2,3]$ and
+rejects with probability $\alpha$ on $[0,1]$. Its power is
+$(1+\alpha)/2$.
+\end{example}
+
+\begin{example}[A most powerful test with size below its level]
+\label{ex:np-unused-size}
+On three outcomes take masses $P=(1/2,1/2,0)$ and
+$Q=(1/4,0,3/4)$. Rejecting on the first and third outcomes
+has size $1/2$ and power one. At level $3/4$ one can raise the
+size to $3/4$ by rejecting with probability $1/2$ on the
+second outcome, without changing the power. The exact-size
+Neyman--Pearson test has threshold $k=0$ here.
+\end{example}
+
+\subsection{Monotone likelihood ratios and one-sided tests}
+\label{subsec:monotone-likelihood-ratio}
+
+\begin{definition}[Monotone likelihood ratio]
+\label{def:monotone-likelihood-ratio}
+Let $\Theta\subseteq\R$ be ordered by the usual order. Suppose the
+model has densities relative to a common $\sigma$-finite measure
+and a common measurable set $S$ on which each density is positive
+almost everywhere. Each density vanishes almost everywhere off $S$.
+The model has a \emph{monotone likelihood ratio} in a real statistic
+$T$ if, for each $\theta_1<\theta_2$, the ratio
+$f_{\theta_2}/f_{\theta_1}$ equals $r_{\theta_1,\theta_2}(T)$
+almost everywhere on $S$ for some nonnegative nondecreasing
+Borel function $r_{\theta_1,\theta_2}:\R\to[0,\infty]$.
+\end{definition}
+
+\begin{theorem}[One-sided tests with a monotone likelihood ratio]
+\label{thm:ump-monotone-likelihood-ratio}
+Suppose the model has a monotone likelihood ratio in $T$, and
+let $\theta_0\in\Theta$. For $0<\alpha<1$, choose $c\in\R$ and
+$\gamma\in[0,1]$ so the threshold test of
+Proposition~\ref{prop:test-threshold-randomization} has rejection
+probability $\alpha$ under $P_{\theta_0}$. Such a choice exists.
+The test is UMP of size $\alpha$ for the null $\theta\leq\theta_0$
+against $\theta>\theta_0$.
+\end{theorem}
+\begin{proof}
+The same quantile argument as in Theorem~\ref{thm:neyman-pearson},
+now for the real statistic $T$ under $P_{\theta_0}$, gives a finite
+$c$ whose upper tails bracket $\alpha$. Choose $\gamma$ using
+Proposition~\ref{prop:test-threshold-randomization}. Write $\phi^\star$
+for the resulting test.
+
+For $\theta<\theta_0$, let $r(T)=f_{\theta_0}/f_\theta$ on $S$.
+Under $P_\theta$, $r(T)$ is integrable with mean one. Write
+$\phi^\star=a(T)$ with $a$ nondecreasing. If $T'$ is an independent
+copy of $T$ under $P_\theta$, then
+\[
+2\operatorname{Cov}_\theta(a(T),r(T))
+=\mathbb E_\theta[(a(T)-a(T'))(r(T)-r(T'))]\geq0 .
+\]
+The product is integrable since $a$ is bounded. Changing
+measure, $\mathbb E_{\theta_0}\phi^\star=\mathbb E_\theta[a(T)r(T)]$
+is therefore at least $\mathbb E_\theta\phi^\star$. Hence the
+size is attained at $\theta_0$.
+
+Fix $\theta>\theta_0$ and let $r(T)=f_\theta/f_{\theta_0}$.
+Put $k=r(c)$. This is finite since $r$ is nondecreasing,
+finite $P_{\theta_0}$-almost surely at $T$, and
+$P_{\theta_0}(T\geq c)\geq\alpha>0$. On $S$, the test is
+one wherever $r(T)>k$ and zero wherever $r(T)<k$, almost
+everywhere. Thus for any composite-null level-$\alpha$
+test $\phi$, the same difference-of-power identity as in the
+Neyman--Pearson proof applies with $p=f_{\theta_0}$ and
+$q=f_\theta$. Its first term is nonnegative by these comparisons.
+Its second term is nonnegative because $\theta_0$ is in the null.
+This proves optimality at each $\theta>\theta_0$.
+\end{proof}
+
+\begin{example}[A binomial upper-tail test is UMP]
+\label{ex:ump-binomial-upper-tail}
+For iid Bernoulli trials with $0<p<1$, the likelihood ratio for
+$p_2>p_1$ is
+\[
+\left(\frac{1-p_2}{1-p_1}\right)^n
+\left(\frac{p_2(1-p_1)}{p_1(1-p_2)}\right)^S
+\]
+where $S$ is the count. The base of the second factor exceeds
+one, so the ratio increases in $S$. For null $p\leq p_0$, the
+upper-tail count test calibrated at $p_0$ is UMP by
+Theorem~\ref{thm:ump-monotone-likelihood-ratio}.
+\end{example}
+
+\begin{example}[A normal upper-tail test is UMP]
+\label{ex:ump-normal-upper-tail}
+For iid $N(\theta,v)$ observations with known $v>0$, the log
+likelihood ratio for $\theta_2>\theta_1$ is
+\[
+\frac{n(\theta_2-\theta_1)}{v}\overline X
+-\frac{n(\theta_2^2-\theta_1^2)}{2v}.
+\]
+The ratio increases in $\overline X$, so the calibrated test
+in Example~\ref{ex:test-normal-upper-tail} is UMP against
+$\theta>\theta_0$.
+\end{example}
+
+\subsection{A two-sided alternative}
+\label{subsec:np-no-ump-two-sided}
+
+\begin{example}[No UMP test for two opposite normal shifts]
+\label{ex:no-ump-opposite-normal-shifts}
+Observe $X\sim N(\theta,1)$. Test $\theta=0$ against
+$\theta\in\{-a,a\}$ with $a>0$ and $0<\alpha<1$.
+Against $a$, the likelihood ratio is $\exp(ax-a^2/2)$,
+strictly increasing in $x$. The unique most powerful test
+up to null sets rejects on the right tail of null mass $\alpha$,
+by the equality condition in Theorem~\ref{thm:neyman-pearson}
+and the absence of atoms. Against $-a$, the ratio is strictly
+decreasing, so the unique most powerful test rejects on the
+left tail of null mass $\alpha$. The two regions differ on
+a set of positive null mass. Therefore no level-$\alpha$ test
+is most powerful against both alternatives.
+\end{example}
+
+\subsection{Exercises}
+\label{subsec:exercises-6-2}
+
+\begin{exercise}[A likelihood ratio on four outcomes]
+\label{exer:np-four-ratios}
+Let $P=(1/4,1/4,1/4,1/4)$ and $Q=(1/8,1/8,1/4,1/2)$.
+Find an exact-size test at level $1/4$ and compute its power.
+\end{exercise}
+
+\begin{exercise}[A tie at the critical ratio]
+\label{exer:np-finite-tie}
+For the laws of Exercise~\ref{exer:np-four-ratios}, find all
+most powerful level-$5/8$ tests. Identify where they can differ.
+\end{exercise}
+
+\begin{exercise}[An alternative equal to the null]
+\label{exer:np-identical-laws}
+For $P=Q$, compute the maximum power at level $\alpha$ and
+characterize all tests attaining it.
+\end{exercise}
+
+\begin{exercise}[Disjoint supports]
+\label{exer:np-mutually-singular}
+Suppose $P$ and $Q$ are mutually singular. Construct a
+nonrandomized test of size zero and power one. Describe an
+exact-size randomized test at an arbitrary level $0<\alpha<1$.
+\end{exercise}
+
+\begin{exercise}[A zero ratio at the threshold]
+\label{exer:np-zero-threshold-condition}
+In Example~\ref{ex:np-unused-size}, determine all most powerful
+tests at level $3/4$ on the three outcomes.
+\end{exercise}
+
+\begin{exercise}[One Bernoulli trial revisited]
+\label{exer:np-one-bit-ratio}
+For $0<p_0<p_1<1$, order the two likelihood ratios of one
+Bernoulli draw and use a randomized threshold to derive
+the maximum power for $0<\alpha<1$.
+\end{exercise}
+
+\begin{exercise}[Changing which law is the null]
+\label{exer:np-swap-null-alternative}
+Reverse the hypotheses in Example~\ref{ex:np-two-bernoulli}.
+At level $1/4$, find the critical count, tie probability, and power.
+\end{exercise}
+
+\begin{exercise}[A positive critical ratio]
+\label{exer:np-positive-critical-ratio}
+Suppose $P$ and $Q$ have positive masses on the same finite space.
+Show that every most powerful test at level $0<\alpha<1$ has
+size exactly $\alpha$.
+\end{exercise}
+
+\begin{exercise}[Testing a normal scale]
+\label{exer:np-normal-scale}
+For one draw, test $N(0,1)$ against $N(0,4)$. Show that the
+likelihood ratio increases with $|x|$ and give the most powerful
+level-$\alpha$ rule in terms of the standard normal distribution.
+\end{exercise}
+
+\begin{exercise}[Testing an exponential rate]
+\label{exer:np-exponential-rate-simple}
+For one exponential draw, test rate $\lambda_0$ against rate
+$\lambda_1>\lambda_0>0$. Determine the direction of the
+threshold, calibrate it, and compute the power.
+\end{exercise}
+
+\begin{exercise}[Poisson likelihood ratios]
+\label{exer:np-poisson-mlr}
+For $n$ independent Poisson counts of common rate $\lambda>0$,
+show that the family has a monotone likelihood ratio in the
+total count. Specify the UMP rule for $\lambda\leq\lambda_0$
+against $\lambda>\lambda_0$ in terms of a null quantile.
+\end{exercise}
+
+\begin{exercise}[A lower-tail normal test]
+\label{exer:np-normal-lower-tail}
+In the known-variance normal location model, construct a UMP
+test for $\theta\geq\theta_0$ against $\theta<\theta_0$ by
+reversing the order of the parameter and the sample mean.
+\end{exercise}
+
+\begin{exercise}[Monotonicity by a change of measure]
+\label{exer:np-monotone-power-functions}
+Under the hypotheses of Theorem~\ref{thm:ump-monotone-likelihood-ratio},
+show that every bounded nondecreasing function of $T$ has
+nondecreasing expectation in $\theta$.
+\end{exercise}
+
+\begin{exercise}[A change of scale for the statistic]
+\label{exer:np-mlr-increasing-transform}
+Suppose the statistic takes finitely many real values and a model
+has a monotone likelihood ratio in that statistic. Show that any
+strictly increasing real transformation of its values preserves
+the likelihood ratio property and the threshold tests.
+\end{exercise}
+
+\begin{exercise}[An endpoint not in the null]
+\label{exer:np-open-normal-null}
+For a normal mean with known variance, take null $\theta<0$
+and alternative $\theta>0$. Show that every level-$\alpha$
+test also has rejection probability at most $\alpha$ at $\theta=0$.
+Use continuity in total variation to conclude that the usual
+upper-tail test calibrated at zero is UMP.
+\end{exercise}
+
+\begin{exercise}[A shared rejection region]
+\label{exer:np-common-region-different-ratios}
+Give two distinct alternative laws on a finite space for which
+the same nonrandomized level-$\alpha$ test is most powerful
+against either one at a specified simple null.
+\end{exercise}
+
+\begin{exercise}[A necessary condition for two-sided optimality]
+\label{exer:np-two-sided-uniqueness}
+In Example~\ref{ex:no-ump-opposite-normal-shifts}, write the two
+critical regions using the standard normal quantiles. Show
+that they differ on a set of positive null probability even
+when $\alpha>1/2$.
+\end{exercise}
+
+\begin{exercise}[Testing after observing a sufficient count]
+\label{exer:np-full-vs-count}
+For $n$ iid Bernoulli observations and two distinct interior
+parameters, compare the likelihood ratio on the record with
+the ratio on the count. Explain how this gives an optimal
+test on the full record.
+\end{exercise}
+
+\begin{exercise}[Power as a function of level]
+\label{exer:np-power-concavity}
+For a fixed simple null and simple alternative, show that
+the supremum of the power over level-$\alpha$ tests is a
+nondecreasing concave function of $\alpha$ on $[0,1]$.
+Use mixtures of tests to prove concavity.
+\end{exercise}
+
+\begin{exercise}[Optimal tests for a finite family of alternatives]
+\label{exer:np-finite-common-order}
+Let $P$ have positive masses on a finite space and let
+$Q_1,\ldots,Q_m$ be alternatives. Suppose one ordering of the
+outcomes makes all the ratios $q_j/p$ nonincreasing. Construct
+a test that is most powerful against every $Q_j$ at level
+$\alpha$, and prove its optimality even when some ratios tie.
+\end{exercise}
+
+\begin{exercise}[Finite composite null and a mixture certificate]
+\label{exer:np-null-mixture-certificate}
+Let the null consist of laws $P_1,\ldots,P_m$ and let $Q$
+be a simple alternative. Suppose a test is most powerful at
+level $\alpha$ for the simple null $\sum_i w_iP_i$, where
+the $w_i$ are probability weights. If it also has level
+$\alpha$ for the composite null, show that it is most powerful
+for the composite problem. Give a finite example with at least
+two positive weights where the certificate applies.
+\end{exercise}
+
+\begin{exercise}[A unique nonrandomized test and a randomized tie]
+\label{exer:np-finite-uniqueness}
+Assume a simple null and alternative have positive masses
+on the same finite space and all likelihood ratios are distinct.
+For $0<\alpha<1$, prove that the most powerful test is unique.
+Give a necessary and sufficient condition on $\alpha$ for that
+test to be nonrandomized.
+\end{exercise}
+
+\begin{exercise}[A maximin test for opposite normal shifts]
+\label{exer:np-maximin-opposite-shifts}
+In Example~\ref{ex:no-ump-opposite-normal-shifts}, maximize the
+smaller of the powers at $-a$ and $a$ at level $\alpha$.
+First apply Neyman--Pearson to the equal mixture of the two
+alternatives. Use the symmetry of the maximizing test to show
+that it solves the maximin problem.
+\end{exercise}
+
+\begin{exercise}[A moving-support one-sided test]
+\label{exer:np-uniform-one-sided}
+Let $X_1,\ldots,X_n$ be iid uniform on $[0,\theta]$, $\theta>0$.
+Test $\theta\leq\theta_0$ against $\theta>\theta_0$ by rejecting
+for large sample maximum. Calibrate to size $\alpha\in(0,1)$
+and prove the test is UMP by applying Neyman--Pearson at the
+boundary null for each alternative. Include the region outside
+the support at $\theta_0$.
+\end{exercise}
+
+
 % BEGIN NOTATION INDEX
 \chapter*{Notation index}
 \label{chap:notation-index}
