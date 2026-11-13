@@ -10384,6 +10384,239 @@ Show that any classifier whose errors are equal at all labels and whose prior av
 \end{exercise}
 
 
+\chapter{Bayesian inference}
+\label{chap:bayesian-inference}
+\notationgroup{Bayesian inference}
+
+\section{Priors, posterior laws, and existence conditions}
+\label{sec:bayesian-posteriors}
+
+\subsection{Posterior kernels and their existence}
+\label{subsec:bayesian-posterior-existence}
+
+Let $P$ be a probability kernel from $(\Theta,\mathcal T)$ to
+$(\mathsf X,\mathcal A)$ and let $\pi$ be a prior. On
+$(\Theta\times\mathsf X,\mathcal T\otimes\mathcal A)$ with law
+$J_\pi=\pi\ltimes P$, write $U$ for the parameter coordinate and $X$
+for the observation coordinate. Their marginal laws are $\pi$ and
+$M_\pi$ (Definition~\ref{def:prior-predictive}). A posterior $\Pi$ is
+the conditional law of $U$ given $X$ in the sense of
+Definition~\ref{def:posterior-kernel}.
+
+\begin{definition}[Standard Borel space]
+\label{def:standard-borel-space}
+A measurable space is \emph{standard Borel} if it admits a bijection
+onto a Borel subset of $\R$, with its trace Borel sigma algebra, such
+that both the bijection and its inverse are measurable. A countable
+space with all subsets measurable and a Borel subset of $\R$ with
+its Borel sigma algebra are examples.
+\end{definition}
+
+We use the distribution-function theorem on $\R$. Every nondecreasing,
+right-continuous function with limits zero at $-\infty$ and one at
+$+\infty$ determines a unique Borel probability law having that
+distribution function.
+
+\begin{theorem}[Existence and uniqueness of a posterior]
+\label{thm:bayesian-posterior-existence}
+If $(\Theta,\mathcal T)$ is standard Borel, then $\pi$ and $P$
+admit a posterior kernel. Any two posterior kernels agree as
+probability measures outside a single $M_\pi$-null set of records.
+The observation space may be arbitrary.
+\end{theorem}
+\begin{proof}
+Choose a measurable isomorphism $h:\Theta\to S$ onto a Borel subset
+$S$ of $\R$. For $q\in\mathbb Q$, the measure
+\[
+A\longmapsto J_\pi\{X\in A,\ h(U)\leq q\}
+\]
+is bounded by $M_\pi$. Let $f_q:\mathsf X\to[0,1]$ be a
+Radon--Nikodym density. Off a single measurable $M_\pi$-null set,
+\[
+f_q\leq f_r\ (q<r),\qquad
+f_{q+1/n}\downarrow f_q,\qquad
+f_{-n}\downarrow 0,\qquad f_n\uparrow 1 .
+\]
+The inequalities follow from the ordering of the measures. For each
+displayed limit, integrate over any $A\in\mathcal A$ and use bounded
+convergence and the corresponding limit of events. Uniqueness of the
+densities identifies the limits. There are countably many conditions.
+
+At each record outside that set, put $F_x(t)=\inf_{q>t,\ q\in\mathbb Q}
+f_q(x)$. It is nondecreasing and right-continuous. Indeed, if $t_k\downarrow
+t$, each rational $q>t$ is greater than $t_k$ eventually, so
+$\lim_k F_x(t_k)\leq f_q(x)$. Taking the infimum and using monotonicity
+gives $\lim_k F_x(t_k)=F_x(t)$. The rational limits above give
+$F_x(q)=f_q(x)$ and the limits zero and one at the two ends of $\R$.
+Thus $F_x$ determines a probability law $Q(x,\cdot)$ on $\R$ by the
+distribution-function theorem. On the exceptional set use a fixed point
+mass at $h(\theta_0)$, where $\theta_0\in\Theta$.
+
+The sets $C$ for which $x\mapsto Q(x,C)$ is measurable form a
+Dynkin system containing the rational lower half-lines and $\R$.
+They therefore include all Borel sets. For each $A\in\mathcal A$,
+the two measures
+\[
+C\longmapsto \int_A Q(x,C)\,M_\pi(dx),\qquad
+C\longmapsto J_\pi\{X\in A,\ h(U)\in C\}
+\]
+agree on the same generating system by the defining densities and
+hence on all Borel sets. In particular, with $A=\mathsf X$ and
+$C=S$, their common mass is one, so $Q(x,S)=1$ almost surely.
+Where $Q(x,S)=1$, set $\Pi(x,B)=Q(x,h(B))$. Elsewhere set
+$\Pi(x,\cdot)=\delta_{\theta_0}$. Each $h(B)$ is Borel, so $\Pi$
+is a kernel and satisfies \eqref{eq:posterior-rectangles}.
+
+The inverse images of the rational lower half-lines, together with
+$\Theta$, form a countable generating system closed under finite
+intersections. Uniqueness now follows from
+Proposition~\ref{prop:conditional-law-versions}.
+\end{proof}
+
+For the regular conditional distribution theorem, see J.~Norris,
+\href{https://www.statslab.cam.ac.uk/~jrn10/Lectures/ap.pdf}{\emph{Advanced
+Probability}}, Section~1.6.
+
+\begin{proposition}[Posterior integration]
+\label{prop:bayesian-posterior-integration}
+\indexnotation{\Pi g(x)}{Posterior integral of a parameter function \(g\).}
+Suppose a posterior exists. For measurable $g:\Theta\to[0,\infty]$,
+or real $g$ with $\int |g|\,d\pi<\infty$, put
+$\Pi g(x)=\int g(\theta)\,\Pi(x,d\theta)$. In the integrable case use
+a measurable real extension where the posterior absolute moment is
+infinite.
+Then $(\Pi g)(X)$ is a version of $\mathbb E_{J_\pi}[g(U)\mid\sigma(X)]$,
+and
+\[
+\int_{\mathsf X}\Pi g(x)\,M_\pi(dx)=\int_\Theta g\,d\pi .
+\]
+\end{proposition}
+\begin{proof}
+Apply \eqref{eq:kernel-iterated-integral} to the reversed joint law
+$M_\pi\ltimes\Pi$ with integrand $(x,\theta)\mapsto\mathbf 1_A(x)g(\theta)$
+for each $A\in\mathcal A$. For integrable $g$, the same formula for
+$|g|$ gives finiteness of its posterior integral almost surely, so one
+may take the difference of the positive and negative parts. Taking
+$A=\mathsf X$ gives the displayed identity.
+\end{proof}
+
+\begin{example}[Two Bernoulli rates]
+\label{ex:bayesian-unequal-bernoulli-rates}
+Give the rates $1/5$ and $3/5$ prior masses $3/4$ and $1/4$.
+For one Bernoulli observation, $M_\pi(\{1\})=3/10$ and
+$M_\pi(\{0\})=7/10$. By Proposition~\ref{prop:posterior-from-densities},
+the posterior mass of $3/5$ is
+\[
+\frac{(1/4)(3/5)}{3/10}=\frac12\quad\text{after success},\qquad
+\frac{(1/4)(2/5)}{7/10}=\frac17\quad\text{after failure}.
+\]
+Averaging these two masses with the predictive weights gives $1/4$.
+\end{example}
+
+\begin{example}[A continuous observation with moving support]
+\label{ex:bayesian-uniform-endpoint-posterior}
+Give $\theta$ the uniform prior on $(0,1)$ and take
+$X\mid U=\theta$ uniform on $(0,\theta)$. For $0<x<1$ the
+predictive density is $m(x)=\int_x^1 d\theta/\theta=-\log x$.
+The posterior density at $x$ is
+\[
+\theta\longmapsto \frac{\mathbf 1_{\{x<\theta<1\}}}{-\theta\log x}.
+\]
+For $x\leq t\leq1$ its probability of $(0,t]$ is
+$\log(t/x)/\log(1/x)$. In particular, its median is $\sqrt{x}$.
+\end{example}
+
+\begin{example}[An exact continuous observation]
+\label{ex:bayesian-exact-continuous-record}
+Let $\Theta=\mathsf X=[0,1]$, with Borel sets, take the uniform prior,
+and put $P_\theta=\delta_\theta$. Then $M_\pi=\pi$ and
+$\Pi(x,\cdot)=\delta_x$, since both sides of
+\eqref{eq:posterior-rectangles} are $\pi(A\cap B)$. The posterior is
+a point mass even though $M_\pi(\{x\})=0$ for every $x$. No
+$\sigma$-finite measure dominates all the $P_\theta$: such a measure
+would have to assign positive mass to uncountably many singletons,
+whereas a finite-measure set contains at most countably many
+positive-mass singletons.
+\end{example}
+
+\begin{example}[A magnitude without its sign]
+\label{ex:bayesian-magnitude-posterior}
+Take $U$ uniform on $[-1,1]$ and $X=|U|$. The predictive law is
+uniform on $[0,1]$. For Borel $A\subseteq[0,1]$ and
+$B\subseteq[-1,1]$,
+\[
+J_\pi\{X\in A,\ U\in B\}
+=\tfrac12\int_A\bigl(\mathbf 1_B(x)+\mathbf 1_B(-x)\bigr)\,dx.
+\]
+Thus $\tfrac12\delta_x+\tfrac12\delta_{-x}$ is a posterior at $x$.
+At $x=0$ its value is $\delta_0$. Replacing this value by $\delta_1$
+also gives a posterior kernel, since the predictive mass of
+$\{0\}$ is zero.
+\end{example}
+
+\begin{exercise}[A record of positive mass]
+\label{exer:bayesian-posterior-atom}
+Suppose $\{x\}\in\mathcal A$ and $M_\pi(\{x\})>0$. Derive the
+posterior at $x$ by taking $A=\{x\}$ in
+\eqref{eq:posterior-rectangles}. Show that its density with respect
+to $\pi$ is $P_\theta(\{x\})/M_\pi(\{x\})$.
+\end{exercise}
+
+\begin{exercise}[One uninformative experiment]
+\label{exer:bayesian-constant-kernel}
+Suppose $P_\theta=Q$ at every label. Verify that the constant kernel
+$\Pi(x,\cdot)=\pi$ is a posterior. Under the hypotheses of
+Theorem~\ref{thm:bayesian-posterior-existence}, show that every
+posterior agrees with it outside a single $Q$-null set.
+\end{exercise}
+
+\begin{exercise}[An erased binary observation]
+\label{exer:bayesian-erased-label-posterior}
+Put prior mass $s\in(0,1)$ on label one and mass $1-s$ on label zero.
+The observation gives the label with probability $1-e$ and an erasure
+with probability $e\in(0,1)$ at both labels. Compute the predictive law
+and all posterior laws at the three records.
+\end{exercise}
+
+\begin{exercise}[Posterior moments in the endpoint model]
+\label{exer:bayesian-endpoint-posterior-moments}
+In Example~\ref{ex:bayesian-uniform-endpoint-posterior}, compute
+$\Pi g(x)$ for $g(\theta)=\theta^a$ and $a>0$. Integrate the result
+against $m(x)\,dx$ to recover the prior moment.
+\end{exercise}
+
+\begin{exercise}[A change on a null set]
+\label{exer:bayesian-posterior-null-replacement}
+Given a posterior $\Pi$, replace it on a measurable $M_\pi$-null
+set by any other probability kernel. Show that the resulting kernel
+is a posterior. Give a replacement on a set of positive predictive
+probability that fails the rectangle identity.
+\end{exercise}
+
+\begin{exercise}[A biased sign]
+\label{exer:bayesian-biased-sign-posterior}
+Let $V$ be uniform on $[0,1]$. Given $V=v$, let $U=v$ with
+probability $v$ and $U=-v$ with probability $1-v$. For $X=|U|$,
+find a posterior for $U$ and verify it on rectangles. Compute
+$\mathbb E[U\mid X]$.
+\end{exercise}
+
+\begin{exercise}[Exact observation mixed with noise]
+\label{exer:bayesian-exact-or-noise}
+Let $U$ and $Z$ be independent uniforms on $[0,1]$. Independently
+draw a Bernoulli variable with success probability $r\in(0,1)$ and
+record $X=U$ on success and $X=Z$ on failure. Find $M_\pi$ and
+verify that the posterior is $r\delta_x+(1-r)\pi$.
+\end{exercise}
+
+\begin{exercise}[Observation events and posterior probabilities]
+\label{exer:bayesian-average-event-posterior}
+For $A\in\mathcal A$ with $M_\pi(A)>0$, express the conditional
+probability of $U\in B$ given $X\in A$ as an average of
+$\Pi(x,B)$. Evaluate it for $A=(1/2,1]$ and $B=(3/4,1]$ in
+Example~\ref{ex:bayesian-magnitude-posterior}.
+\end{exercise}
+
 % BEGIN NOTATION INDEX
 \chapter*{Notation index}
 \label{chap:notation-index}
