@@ -10041,6 +10041,349 @@ uniform variable for all target values.
 \end{exercise}
 
 
+
+\clearpage
+\section{Multiple decisions and error criteria}
+\label{sec:multiple-decisions-error-criteria}
+
+\subsection{Choosing one of several labels}
+\label{subsec:multiclass-decision-error}
+
+\begin{definition}[Classification error]
+\label{def:multiclass-error}
+Let $\Theta=\{1,\ldots,m\}$ with observation laws $P_i$. A
+classification rule is a decision kernel with the same set of
+actions. Write $q_j(x)$ for the probability of choosing $j$ at $x$.
+The zero-one risk at $i$ is $e_i(q)=1-\int q_i\,dP_i$.
+For a prior $\pi$ on the labels the average error is
+$e_\pi(q)=\sum_i\pi_i e_i(q)$ and the worst-case error is
+$\max_i e_i(q)$.
+\end{definition}
+
+\begin{proposition}[Minimum average classification error]
+\label{prop:multiclass-bayes-error}
+Let $f_i=dP_i/d\mu$ for a common finite dominating measure.
+The minimum average error is
+\[
+1-\int \max_i\{\pi_i f_i(x)\}\,\mu(dx).
+\]
+A rule attains it exactly when it puts all its action mass on
+maximizers of $\pi_i f_i(x)$ for $\mu$-almost every $x$.
+\end{proposition}
+\begin{proof}
+The prior probability of a correct decision is
+$\int\sum_i q_i(x)\pi_i f_i(x)\,\mu(dx)$.
+The integrand is a convex combination bounded by the maximum.
+Choosing the first maximizing index is measurable by finite
+comparisons and attains that bound. For equality, the nonnegative
+gap must vanish almost everywhere, which holds exactly when
+each index with positive action mass maximizes the weighted density.
+\end{proof}
+
+\begin{example}[Average and worst-case errors]
+\label{ex:multiclass-no-observation}
+Suppose all three labels give the same observation law. Every
+rule has a common marginal action distribution $(r_1,r_2,r_3)$
+and error vector $(1-r_1,1-r_2,1-r_3)$. For prior
+$(1/2,1/3,1/6)$ the average error is minimized by always choosing
+label one, giving average error $1/2$ and worst-case error one.
+The minimum worst-case error is $2/3$, attained by choosing
+each label with probability $1/3$. Indeed, at least one $r_i$
+is at most $1/3$.
+\end{example}
+
+\begin{example}[Three labels with a shared observation]
+\label{ex:multiclass-shared-observation}
+For $i=1,2,3$, let $P_i$ assign mass $3/4$ to outcome $i$
+and $1/4$ to outcome $0$. Under the uniform prior, choose $i$
+at outcome $i$ and randomize uniformly at zero. At each label
+the error is $(1/4)(2/3)=1/6$. This is Bayes by
+Proposition~\ref{prop:multiclass-bayes-error}. The worst-case
+error of any rule is at least its uniform prior average,
+so the same rule is minimax.
+\end{example}
+
+\subsection{Rejecting several hypotheses}
+\label{subsec:multiple-testing-errors}
+
+\begin{definition}[Family-wise error and false discovery rate]
+\label{def:fwer-fdr}
+\indexnotation{\mathcal I_0(\theta),\ R,\ V}{Indices of true nulls, number of rejections, and number of false rejections.}
+\indexnotation{\operatorname{FWER},\ \operatorname{FDR}}{Family-wise error rate and false discovery rate.}
+Let $H_1,\ldots,H_m$ be null hypotheses, each a subset of the
+parameter space. A multiple testing procedure returns a measurable
+random subset of rejected indices. Under label $\theta$ put
+$\mathcal I_0(\theta)=\{i:\theta\in H_i\}$. Let $R$ count all
+rejections and $V$ count rejections in $\mathcal I_0(\theta)$. Define
+\[
+\operatorname{FWER}_\theta=P_\theta(V\geq1),\qquad
+\operatorname{FDR}_\theta=\mathbb E_\theta\!\left[\frac{V}{\max\{R,1\}}\right].
+\]
+If the procedure uses auxiliary randomness these probabilities and
+expectations include that randomness. Control at level $\alpha$
+means that the specified rate is at most $\alpha$ at every label.
+\end{definition}
+
+\begin{proposition}[Comparing error criteria]
+\label{prop:fdr-fwer-comparison}
+At each $\theta$, $\operatorname{FDR}_\theta\leq
+\operatorname{FWER}_\theta$. The two rates agree when every
+null is true. If $\mathcal I_0(\theta)=\varnothing$, both
+rates are zero.
+\end{proposition}
+\begin{proof}
+The fraction $V/\max\{R,1\}$ is bounded by $\mathbf 1_{\{V\geq1\}}$.
+If all nulls are true, $V=R$ and this bound is an equality.
+If there are no true nulls then $V=0$.
+\end{proof}
+
+\begin{example}[One false rejection among several rejections]
+\label{ex:fdr-fwer-separated}
+For a fixed label, suppose the procedure always rejects four
+false nulls and also rejects the only true null with probability
+$1/4$. Then $\operatorname{FWER}_\theta=1/4$. On a false
+rejection the fraction is $1/5$, and otherwise it is zero.
+Thus $\operatorname{FDR}_\theta=1/20$.
+\end{example}
+
+\begin{example}[Separate level guarantees]
+\label{ex:multiple-independent-null-unadjusted}
+Under the global null, let the $m$ $p$-values be independent
+uniform random variables on $[0,1]$. Rejecting each at threshold
+$\alpha$ gives marginal rejection probability $\alpha$ and
+family-wise error $1-(1-\alpha)^m$. For $m>1$ and $0<\alpha<1$
+this exceeds $\alpha$.
+\end{example}
+
+\subsection{Family-wise control from marginal \texorpdfstring{$p$}{p}-values}
+\label{subsec:bonferroni-holm}
+
+For each $i$, let $p_i$ satisfy $P_\theta(p_i\leq u)\leq u$
+for every $\theta\in H_i$ and $0\leq u\leq1$. This extends
+Definition~\ref{def:test-p-value} to a composite null.
+
+\begin{theorem}[Bonferroni control]
+\label{thm:bonferroni-control}
+Let $w_i\geq0$ with $\sum_i w_i=1$, and let $0\leq\alpha\leq1$.
+Reject $i$ when $p_i\leq\alpha w_i$. The procedure controls
+family-wise error at level $\alpha$.
+\end{theorem}
+\begin{proof}
+At $\theta$ a false rejection means that
+$p_i\leq\alpha w_i$ for at least one $i\in\mathcal I_0(\theta)$.
+By the union bound and marginal validity its probability is at
+most $\alpha\sum_{i\in\mathcal I_0(\theta)}w_i\leq\alpha$.
+\end{proof}
+
+\begin{theorem}[Holm's step-down procedure]
+\label{thm:holm-control}
+Order the $p$-values as $p_{(1)}\leq\cdots\leq p_{(m)}$,
+breaking ties by index. Reject in order as long as
+$p_{(j)}\leq\alpha/(m-j+1)$, stopping at the first failure.
+This procedure controls family-wise error at level $\alpha$
+and rejects every hypothesis rejected by equal-weight Bonferroni.
+\end{theorem}
+\begin{proof}
+Fix $\theta$ and let $m_0$ be the number of true nulls.
+When $m_0=0$ there is no false rejection. Otherwise let $j$
+be the rank of the first true null. A false rejection requires
+rejection at rank $j$. Since at least $m_0$ hypotheses remain
+at that rank, the smallest true-null $p$-value must be at most
+$\alpha/(m-j+1)\leq\alpha/m_0$. A union bound over the $m_0$
+true nulls bounds this probability by $\alpha$.
+
+All ranks at or before an equal-weight Bonferroni rejection
+have $p$-value at most $\alpha/m$. Each step-down threshold
+is at least $\alpha/m$, so none of those ranks stops the
+procedure.
+\end{proof}
+
+\begin{example}[Holm can reject more hypotheses]
+\label{ex:holm-extra-rejections}
+Take level $0.06$ and ordered values
+\[(0.01,0.025,0.04).\]
+Equal-weight Bonferroni rejects only the first, at threshold
+$0.02$. Holm compares the three values successively with
+$0.02,0.03,0.06$ and rejects all three.
+\end{example}
+
+\begin{example}[Simultaneous confidence sets]
+\label{ex:bonferroni-simultaneous-confidence}
+Suppose $C_1,\ldots,C_m$ have marginal coverage at least
+$1-\alpha/m$ for targets $g_1(\theta),\ldots,g_m(\theta)$,
+respectively. The product set $\prod_i C_i$ covers the full
+target vector with probability at least $1-\alpha$. Indeed,
+its failure is the union of the marginal failures. For $m$
+normal means with known variances, this gives simultaneous
+intervals by using the quantile $z_{1-\alpha/(2m)}$ in each
+interval from Example~\ref{ex:confidence-normal-known-variance}.
+\end{example}
+
+\subsection{False discovery rate under independence}
+\label{subsec:benjamini-hochberg}
+
+\begin{theorem}[Benjamini--Hochberg control]
+\label{thm:benjamini-hochberg-independence}
+At a label $\theta$, suppose each true-null $p$-value is independent
+of the vector of the other $p$-values. For $0<\alpha<1$, set
+\[
+r=\max\bigl(\{j:1\leq j\leq m,\ p_{(j)}\leq\alpha j/m\}\cup\{0\}\bigr).
+\]
+Reject the first $r$ hypotheses in the ordering. If $m_0$ nulls
+are true, then $\operatorname{FDR}_\theta\leq\alpha m_0/m$.
+Equality holds if every true-null $p$-value is uniform.
+\end{theorem}
+\begin{proof}
+Write $N(t)=\#\{i:p_i\leq t\}$. The condition at rank $j$
+is $N(\alpha j/m)\geq j$. If $r>0$, then
+$N(\alpha r/m)=r$, since a larger count would make rank $r+1$
+pass its threshold. Thus the rejected indices are exactly those
+with $p_i\leq\alpha r/m$ when $r>0$.
+
+For a true null $i$, let $r_i$ be the rejection count after
+setting $p_i=0$. Then $r_i\geq1$ and $r_i\geq r$. If $i$ is
+rejected originally, replacing its value by zero leaves all
+counts at thresholds of ranks greater than $r$ unchanged.
+Hence $r_i=r$. Conversely, if $p_i\leq\alpha r_i/m$, the
+count at threshold $\alpha r_i/m$ is unchanged by the replacement,
+so $r\geq r_i$. Thus $r=r_i$ and $i$ is rejected. Its contribution
+to the expected false discovery proportion is therefore
+\[
+\sum_{k=1}^m \frac{1}{k}
+ P_\theta(r_i=k,\ p_i\leq\alpha k/m)
+\leq \sum_{k=1}^m \frac{\alpha}{m}P_\theta(r_i=k)
+=\frac{\alpha}{m}.
+\]
+The inequality uses independence since $r_i$ depends only on
+the other $p$-values. It is an equality for a uniform $p_i$.
+Summing over the true nulls proves both assertions.
+\end{proof}
+
+\subsection{Exercises}
+\label{subsec:exercises-6-4}
+
+\begin{exercise}[A binary rule as a classifier]
+\label{exer:multiple-binary-classification}
+For two labels, express the two classification errors in terms of the power of the test that rejects label one by choosing label two.
+\end{exercise}
+
+\begin{exercise}[Equal laws and a uniform prior]
+\label{exer:multiple-equal-laws}
+For $m$ labels with identical observation laws, compute the Bayes error under a uniform prior. Characterize all Bayes rules.
+\end{exercise}
+
+\begin{exercise}[A point mass and a shared atom]
+\label{exer:multiple-shared-atom}
+Extend Example~\ref{ex:multiclass-shared-observation} to $m$ labels with mass $a$ at zero and $1-a$ at its own label. Compute the minimax error.
+\end{exercise}
+
+\begin{exercise}[Weighted densities on two outcomes]
+\label{exer:multiple-weighted-densities}
+Use laws $(1/4,3/4)$, $(1/2,1/2)$, and $(3/4,1/4)$ on two outcomes, with equal priors. Find the Bayes action at each outcome and its average error.
+\end{exercise}
+
+\begin{exercise}[A label with zero prior mass]
+\label{exer:multiple-zero-prior}
+In Proposition~\ref{prop:multiclass-bayes-error}, explain when a label of prior mass zero can be a maximizing action.
+\end{exercise}
+
+\begin{exercise}[No rejections]
+\label{exer:multiple-no-rejections}
+For a procedure that rejects nothing, compute $R$, $V$, FDR, and FWER at every label.
+\end{exercise}
+
+\begin{exercise}[Two true nulls]
+\label{exer:multiple-global-null}
+When both nulls are true, tabulate the false discovery proportion for all possible rejection sets and recover the equality of the two error rates.
+\end{exercise}
+
+\begin{exercise}[One true and one false null]
+\label{exer:multiple-two-null-rates}
+Suppose the false null is always rejected and the true null is rejected with probability $b$. Compute both rates.
+\end{exercise}
+
+\begin{exercise}[A bound involving the expected number of false rejections]
+\label{exer:multiple-expected-false-count}
+Show that $P_\theta(V\geq1)\leq\mathbb E_\theta V$, and characterize equality.
+\end{exercise}
+
+\begin{exercise}[Independent uniform null values]
+\label{exer:multiple-independent-bonferroni}
+For Example~\ref{ex:multiple-independent-null-unadjusted}, compute FWER when the marginal threshold is $\alpha/m$.
+\end{exercise}
+
+\begin{exercise}[Identical null values]
+\label{exer:multiple-identical-pvalues}
+Take $p_i=U$ for all $i$, with a single uniform $U$ under the global null. Compute FWER for both Bonferroni and Holm.
+\end{exercise}
+
+\begin{exercise}[A choice of weights]
+\label{exer:multiple-weights}
+For $m=3$ and weights $(1/2,1/4,1/4)$, tabulate the rejection thresholds at level $0.04$.
+\end{exercise}
+
+\begin{exercise}[A zero weight]
+\label{exer:multiple-zero-weight}
+Show that a valid $p$-value equals zero with probability zero under its null. Explain what a zero weight can do under the alternative.
+\end{exercise}
+
+\begin{exercise}[First failure in Holm's rule]
+\label{exer:multiple-holm-first-failure}
+At level $0.05$, compare Holm, Bonferroni, and Benjamini--Hochberg
+on $(0.012,0.028,0.029)$. Explain the role of stopping.
+\end{exercise}
+
+\begin{exercise}[An order-invariant tie]
+\label{exer:multiple-holm-tie}
+Show that the Holm rejection set does not depend on the ordering within a block of equal $p$-values.
+\end{exercise}
+
+\begin{exercise}[Only one true null]
+\label{exer:multiple-single-true-null}
+At a label with exactly one true null, relate FWER to the rejection probability of that null. Give an example with strict inequality between FDR and FWER.
+\end{exercise}
+
+\begin{exercise}[The probability of joint coverage]
+\label{exer:multiple-joint-coverage}
+For $m$ independent intervals each of exact coverage $1-\alpha/m$, compute the coverage of their product.
+\end{exercise}
+
+\begin{exercise}[Weighted simultaneous intervals]
+\label{exer:multiple-weighted-coverage}
+Generalize Example~\ref{ex:bonferroni-simultaneous-confidence} to marginal noncoverage bounds $\alpha w_i$.
+\end{exercise}
+
+\begin{exercise}[Dependent null values making Bonferroni exact]
+\label{exer:multiple-exact-bonferroni}
+For $0<\alpha<1$, construct $m$ jointly distributed uniform $p$-values for which the events $\{p_i\leq\alpha/m\}$ are pairwise disjoint up to null sets. Verify exact FWER.
+\end{exercise}
+
+\begin{exercise}[Subset coverage from a family of intervals]
+\label{exer:multiple-subset-coverage}
+Given simultaneous confidence sets $C_i$ for $g_i(\theta)$, reject the null $g_i(\theta)=t_i$ when $t_i\notin C_i$. Prove FWER control even if some nulls are false.
+\end{exercise}
+
+\begin{exercise}[Holm adjusted values]
+\label{exer:multiple-holm-adjusted}
+Show that Holm rejects an index at rank $j$ exactly when $\min\{1,\max_{k\leq j}(m-k+1)p_{(k)}\}\leq\alpha$ for $0\leq\alpha<1$.
+\end{exercise}
+
+\begin{exercise}[Counting false rejections]
+\label{exer:multiple-false-count-tails}
+Let $m_0$ nulls be true. If each is rejected with probability at most $\alpha/m$, bound $\mathbb E_\theta V$ and $P_\theta(V\geq k)$ for every integer $k\geq1$.
+\end{exercise}
+
+\begin{exercise}[Minimax randomization on a shared atom]
+\label{exer:multiple-deterministic-minimax}
+In Example~\ref{ex:multiclass-shared-observation}, compute the smallest worst-case error among deterministic rules. Compare it with the randomized minimax value.
+\end{exercise}
+
+\begin{exercise}[Worst-case error and a prior bound]
+\label{exer:multiple-equal-risk-prior}
+Show that any classifier whose errors are equal at all labels and whose prior average error is Bayes for some prior is minimax. Explain which inequalities become equalities.
+\end{exercise}
+
+
 % BEGIN NOTATION INDEX
 \chapter*{Notation index}
 \label{chap:notation-index}
