@@ -1,0 +1,624 @@
+\documentclass[11pt,oneside]{book}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,enumitem,microtype,needspace}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Mathematical Foundations of Statistics and Learning: Book Plan}}
+\pagestyle{plain}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setcounter{tocdepth}{1}
+\setlist[itemize]{leftmargin=1.5em,itemsep=1pt,topsep=3pt}
+\newcounter{planchapter}
+\newcommand{\PlanPart}[2]{\Needspace{18\baselineskip}\section*{Part #1. #2}\addcontentsline{toc}{section}{Part #1. #2}}
+\newcommand{\PlanChapter}[2]{\Needspace{14\baselineskip}\refstepcounter{planchapter}\subsection*{\theplanchapter. #2}\label{plan:#1}}
+\newenvironment{Outline}{\begin{enumerate}[label=\theplanchapter.\arabic*,leftmargin=2.8em,itemsep=1pt,topsep=2pt]}{\end{enumerate}}
+\newcommand{\Target}[1]{\textit{Principal target.} #1\par}
+\newcommand{\Examples}[1]{\textit{Examples.} #1\par}
+\title{Mathematical Foundations of Statistics and Learning\\[6pt]\large Book plan: the route to transformers and language models}
+\author{Working plan}
+\date{11 November 2026}
+
+\begin{document}
+\hypersetup{pageanchor=false}
+\maketitle
+\clearpage
+\hypersetup{pageanchor=true}
+\frontmatter
+\tableofcontents
+
+\chapter*{Scope and conventions}
+\addcontentsline{toc}{chapter}{Scope and conventions}
+
+\textbf{First overall goal.} Develop a mathematical account of autoregressive
+transformers and language models: statistical interpretation, architecture,
+training objectives, differentiation, inference algorithms, and conditional
+theoretical guarantees. The proposal contains eight parts and 34 chapters.
+Titles and numbering remain provisional.
+
+\textbf{Agreed background.} Standard measure-theoretic probability, including
+its core measure theory, may be assumed. State imported results with exact
+hypotheses when used. Specialized statistics, information theory, optimization,
+and learning theory are developed in the text. Record borderline imports
+explicitly.
+
+\textbf{Additional background proposed for discussion.} Elementary
+finite-dimensional linear algebra, real analysis, and multivariable calculus.
+This boundary is not yet agreed. Develop specialized tools---matrix
+differentiation, convex duality, reproducing kernels, approximation results---where
+needed. Introduce definitions at first use; later chapters develop their theory
+without redefining them.
+
+\textbf{Form.} Definitions, results, concise proofs, numerous worked examples,
+counterexamples, and exercises; minimal discussion. Plan a section or subsection,
+then draft definitions, statements, and proofs in separate passes. The author's
+study drives revision. Python is deferred to a later phase.
+
+\textbf{Result status.} The targets below specify intended coverage, not
+theorems established in this project. Each requires precise hypotheses during
+unit planning. Architectural identities, statistical guarantees, empirical
+observations, and open questions remain distinct. In particular, practical
+neural training is not assumed to attain global optima.
+
+\textbf{Breadth and order.} Classical inference, kernels, and latent-variable
+methods retain a place even where they are not direct transformer prerequisites.
+The dependency graph records what each result needs. The project may eventually
+span several volumes; the eight-part structure is a mathematical organization,
+not a promise of a short physical book.
+
+\mainmatter
+\chapter*{Proposed contents}
+\addcontentsline{toc}{chapter}{Proposed contents}
+
+\PlanPart{I}{Statistical models and decisions}
+
+\PlanChapter{models}{Statistical models and observations}
+\begin{Outline}
+\item Observation spaces, models, and parametrized families.
+\item Sampling schemes and product experiments.
+\item Parameters, statistical functionals, and identifiability.
+\item Domination, densities, and likelihoods.
+\end{Outline}
+\Target{Characterize identifiable targets through their underlying laws;
+derive likelihoods for specified observation schemes.}
+\Examples{Bernoulli, Gaussian, and uniform endpoint families; redundant
+parametrizations; independent versus dependent observations.}
+
+\PlanChapter{decisions}{Loss, risk, and decision rules}
+\begin{Outline}
+\item Actions and deterministic or randomized rules.
+\item Loss functions, risk, and comparison of procedures.
+\item Bayes risk and optimal actions in elementary models.
+\item Minimax risk, admissibility, and existence issues.
+\end{Outline}
+\Target{Derive optimal decisions in finite models and under square loss;
+distinguish optimal values from attained optimal rules.}
+\Examples{Mean estimation; asymmetric classification costs; ties and nonattainment.}
+
+\PlanChapter{information}{Information, divergence, and scoring rules}
+\begin{Outline}
+\item Entropy, cross-entropy, and logarithmic loss.
+\item Relative entropy and divergence inequalities.
+\item Conditional information, chain rules, and data processing.
+\item Proper scoring rules and probability estimation.
+\end{Outline}
+\Target{Prove information inequalities and the cross-entropy decomposition;
+characterize minimizers of logarithmic and quadratic probability scores.}
+\Examples{Finite laws; Gaussian divergence; incompatible supports and infinite values.}
+
+\PlanChapter{sufficiency}{Statistics, sufficiency, and information reduction}
+\begin{Outline}
+\item Statistics and induced experiments.
+\item Sufficiency and conditional formulations.
+\item Factorization criteria under explicit assumptions.
+\item Minimal sufficiency, completeness, and ancillarity.
+\end{Outline}
+\Target{Establish sufficient reductions in dominated models; distinguish
+sufficiency from identifiability and completeness.}
+\Examples{Binomial counts; Gaussian summaries; order statistics; information discarded by a statistic.}
+
+\PlanPart{II}{Statistical inference}
+
+\PlanChapter{estimation}{Point estimation and finite-sample optimality}
+\begin{Outline}
+\item Estimators, bias, variance, and mean squared error.
+\item Maximum likelihood and other estimating constructions.
+\item Rao--Blackwellization and complete sufficient statistics.
+\item Fisher information and information lower bounds.
+\end{Outline}
+\Target{Prove Rao--Blackwell and Lehmann--Scheff\'e results and a regular
+Cram\'er--Rao bound; expose their required hypotheses.}
+\Examples{Bernoulli and normal estimation; biased improvements; boundary
+maxima; parameter-dependent support.}
+
+\PlanChapter{testing}{Tests and confidence procedures}
+\begin{Outline}
+\item Hypotheses, randomized tests, size, and power.
+\item Neyman--Pearson theory and composite hypotheses.
+\item Confidence sets and inversion of tests.
+\item Multiple decisions and error criteria.
+\end{Outline}
+\Target{Prove the Neyman--Pearson lemma and testing--confidence duality;
+derive exact procedures in tractable models.}
+\Examples{Binomial and Gaussian tests; discrete coverage; absence of a uniformly most powerful test.}
+
+\PlanChapter{bayes}{Bayesian inference}
+\begin{Outline}
+\item Priors, posterior laws, and existence conditions.
+\item Conjugate models and posterior prediction.
+\item Posterior decisions and credible sets.
+\item Prior sensitivity and improper-prior pitfalls.
+\end{Outline}
+\Target{Derive posterior and predictive laws and Bayes decisions;
+distinguish posterior probability from repeated-sampling coverage.}
+\Examples{Beta--Bernoulli; normal conjugacy; alternative priors; an improper posterior.}
+
+\PlanChapter{asymptotics}{Consistency and asymptotic inference}
+\begin{Outline}
+\item Consistency, continuous transformations, and the delta method.
+\item Compact-parametric uniform laws from probability prerequisites.
+\item Consistency and asymptotic normality of regular estimators.
+\item Likelihood-based asymptotic procedures and their failures.
+\end{Outline}
+\Target{Prove argmin consistency and regular asymptotic normality. Establish
+needed uniform laws here without relying on later chapters.}
+\Examples{Sample moments; normal likelihood; boundary models; pointwise
+convergence insufficient for an argmin argument.}
+
+\PlanChapter{lower-bounds}{Minimax inference and lower bounds}
+\begin{Outline}
+\item Minimax risk, rates, and finite-sample comparisons.
+\item Reduction from estimation to testing.
+\item Two-point and multiple-hypothesis lower bounds.
+\item Matching upper and lower bounds.
+\end{Outline}
+\Target{Derive Le Cam and Fano methods in stated settings and establish
+optimal rates in elementary models.}
+\Examples{Bernoulli mean; Gaussian location; finite packing constructions.}
+
+\PlanPart{III}{Computation, differentiation, and optimization}
+
+\PlanChapter{computation}{Algorithms, cost models, and numerical stability}
+\begin{Outline}
+\item Algorithms, representations, and input size.
+\item Arithmetic cost, bit cost, memory, and asymptotic notation.
+\item Conditioning and floating-point error.
+\item Stable elementary statistical operations.
+\end{Outline}
+\Target{State computational bounds relative to an explicit model;
+separate exact identities from numerical approximations.}
+\Examples{Matrix multiplication; ill-conditioned least squares; stable log-sum-exp and softmax.}
+
+\PlanChapter{differentiation}{Differentiation and computational graphs}
+\begin{Outline}
+\item Derivatives as linear maps; matrix-valued functions.
+\item Chain rules, Jacobians, and adjoints.
+\item Forward and reverse automatic differentiation.
+\item Nondifferentiability and derivative conventions.
+\end{Outline}
+\Target{Prove reverse accumulation correct on finite computation graphs;
+state time and memory costs under explicit assumptions.}
+\Examples{Least squares; log-likelihood gradients; shared parameters; piecewise-linear activations.}
+
+\PlanChapter{convexity}{Convex analysis and duality}
+\begin{Outline}
+\item Convex sets, functions, and supporting inequalities.
+\item Smoothness, strong convexity, and subgradients.
+\item Conjugacy, constrained problems, and duality.
+\item Optimality conditions and proximal maps.
+\end{Outline}
+\Target{Prove finite-dimensional optimality and duality results with
+constraint qualifications; derive basic proximal operators.}
+\Examples{Quadratics; entropy; norm penalties; a duality gap.}
+
+\PlanChapter{deterministic-optimization}{Deterministic optimization}
+\begin{Outline}
+\item Descent lemmas and gradient methods.
+\item Convex and strongly convex rates.
+\item Projected, proximal, and second-order methods.
+\item Nonconvex stationarity and limitations.
+\end{Outline}
+\Target{Prove representative convergence rates; distinguish stationarity
+from global optimization.}
+\Examples{Quadratic and logistic objectives; constrained least squares; saddles and flat directions.}
+
+\PlanChapter{stochastic-optimization}{Stochastic optimization}
+\begin{Outline}
+\item Stochastic gradients and sampling assumptions.
+\item Step sizes, minibatches, and convex guarantees.
+\item Smooth nonconvex stationarity bounds.
+\item Momentum and adaptive methods: qualified results.
+\end{Outline}
+\Target{Prove SGD guarantees under explicit noise and regularity assumptions.
+Give adaptive methods only the guarantees actually established.}
+\Examples{Noisy quadratics; finite-sum losses; biased gradients; unsuitable step sizes.}
+
+\PlanPart{IV}{Statistical learning theory}
+
+\PlanChapter{learning}{Prediction and empirical risk minimization}
+\begin{Outline}
+\item Prediction problems, hypothesis classes, and population risk.
+\item Bayes predictors for regression and classification.
+\item Empirical risk minimization and excess risk.
+\item Approximation, estimation, and optimization error.
+\end{Outline}
+\Target{Derive risk decompositions and elementary empirical-risk solutions;
+distinguish optimization from statistical performance.}
+\Examples{Constant predictors; finite classes; thresholds; interpolation and unattained minima.}
+
+\PlanChapter{concentration}{Concentration and uniform convergence}
+\begin{Outline}
+\item Exponential-moment methods.
+\item Hoeffding, Bernstein, and bounded-difference bounds.
+\item Finite classes, coverings, and uniform deviations.
+\item Generalization of empirical minimizers.
+\end{Outline}
+\Target{Prove concentration and a finite-class excess-risk bound; record
+any overlap with the chosen probability prerequisites.}
+\Examples{Empirical means; rare events; bounded versus heavy-tailed losses.}
+
+\PlanChapter{capacity}{Capacity, complexity, and learnability}
+\begin{Outline}
+\item PAC formulations and sample complexity.
+\item Growth functions, VC dimension, and combinatorial bounds.
+\item Rademacher complexity and symmetrization.
+\item Learnability theorems and lower bounds.
+\end{Outline}
+\Target{Establish VC and Rademacher guarantees in precise settings, including
+measurability and function-class restrictions.}
+\Examples{Intervals; halfspaces; finite-dimensional predictors; an unrestricted unlearnable class.}
+
+\PlanChapter{regularization}{Regularization, stability, and model selection}
+\begin{Outline}
+\item Penalized and constrained learning.
+\item Stability and expected generalization.
+\item Validation, selection, and repeated data reuse.
+\item Surrogate losses and calibration.
+\end{Outline}
+\Target{Prove a stability guarantee for a regularized learner and a model-selection
+bound under stated sampling assumptions.}
+\Examples{Ridge; logistic classification; finite model selection; validation overfitting.}
+
+\PlanPart{V}{Classical models and representations}
+
+\PlanChapter{linear-models}{Linear models and regularized regression}
+\begin{Outline}
+\item Least squares, projections, and nonunique solutions.
+\item Gaussian linear inference.
+\item Ridge, shrinkage, and bias--variance calculations.
+\item Sparse penalties and optimality conditions.
+\end{Outline}
+\Target{Derive solutions and finite-sample risk formulas under explicit
+design and noise assumptions.}
+\Examples{Rank deficiency; correlated features; minimum-norm interpolation; orthogonal-design thresholding.}
+
+\PlanChapter{exponential-families}{Exponential families and generalized linear models}
+\begin{Outline}
+\item Natural parameters, sufficient statistics, and log partition functions.
+\item Moments, curvature, and information.
+\item Generalized linear models and likelihood fitting.
+\item Existence, identifiability, and separation.
+\end{Outline}
+\Target{Prove log-partition derivative identities under valid conditions;
+derive Gaussian, Bernoulli, and categorical regression.}
+\Examples{Logistic, softmax, and Poisson regression; complete separation.}
+
+\PlanChapter{kernels}{Kernels and nonparametric prediction}
+\begin{Outline}
+\item Positive-definite kernels and feature maps.
+\item Reproducing kernel Hilbert spaces.
+\item Representer theorems and kernel ridge regression.
+\item Local smoothing and elementary nonparametric rates.
+\end{Outline}
+\Target{Construct the needed kernel spaces and prove a representer theorem;
+derive bounds in a specified smoothness class.}
+\Examples{Linear and Gaussian kernels; nearest neighbors; kernel smoothers.}
+
+\PlanChapter{latent-models}{Dimension reduction and latent-variable models}
+\begin{Outline}
+\item PCA, low-rank approximation, and reconstruction.
+\item Clustering and quantization.
+\item Mixtures, label symmetry, and likelihood pathologies.
+\item Variational identities and expectation--maximization.
+\end{Outline}
+\Target{Prove PCA optimality and EM monotonicity under stated conditions;
+distinguish monotonic improvement from global optimality.}
+\Examples{Gaussian mixtures; local minima; singular covariance and unbounded likelihood.}
+
+\PlanPart{VI}{Neural networks}
+
+\PlanChapter{neural-maps}{Neural maps and architectural structure}
+\begin{Outline}
+\item Tensors, affine maps, activations, and composition.
+\item Multilayer, residual, and shared-parameter architectures.
+\item Convolution, equivariance, and elementary symmetry.
+\item Normalization and parameter symmetries.
+\end{Outline}
+\Target{Define architectures as maps with explicit dimensions; prove
+elementary symmetry and composition properties.}
+\Examples{A small multilayer network; a residual block; convolution; stabilized normalization.}
+
+\PlanChapter{approximation}{Expressivity and approximation}
+\begin{Outline}
+\item Function classes, approximation metrics, and domains.
+\item Piecewise-linear representations.
+\item A constructive universal-approximation theorem.
+\item Width, depth, and limitations.
+\end{Outline}
+\Target{Prove approximation for a specified network class and domain;
+keep representation separate from learnability.}
+\Examples{Piecewise-linear functions; finite interpolation; insufficient width.}
+
+\PlanChapter{neural-learning}{Learning and optimizing neural models}
+\begin{Outline}
+\item Backpropagation as reverse differentiation.
+\item Initialization, normalization, and gradient propagation.
+\item Optimization in tractable special models.
+\item Generalization, implicit bias, and limitations.
+\end{Outline}
+\Target{Derive neural gradients and selected optimization or implicit-bias
+results in explicit settings, such as deep linear models.}
+\Examples{Linear versus nonlinear networks; interpolation; redundancy;
+valid but uninformative capacity bounds.}
+
+\PlanPart{VII}{Sequences and transformers}
+
+\PlanChapter{sequences}{Sequence distributions and language modeling}
+\begin{Outline}
+\item Alphabets, strings, prefixes, and termination conventions.
+\item Conditional sequence laws and autoregressive factorization.
+\item Markov, recurrent, and neural conditional models.
+\item Sequence log loss, token weighting, and perplexity.
+\end{Outline}
+\Target{Prove normalization for specified finite-horizon or terminating models;
+derive sequence likelihood and information decompositions.}
+\Examples{Bigrams; a tiny vocabulary; faulty variable-length normalization;
+dependent tokens within independent documents.}
+
+\PlanChapter{tokens}{Tokenization, embeddings, and position}
+\begin{Outline}
+\item Encodings, tokenizers, and recoverability.
+\item Pair-merging tokenization algorithms and deterministic conventions.
+\item Embedding maps, output projections, and tied parameters.
+\item Absolute, relative, and rotary position.
+\end{Outline}
+\Target{Establish encoding properties and positional identities; specify
+how tokenization changes the modeled sample space.}
+\Examples{Byte encodings; ambiguous segmentations; a merge table; rotary inner products.}
+
+\PlanChapter{attention}{Attention as a mathematical operator}
+\begin{Outline}
+\item Queries, keys, values, and softmax attention.
+\item Masks and multihead composition.
+\item Equivariance, derivatives, and qualified stability results.
+\item Arithmetic and memory costs.
+\end{Outline}
+\Target{Prove weight normalization, appropriate equivariance properties,
+operator derivatives, and explicit cost bounds.}
+\Examples{Uniform and concentrated attention; forbidden positions;
+an empty mask row; symmetry broken by positions.}
+
+\PlanChapter{transformers}{Transformer architectures}
+\begin{Outline}
+\item Encoder, decoder, and encoder--decoder constructions.
+\item Residual blocks, normalization, and feedforward sublayers.
+\item Causal masking and prefix dependence.
+\item Parameter counts and cached evaluation.
+\end{Outline}
+\Target{Prove prefix causality and full-prefix/incremental equivalence
+for the specified deterministic architecture in exact arithmetic.}
+\Examples{A one-block decoder; pre- versus post-normalization;
+cache shapes; leakage from an incorrect mask.}
+
+\PlanPart{VIII}{Language-model training, inference, and theory}
+
+\PlanChapter{lm-training}{Language-model estimation and training objectives}
+\begin{Outline}
+\item Population and empirical sequence likelihood.
+\item Teacher forcing, masking, and document boundaries.
+\item Gradient estimation, weighting, and optimization procedures.
+\item Evaluation protocols and distribution shift.
+\end{Outline}
+\Target{Derive the teacher-forced likelihood and gradients; distinguish
+token-weighted and document-weighted risks.}
+\Examples{Padded batches; packed documents; unequal lengths; contaminated evaluation data.}
+
+\PlanChapter{decoding}{Decoding and inference algorithms}
+\begin{Outline}
+\item Ancestral sampling and exact target distributions.
+\item Temperature, top-$k$, and cumulative-probability truncation.
+\item Greedy and beam procedures versus sequence maximization.
+\item Speculative sampling and inference cost.
+\end{Outline}
+\Target{Prove ancestral and specified speculative sampling correct;
+identify procedures that alter the target distribution.}
+\Examples{A probability tree; greedy and beam failures; acceptance and residual laws.}
+
+\PlanChapter{adaptation}{Adaptation and preference objectives}
+\begin{Outline}
+\item Conditional fine-tuning and distributional objectives.
+\item Low-rank parameter updates.
+\item Reward objectives with relative-entropy regularization.
+\item Preference models and direct preference optimization.
+\end{Outline}
+\Target{Derive the regularized optimum and preference objective under explicit
+support, normalization, and modeling assumptions.}
+\Examples{Finite response sets; low-rank updates; misspecified preferences;
+a failed support assumption.}
+General sequential reinforcement learning and PPO belong to the later agent
+extension; this chapter treats the stated single-decision objectives.
+
+\PlanChapter{transformer-theory}{Transformer expressivity and theoretical limits}
+\begin{Outline}
+\item Finite-domain constructions and specified approximation results.
+\item Context length, precision, and architectural restrictions.
+\item In-context inference in tractable models.
+\item Generalization, empirical capabilities, and open questions.
+\end{Outline}
+\Target{Prove selected results for precisely restricted models without
+transferring them to arbitrary trained LLMs.}
+\Examples{Copying and retrieval; finite lookup; tractable in-context inference;
+a fixed context's limitations.}
+
+\PlanChapter{capstone}{Capstone: a fully specified autoregressive transformer}
+\begin{Outline}
+\item Vocabulary, context, parameters, and the complete decoder map.
+\item The probability law and likelihood objective.
+\item Differentiation, cached evaluation, and sampling.
+\item Computational costs and the scope of statistical guarantees.
+\end{Outline}
+\Target{Assemble a complete mathematical specification whose definitions
+and proved properties refer to the preceding development.}
+\Examples{A symbolic small-vocabulary model; end-to-end shapes, likelihood,
+gradients, cache, and sampling calculations.}
+
+\chapter*{The first unit and the dependency spine}
+\addcontentsline{toc}{chapter}{The first unit and the dependency spine}
+
+\section*{Opening unit: Section 1.1}
+Plan only the opening unit to subsection depth for now:
+\begin{enumerate}[label=1.1.\arabic*,leftmargin=3.4em]
+\item Observation spaces and data values.
+\item Statistical models as collections of probability laws.
+\item Indexed families and parametrizations.
+\item Worked models, counterexamples, and exercises.
+\end{enumerate}
+\textit{Definitions pass:} observation space, model, indexed family, parameter
+space, and reparametrization. Distinguish a law from its densities and a model
+from its parameter labels.
+
+\textit{Statements pass:} invariance of a model under bijective
+reparametrization; elementary examples of different parametrizations of the
+same collection of laws. No general inference theorem is needed in this unit.
+
+\textit{Proofs and examples pass:} prove the elementary facts; work through
+Bernoulli, categorical, Gaussian-location, and uniform-endpoint families.
+Include a redundant parametrization. Exercises ask the reader to specify
+observation spaces and models, compare parametrizations, and distinguish
+quantities attached to a law from quantities attached to parameter labels.
+Formal identifiability follows in Section 1.3.
+
+\section*{Logical dependencies}
+These edges describe the main route, not a requirement to finish every preceding
+chapter before any later chapter.
+\begin{itemize}
+\item Models and decisions (1--2), with information (3), support estimation
+and prediction (5, 15), then learning guarantees (16--18).
+\item Computation and differentiation (10--11), with convex analysis (12),
+support optimization (13--14), then neural training (25, 30).
+\item Linear and categorical predictors (19--20) connect statistical losses
+to neural maps (23) and sequence conditionals (26).
+\item Neural maps and differentiation (23, 11), with sequence and position
+conventions (26--27), support attention (28) and transformers (29).
+\item Information (3), sequences (26), and transformers (29) support
+language-model estimation (30), decoding (31), and adaptation (32).
+\item The capstone (34) assembles these constructions and cites only the
+learning and optimization guarantees whose assumptions actually apply.
+\end{itemize}
+Sufficiency, testing, Bayesian inference, asymptotics, lower bounds, kernels,
+and latent models supply the broader statistical foundation. Their full
+development need not block independent sections on the direct transformer route.
+Advanced expressivity (33) is not required merely to define the model.
+
+\section*{Capstone completion criteria}
+\begin{enumerate}[leftmargin=1.8em]
+\item Specify a decoder with finite vocabulary, explicit context and termination
+conventions, and every map's domain, codomain, and dimensions.
+\item Establish a normalized sequence law. For fixed finite length $T$, derive
+\[
+p_\theta(x_{1:T})=\prod_{t=1}^T p_\theta(x_t\mid x_{<t}).
+\]
+Variable-length laws require the separately stated termination convention.
+\item Derive negative log likelihood and the applicable cross-entropy--KL
+decomposition, specifying the data law and weighting.
+\item Prove prefix causality, gradients under the chosen regularity conditions,
+and cache equivalence in deterministic exact arithmetic.
+\item Prove the chosen sampler correct; state arithmetic and memory bounds
+in an explicit cost model.
+\item Separate established guarantees from empirical scaling, benchmark
+performance, and unresolved capability explanations.
+\end{enumerate}
+
+\chapter*{Extensions beyond the first milestone}
+\addcontentsline{toc}{chapter}{Extensions beyond the first milestone}
+
+These later branches extend the scope; they are not opening prerequisites
+or a universal ranking of AI methods.
+
+\section*{A. Learning and decision-making agents}
+\begin{enumerate}[leftmargin=1.8em]
+\item Markov decision processes and dynamic programming.
+\item Partial observation, belief states, and planning.
+\item Bandits, exploration, regret, and reinforcement learning.
+\item Learned world models, model error, and control.
+\item Language-model policies, tools, memory, and interactive tasks.
+\end{enumerate}
+\textit{Later destination:} a specified agent that learns and acts under
+uncertainty, with guarantees in restricted environments. World-model
+reinforcement learning gives a concrete research connection~\cite{dreamer}.
+
+\section*{B. Causality, adaptation, and general learning}
+Structural causal models; interventions and identification; experimental
+design; distribution shift; online and continual learning; multi-agent learning.
+
+\section*{C. Other generative models and modalities}
+Graphical models and inference; variational autoencoders; normalizing flows;
+score and diffusion models; multimodal learning; graph and geometric models.
+
+\section*{D. Computation and formal reasoning}
+Automata, computability, and complexity; formal languages and program semantics;
+search and planning; program synthesis; proof-guided learning. These support
+longer-term goals involving reasoning and algorithm discovery.
+
+\chapter*{Source checks and open choices}
+\addcontentsline{toc}{chapter}{Source checks and open choices}
+
+\textbf{Source use.} This is an original proposed outline. Statistical,
+learning-theoretic, and neural coverage was checked against primary book
+contents~\cite{wasserman,uml,dl}. Architecture and later topics were checked
+against original transformer, language-model, positional, adaptation, and
+decoding papers~\cite{attention,gpt,rope,lora,dpo,speculative,yun}.
+Checks used contents pages, abstracts, and bibliographic records; they do not
+verify the papers' proofs or experiments. Consult precise statements and proof
+sources during unit planning. The author's book collection has not yet been
+mapped to the plan.
+
+\textbf{Open choices.} Exact probability reference; additional linear-algebra
+and analysis boundary; priorities among breadth chapters; routine inference
+left implicit in proofs; eventual physical volumes. Revise the plan before
+drafting the mathematical definitions that depend on those choices.
+
+\begin{thebibliography}{99}
+\raggedright
+\bibitem{wasserman} L. Wasserman. \textit{All of Statistics}.
+\href{https://link.springer.com/book/10.1007/978-0-387-21736-9}{Publisher's contents}.
+\bibitem{uml} S. Shalev-Shwartz and S. Ben-David.
+\textit{Understanding Machine Learning: From Theory to Algorithms} (2014).
+\href{https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/understanding-machine-learning-theory-algorithms.pdf}{Author-hosted text}.
+\bibitem{dl} I. Goodfellow, Y. Bengio, and A. Courville.
+\textit{Deep Learning} (2016).
+\href{https://www.deeplearningbook.org/contents/TOC.html}{Authors' contents}.
+\bibitem{attention} A. Vaswani et al. \textit{Attention Is All You Need} (2017).
+\href{https://arxiv.org/abs/1706.03762}{arXiv:1706.03762}.
+\bibitem{gpt} T. B. Brown et al. \textit{Language Models are Few-Shot Learners} (2020).
+\href{https://arxiv.org/abs/2005.14165}{arXiv:2005.14165}.
+\bibitem{rope} J. Su et al. \textit{RoFormer: Enhanced Transformer with Rotary Position Embedding} (2021).
+\href{https://arxiv.org/abs/2104.09864}{arXiv:2104.09864}.
+\bibitem{lora} E. J. Hu et al. \textit{LoRA: Low-Rank Adaptation of Large Language Models} (2021).
+\href{https://arxiv.org/abs/2106.09685}{arXiv:2106.09685}.
+\bibitem{dpo} R. Rafailov et al. \textit{Direct Preference Optimization:
+Your Language Model is Secretly a Reward Model} (2023).
+\href{https://arxiv.org/abs/2305.18290}{arXiv:2305.18290}.
+\bibitem{speculative} Y. Leviathan, M. Kalman, and Y. Matias.
+\textit{Fast Inference from Transformers via Speculative Decoding} (2023).
+\href{https://proceedings.mlr.press/v202/leviathan23a.html}{PMLR 202}.
+\bibitem{yun} C. Yun et al. \textit{Are Transformers Universal Approximators
+of Sequence-to-Sequence Functions?} (2020).
+\href{https://arxiv.org/abs/1912.10077}{arXiv:1912.10077}.
+\bibitem{dreamer} D. Hafner et al. \textit{Mastering Diverse Domains through
+World Models} (2023).
+\href{https://arxiv.org/abs/2301.04104}{arXiv:2301.04104}.
+\end{thebibliography}
+\end{document}
