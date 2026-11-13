@@ -9607,6 +9607,440 @@ the support at $\theta_0$.
 \end{exercise}
 
 
+
+\clearpage
+\section{Confidence sets and inversion of tests}
+\label{sec:confidence-sets-test-inversion}
+
+Fix an experiment $\mathcal E=(\mathsf X,\mathcal A,
+(P_\theta)_{\theta\in\Theta})$ and equip $\Theta$ with a
+sigma algebra $\mathcal T$.
+
+\subsection{Coverage and test inversion}
+\label{subsec:confidence-coverage-inversion}
+
+\begin{definition}[Confidence set and coverage]
+\label{def:confidence-set-coverage}
+\indexnotation{C(X),\ \operatorname{cov}_C(\theta)}{Confidence set and its coverage at parameter \(\theta\).}
+A confidence procedure assigns a subset $C(x)\subseteq\Theta$ to
+each record $x$, with measurable graph
+\[
+G_C=\{(x,t):t\in C(x)\}\in\mathcal A\otimes\mathcal T .
+\]
+Its coverage at $\theta$ is
+$\operatorname{cov}_C(\theta)=P_\theta\{\theta\in C(X)\}$.
+It has confidence level $1-\alpha$ if
+$\inf_{\theta\in\Theta}\operatorname{cov}_C(\theta)\geq1-\alpha$.
+It has \emph{pointwise exact coverage} $1-\alpha$ if equality
+holds at every $\theta$. A randomized procedure may use an
+independent $U$ uniform on $[0,1]$ as part of the observation.
+Coverage then uses $P_\theta\otimes\operatorname{Unif}[0,1]$.
+\end{definition}
+
+\begin{theorem}[Test--confidence duality]
+\label{thm:test-confidence-duality}
+Suppose $\phi(x,t)\in[0,1]$ is product measurable and
+$\mathbb E_t[\phi(X,t)]\leq\alpha$ for every $t\in\Theta$.
+Using a single independent uniform $U$, form
+\[
+C(x,u)=\{t\in\Theta:u\geq\phi(x,t)\}.
+\]
+This is a confidence procedure with
+$\operatorname{cov}_C(\theta)=1-\mathbb E_\theta[\phi(X,\theta)]$.
+If the tests are nonrandomized one can use
+$C(x)=\{t:\phi(x,t)=0\}$. Conversely, a confidence procedure of
+level $1-\alpha$ gives a level-$\alpha$ test of each point
+null $t$ by rejecting when $t\notin C$. For a randomized
+confidence procedure the corresponding test function averages
+this rejection indicator over $U$.
+\end{theorem}
+\begin{proof}
+The graph is measurable since it is defined by the comparison
+$u\geq\phi(x,t)$ of two product-measurable functions.
+At $\theta$, conditional on $X=x$, the probability that $C$
+excludes $\theta$ is $\phi(x,\theta)$. Integration gives the
+coverage identity. For nonrandomized tests, the graph given by
+$\phi(x,t)=0$ gives the same identity.
+
+Conversely, the test function at $t$ is the indicator of
+$t\notin C(x)$ in the nonrandomized case. In the randomized case it is
+$\int_0^1\mathbf 1_{\{t\notin C(x,u)\}}\,du$, product measurable by
+integration of the graph indicator. Its rejection probability
+at $t$ is $1-\operatorname{cov}_C(t)\leq\alpha$ by Tonelli.
+\end{proof}
+
+\begin{example}[Exact coverage with one Bernoulli observation]
+\label{ex:confidence-bernoulli-shared-randomizer}
+For $X$ Bernoulli of parameter $t$, fix $0<\alpha<1$.
+Against larger success probabilities, the exact-size test
+of $t$ rejects at $X=1$ with probability $\min\{1,\alpha/t\}$
+for $t>0$ and with probability one for $t=0$. At $X=0$ it
+rejects with probability $(\alpha-t)/(1-t)$ for $t<\alpha$
+and with probability zero for $t\geq\alpha$.
+For $t\geq\alpha$ its rejection probability under $t$ is
+$t(\alpha/t)=\alpha$. For $t<\alpha$ the probability is
+$t+(1-t)(\alpha-t)/(1-t)=\alpha$. Inversion gives pointwise
+exact coverage using the same $U$ for every $t$.
+\end{example}
+
+\subsection{Pivots and continuous models}
+\label{subsec:confidence-pivots}
+
+\begin{definition}[Pivot]
+\label{def:confidence-pivot}
+\indexnotation{W(X,\theta)}{Pivot whose law at the true parameter is parameter independent.}
+A real pivot is a product-measurable function $W(x,t)$ whose
+law under $P_\theta$ at $t=\theta$ is the same for all $\theta$.
+\end{definition}
+
+\begin{proposition}[Inverting a pivot]
+\label{prop:confidence-pivot-inversion}
+Let $W$ be a pivot with common law $\nu$ at the true label.
+If $A$ is Borel and $\nu(A)\geq1-\alpha$, then
+\[
+C(x)=\{t:W(x,t)\in A\}
+\]
+has coverage $\nu(A)$ at every label.
+\end{proposition}
+\begin{proof}
+The graph is the inverse image of $A$ under $W$. The event
+that $C(X)$ contains $\theta$ is $\{W(X,\theta)\in A\}$, of
+probability $\nu(A)$.
+\end{proof}
+
+\begin{example}[A normal mean with known variance]
+\label{ex:confidence-normal-known-variance}
+For iid $N(\theta,v)$ observations with known $v>0$,
+$W(X,\theta)=(\overline X-\theta)\sqrt{n/v}$ has law $N(0,1)$.
+Write $z_u=\Phi^{-1}(u)$ for $0<u<1$. The region
+$[-z_{1-\alpha/2},z_{1-\alpha/2}]$ has mass $1-\alpha$.
+Inversion gives
+\[
+\left[\overline X-z_{1-\alpha/2}\sqrt{v/n},\
+      \overline X+z_{1-\alpha/2}\sqrt{v/n}\right].
+\]
+The same interval results from inverting the two-tailed
+tests that reject $t$ when $|(\overline X-t)\sqrt{n/v}|$
+exceeds $z_{1-\alpha/2}$.
+\end{example}
+
+\begin{example}[A uniform endpoint]
+\label{ex:confidence-uniform-endpoint}
+For iid $\operatorname{Unif}[0,\theta]$ observations let $T$ be
+the maximum. By Example~\ref{ex:statistic-uniform-maximum},
+$(T/\theta)^n$ is uniform on $[0,1]$. Inverting the pivot
+region $[\alpha,1]$ yields
+\[
+C(X)=[T,T\alpha^{-1/n}]\cap(0,\infty).
+\]
+Its coverage is exactly $1-\alpha$ for every $\theta>0$.
+The parameter at the true endpoint enters through the support,
+and the argument uses the distribution of the maximum directly.
+\end{example}
+
+
+\begin{example}[Changing the allocation of the normal tails]
+\label{ex:confidence-normal-tail-allocation}
+In the known-variance normal model, assign probability $a$
+to the lower pivot tail and $b$ to the upper tail, where
+$a,b>0$ and $a+b=\alpha$. The interval is
+\[
+[\overline X-z_{1-b}\sqrt{v/n},\
+ \overline X-z_a\sqrt{v/n}].
+\]
+Its coverage is $1-\alpha$. For $b<a$ its lower endpoint
+is farther below $\overline X$ than in the equal-tail
+interval, while the upper endpoint also moves downward.
+Both facts follow from strict monotonicity of the normal quantiles.
+\end{example}
+
+\subsection{Discrete tails and binomial intervals}
+\label{subsec:confidence-discrete}
+
+\begin{definition}[$p$-value]
+\label{def:test-p-value}
+\indexnotation{p_t(X)}{\(p\)-value for the null label \(t\).}
+A $p$-value for the null label $t$ is a measurable
+$p_t:\mathsf X\to[0,1]$ satisfying
+\[
+P_t\{p_t(X)\leq u\}\leq u\qquad(0\leq u\leq1).
+\]
+The same definition applies on the augmented observation space
+when the $p$-value uses independent randomization.
+\end{definition}
+
+\begin{proposition}[Discrete upper tails]
+\label{prop:discrete-tail-pvalues}
+Let $S$ take finitely many ordered real values and set
+\[
+p_t^+(s)=P_t(S\geq s),\qquad
+\widetilde p_t^+(s,u)=P_t(S>s)+uP_t(S=s).
+\]
+The first expression evaluated at $S$ is a $p$-value.
+For independent $U$ uniform on $[0,1]$, the second expression
+evaluated at $(S,U)$ is uniform on $[0,1]$ under $P_t$.
+The corresponding lower-tail statements follow by replacing
+$S$ with $-S$.
+\end{proposition}
+\begin{proof}
+For the first statement, if there is a possible value $s$ with
+$p_t^+(s)\leq u$, let $s_0$ be the smallest such value.
+Then the event $\{p_t^+(S)\leq u\}$ is $\{S\geq s_0\}$ and has
+probability $p_t^+(s_0)\leq u$. If there is no such value the
+event is empty.
+
+For the second statement, conditional on a value $s$ with
+positive mass, $\widetilde p_t^+(s,U)$ is uniform on
+$[P_t(S>s),P_t(S\geq s)]$. In descending order of $s$, these
+intervals cover $[0,1]$ with disjoint interiors. Each interval
+is selected with probability equal to its length. The
+resulting distribution is uniform, as is seen by summing
+the lengths of the intersections with any Borel set.
+\end{proof}
+
+\begin{proposition}[Equal-tail binomial interval]
+\label{prop:clopper-pearson-interval}
+Let $S$ be the count of $n\geq1$ iid Bernoulli draws with
+parameter $p\in[0,1]$. For $0<\alpha<1$, put $a=\alpha/2$.
+At observed count $k$, define $L_0=0$, $U_n=1$, and the
+remaining endpoints by
+\[
+P_{L_k}(S\geq k)=a\quad (1\leq k\leq n),\qquad
+P_{U_k}(S\leq k)=a\quad (0\leq k<n).
+\]
+The equations have unique solutions in $(0,1)$. The set
+$[L_k,U_k]$, called the Clopper--Pearson interval, has
+coverage at least $1-\alpha$ at every $p$.
+\end{proposition}
+\begin{proof}
+The binomial upper tail at $k\geq1$ is continuous in $p$ and
+strictly increases from zero to one. For strict increase
+between two interior probabilities $p<q$, use the shared
+uniform construction in Proposition~\ref{prop:test-binomial-composite-calibration}.
+There is positive probability that exactly $k-1$ uniforms
+are below $p$, one is in $(p,q)$, and all others exceed $q$.
+The count crosses $k$ on this event. The lower tail at
+$k<n$ is one minus the upper tail at $k+1$, so it strictly
+decreases. This proves existence and uniqueness of the roots.
+For $0<k<n$, at $p=L_k$ the lower tail is at least
+$1-P_{L_k}(S\geq k)=1-a>a$. Hence $L_k<U_k$, and the endpoint
+cases also satisfy $L_k\leq U_k$.
+
+At the true $p$, exclusion by the lower endpoint requires
+$P_p(S\geq k)<a$, by monotonicity. Exclusion by the upper
+endpoint requires $P_p(S\leq k)<a$. Each event has probability
+at most $a$ by Proposition~\ref{prop:discrete-tail-pvalues}.
+The union has probability at most $2a=\alpha$.
+\end{proof}
+
+\begin{example}[Coverage on a finite space]
+\label{ex:confidence-binomial-boundary}
+At count zero the binomial interval is
+$[0,1-(\alpha/2)^{1/n}]$ since $P_p(S=0)=(1-p)^n$.
+At count $n$ it is $[(\alpha/2)^{1/n},1]$.
+At $p=0$ and $p=1$ the true label is included with probability
+one, so the interval's uniform coverage guarantee can be
+strict.
+\end{example}
+
+\begin{example}[An exact randomized one-sided bound]
+\label{ex:confidence-binomial-randomized-bound}
+Let $S$ be the binomial count and let $U$ be independent and
+uniform on $[0,1]$. Put
+\[
+C(S,U)=\{p\in[0,1]:\widetilde p_p^+(S,U)>\alpha\}.
+\]
+The graph is measurable since for each $s$ the randomized
+tail is a polynomial in $p$ with coefficients depending
+continuously on $U$. Under the true $p$ it is uniform by
+Proposition~\ref{prop:discrete-tail-pvalues}, so the coverage
+is $1-\alpha$ even at $p=0,1$. For fixed $(s,u)$ the tail is
+$(1-u)P_p(S>s)+uP_p(S\geq s)$, a nondecreasing function of
+$p$. Thus $C$ is an upper interval in the parameter space,
+possibly empty or the whole space.
+\end{example}
+
+\subsection{Exercises}
+\label{subsec:exercises-6-3}
+
+\begin{exercise}[Reading coverage]
+\label{exer:coverage-from-acceptance}
+If a point-null test rejects the true label $t$ with probability
+$0.04$ at every $t$, find the coverage of its inversion.
+\end{exercise}
+
+\begin{exercise}[Restricting the parameter space]
+\label{exer:confidence-restricted-parameter}
+For the normal mean interval in Example~\ref{ex:confidence-normal-known-variance},
+intersect the interval with a known parameter space $[0,\infty)$.
+Prove that coverage remains exact at every allowed label.
+\end{exercise}
+
+\begin{exercise}[Randomization on a singleton model]
+\label{exer:confidence-singleton-randomization}
+For a model with one label and a constant observation, describe
+all possible coverages of nonrandomized confidence sets. Construct
+a randomized confidence set with coverage $1-\alpha$.
+\end{exercise}
+
+\begin{exercise}[When the set is empty]
+\label{exer:confidence-empty-set-bound}
+Show that a level-$1-\alpha$ confidence procedure produces the
+empty set with probability at most $\alpha$ at each label,
+provided the empty-set event is measurable.
+\end{exercise}
+
+\begin{exercise}[Inversion on two labels]
+\label{exer:confidence-two-label-inversion}
+Let the labels be $0,1$ and let $P_t(X=t)=3/4$ for a binary
+observation. Invert the tests that each reject their own label
+when $X\ne t$. Find the resulting set and its coverage.
+\end{exercise}
+
+\begin{exercise}[An upper bound for a normal mean]
+\label{exer:confidence-normal-upper-bound}
+Invert the lower-tail point-null tests at level $\alpha$ for
+a normal mean with known variance. Write the resulting
+one-sided confidence set and verify coverage directly.
+\end{exercise}
+
+\begin{exercise}[Interval length and sample size]
+\label{exer:confidence-normal-fixed-width}
+In Example~\ref{ex:confidence-normal-known-variance}, find
+the smallest $n\geq1$ giving interval length at most $w>0$.
+\end{exercise}
+
+\begin{exercise}[A pivot for a uniform minimum]
+\label{exer:confidence-uniform-minimum}
+For $n$ iid draws from $\operatorname{Unif}[0,\theta]$, $\theta>0$,
+find the law of the sample minimum divided by $\theta$. Invert a
+central pivot region to obtain an interval for $\theta$.
+\end{exercise}
+
+\begin{exercise}[Reallocating pivot tails]
+\label{exer:confidence-uniform-pivot-tail-allocation}
+In Example~\ref{ex:confidence-uniform-endpoint}, invert
+$[a,1-b]$ for $a>0$, $b\geq0$, and $a+b=\alpha$.
+Compare the lower and upper endpoints with those for $b=0$.
+\end{exercise}
+
+\begin{exercise}[A transformed normal interval]
+\label{exer:confidence-normal-exp-transform}
+For a normal mean with known variance, transform both
+endpoints of the usual interval by the exponential map.
+Find its coverage for the target $e^\theta$.
+\end{exercise}
+
+\begin{exercise}[A finite upper-tail p-value]
+\label{exer:confidence-discrete-tail-table}
+Let $S$ have masses $(1/2,1/3,1/6)$ at $0,1,2$ under a
+point null. Tabulate $P(S\geq s)$ and compute the size of
+the test that rejects when this tail is at most $1/4$.
+\end{exercise}
+
+\begin{exercise}[Randomization intervals]
+\label{exer:confidence-discrete-randomization-table}
+For the law in Exercise~\ref{exer:confidence-discrete-tail-table},
+list the three intervals used by the randomized upper-tail
+$p$-value. Compute its rejection probability at level $1/4$.
+\end{exercise}
+
+\begin{exercise}[Omitting the observed atom]
+\label{exer:confidence-strict-tail-invalid}
+For one fair Bernoulli draw, show that $P(S>s)$ evaluated
+at the observed $s=S$ is not a valid $p$-value. Exhibit a
+level at which it rejects too often.
+\end{exercise}
+
+\begin{exercise}[A two-tailed p-value]
+\label{exer:confidence-two-tail-union-bound}
+Suppose $p^-,p^+$ are valid $p$-values under the same law.
+Show that $\min\{1,2\min(p^-,p^+)\}$ is also valid.
+Which inequality in the proof can be strict?
+\end{exercise}
+
+\begin{exercise}[Endpoints with one draw]
+\label{exer:confidence-cp-one-draw}
+Write the Clopper--Pearson intervals at counts zero and one
+when $n=1$. Determine the coverage function on $[0,1]$,
+including at the two interior interval endpoints.
+\end{exercise}
+
+\begin{exercise}[Binomial symmetry]
+\label{exer:confidence-cp-symmetry}
+Show that the equal-tail binomial endpoints satisfy
+$L_k=1-U_{n-k}$ for $0\leq k\leq n$.
+\end{exercise}
+
+\begin{exercise}[A randomized lower bound at the boundary]
+\label{exer:confidence-randomized-bound-zero}
+In Example~\ref{ex:confidence-binomial-randomized-bound}, take
+the true parameter to be zero. Determine the event in $U$
+on which zero belongs to the set. When does the set contain
+the entire parameter space?
+\end{exercise}
+
+\begin{exercise}[Conservatism at an interior label]
+\label{exer:confidence-binomial-interior-conservatism}
+For $n=2$ and nominal confidence level $3/4$, use the
+binomial tail probabilities at $p=1/2$ to compute the
+coverage of the equal-tail interval there.
+\end{exercise}
+
+\begin{exercise}[Nested tests and confidence sets]
+\label{exer:confidence-inversion-nesting}
+Suppose $\phi_\alpha(x,t)$ is nondecreasing in $\alpha$ for
+every $(x,t)$, with level $\alpha$ at each point null.
+Use one common $U$ to prove nesting of the inverted
+confidence sets as $\alpha$ varies.
+\end{exercise}
+
+\begin{exercise}[Expected length from inclusion probabilities]
+\label{exer:confidence-expected-length-tonelli}
+Let $\Theta\subseteq\R$ be Borel and let $C$ have a
+measurable graph. Use Tonelli to write the expected Lebesgue
+measure of $C(X)$ under $P_\theta$ as an integral of
+inclusion probabilities. Interpret the integrand for a false
+label in terms of the inverted test.
+\end{exercise}
+
+\begin{exercise}[Exclusion probabilities for one-sided intervals]
+\label{exer:confidence-normal-ump-lower-bound}
+In the known-variance normal location model, restrict to
+confidence procedures whose sets are upper intervals in $\R$.
+For fixed $t$, compare exclusion probabilities under $\theta>t$
+using Theorem~\ref{thm:ump-monotone-likelihood-ratio}.
+Show that inverting its tests maximizes those exclusion
+probabilities simultaneously for all $t<\theta$.
+\end{exercise}
+
+\begin{exercise}[An exact two-sided randomized binomial procedure]
+\label{exer:confidence-binomial-two-sided-randomized}
+Use $R=\widetilde p_p^+(S,U)$ and reject the point null $p$
+when $R\leq\alpha/2$ or $R\geq1-\alpha/2$. Prove that
+the inverted set has exact coverage at every label and
+is an interval when nonempty. Allow open endpoints.
+\end{exercise}
+
+\begin{exercise}[Testing power and confidence-set discrimination]
+\label{exer:confidence-false-label-power}
+For two normal means $t<\theta$, invert the family of
+level-$\alpha$ upper-tail tests. Compute $P_\theta(t\notin C(X))$.
+Show that no other level-$1-\alpha$ confidence procedure
+excludes $t$ with greater probability under $P_\theta$.
+\end{exercise}
+
+\begin{exercise}[Inverting tests for a function of the parameter]
+\label{exer:confidence-target-composite-null}
+Let $g:\Theta\to\R$ be measurable. For each possible target
+value $r$, suppose a product-measurable test family has
+size at most $\alpha$ for the null $\{\theta:g(\theta)=r\}$.
+Construct a confidence set for $g(\theta)$ and prove its
+uniform coverage. Explain how to use a fixed independent
+uniform variable for all target values.
+\end{exercise}
+
+
 % BEGIN NOTATION INDEX
 \chapter*{Notation index}
 \label{chap:notation-index}
