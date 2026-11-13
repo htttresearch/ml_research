@@ -8835,6 +8835,394 @@ attains the bound at any $\lambda>0$.
 \end{exercise}
 
 
+
+\chapter{Tests and confidence procedures}
+\label{chap:tests-confidence}
+\notationgroup{Tests and confidence procedures}
+\section{Hypotheses, randomized tests, size, and power}
+\label{sec:hypotheses-size-power}
+
+Fix an experiment $\mathcal E=(\mathsf X,\mathcal A,
+(P_\theta)_{\theta\in\Theta})$.
+
+\subsection{Hypotheses and test functions}
+\label{subsec:test-functions}
+
+\begin{definition}[Hypotheses and tests]
+\label{def:hypotheses-test-function}
+\indexnotation{\Theta_0,\ \Theta_1,\ \phi}{Null and alternative parameter sets, and conditional probability of rejection.}
+Let $\Theta_0,\Theta_1$ be nonempty disjoint subsets of $\Theta$,
+called the \emph{null} and \emph{alternative} parameter sets.
+A hypothesis is \emph{simple} if it specifies a single observation
+law and \emph{composite} if it specifies more than one.
+A \emph{test function} is a measurable $\phi:\mathsf X\to[0,1]$.
+At record $x$ the probability of rejecting the null is $\phi(x)$.
+A test is \emph{nonrandomized} if $\phi$ takes only the values zero
+and one. Its \emph{rejection region} is $\{x:\phi(x)=1\}$.
+\end{definition}
+
+\begin{definition}[Power, errors, size, and level]
+\label{def:test-size-power}
+\indexnotation{\beta_\phi(\theta),\ \alpha(\phi)}{Power function and size of a test.}
+The \emph{power function} is $\beta_\phi(\theta)=\mathbb E_\theta\phi(X)$.
+At $\theta\in\Theta_0$ this is the probability of a \emph{type I error}.
+At $\theta\in\Theta_1$, the probability of a \emph{type II error} is
+$1-\beta_\phi(\theta)$. The \emph{size} is
+\[
+\alpha(\phi)=\sup_{\theta\in\Theta_0}\beta_\phi(\theta).
+\]
+For $0\leq\alpha\leq1$, a test has \emph{level} $\alpha$ if its
+size is at most $\alpha$.
+\end{definition}
+
+\begin{proposition}[Binary decisions and randomized tests]
+\label{prop:binary-decision-test}
+Test functions correspond bijectively to decision kernels with
+actions $0$ (retain the null) and $1$ (reject it). The test
+$\phi$ is implemented by rejecting when $U<\phi(X)$, where
+$U$ is an independent uniform random variable on $[0,1]$.
+A mixture $t\phi+(1-t)\psi$ of two test functions, for $t\in[0,1]$,
+has power $t\beta_\phi+(1-t)\beta_\psi$. In particular,
+the level-$\alpha$ tests form a convex set.
+\end{proposition}
+\begin{proof}
+In Definition~\ref{def:randomized-rule}, the two masses of the
+kernel at $x$ are $1-\phi(x)$ and $\phi(x)$. These determine the
+kernel, and any kernel on these actions gives a measurable $\phi$.
+The independent uniform variable implements this kernel since the
+Lebesgue measure of $\{u\in[0,1]:u<\phi(x)\}$ is $\phi(x)$.
+Linearity of integration gives the power of a mixture. Under each
+null label, a mixture of two powers at most $\alpha$ is at most
+$\alpha$.
+\end{proof}
+
+\begin{example}[Two labels with the same observation law]
+\label{ex:test-bernoulli-aliased}
+Let $P_\theta$ be the Bernoulli law with probability $\theta^2$,
+where $\theta\in[-1,1]$. For null $\{-1/2\}$ and alternative
+$\{1/2\}$, every test has the same rejection probability under
+both hypotheses. Thus every level-$\alpha$ test has power at
+most $\alpha$ at the alternative. The constant test
+$\phi(x)=\alpha$ attains this power.
+\end{example}
+
+\subsection{Calibrating rejection probabilities}
+\label{subsec:test-calibration}
+
+\begin{proposition}[Randomization at a threshold]
+\label{prop:test-threshold-randomization}
+For a measurable real statistic $T$, threshold $c$, and
+$\gamma\in[0,1]$, define
+\[
+\phi_{c,\gamma}(x)=\mathbf 1_{\{T(x)>c\}}
++\gamma\mathbf 1_{\{T(x)=c\}} .
+\]
+Its power is $P_\theta(T>c)+\gamma P_\theta(T=c)$.
+For a simple null with law $P_0$, if
+$P_0(T>c)\leq\alpha\leq P_0(T\geq c)$ and $P_0(T=c)>0$, then
+$\gamma=(\alpha-P_0(T>c))/P_0(T=c)$ gives size $\alpha$.
+If $P_0(T=c)=0$ and the same inequalities hold, every $\gamma$
+gives size $\alpha$.
+\end{proposition}
+\begin{proof}
+Integrate the two indicators. When the atom has positive mass,
+the inequalities on $\alpha$ put the stated $\gamma$ in $[0,1]$.
+Substitution gives size $\alpha$. When the atom has mass zero
+the two tail probabilities are equal, so the inequalities already
+force the size to be $\alpha$.
+\end{proof}
+
+\begin{proposition}[Calibration at the upper endpoint of a binomial null]
+\label{prop:test-binomial-composite-calibration}
+Let $S$ be the number of successes in $n\geq1$ iid Bernoulli
+trials with parameter $p\in[0,1]$. Every test of the form $r(S)$
+with $r$ nondecreasing has nondecreasing power in $p$.
+For $\Theta_0=[0,p_0]$, its size is its power at $p_0$.
+For every $\alpha\in[0,1]$, a test of the form $\phi_{c,\gamma}$
+with $T=S$ attains size $\alpha$.
+\end{proposition}
+\begin{proof}
+On a common probability space take independent uniforms
+$U_1,\ldots,U_n$ on $[0,1]$. For each $p$ the sum
+$\sum_i\mathbf 1_{\{U_i<p\}}$ has the required binomial law.
+This sum is nondecreasing in $p$ for every realization, hence so is
+its image under $r$. Taking expectations proves monotonicity.
+The null includes its upper endpoint, so the supremum is attained
+there. Under $p_0$ the tail probabilities $P_{p_0}(S\geq j)$ for
+$j=0,\ldots,n+1$ decrease from one to zero. Some consecutive pair
+brackets $\alpha$. Use that pair as $P_{p_0}(S\geq c)$ and
+$P_{p_0}(S>c)$ in Proposition~\ref{prop:test-threshold-randomization}.
+\end{proof}
+
+\begin{example}[Exact size for two Bernoulli trials]
+\label{ex:test-binomial-randomized-tie}
+For two iid Bernoulli trials, take null $p\leq1/2$ and target
+size $1/2$. With $S$ the count, reject at $S=2$, reject with
+probability $1/2$ at $S=1$, and retain the null at $S=0$.
+The power is $p^2+\tfrac12(2p(1-p))=p$, so the size is $1/2$.
+The nonrandomized upper-tail test rejecting only at $S=2$
+has size $1/4$. Rejecting at both $S=1$ and $S=2$ gives size
+$3/4$.
+\end{example}
+
+\begin{example}[A continuous upper-tail test]
+\label{ex:test-normal-upper-tail}
+Let $X_1,\ldots,X_n$ be iid $N(\theta,v)$ for known $v>0$,
+and take null $\theta\leq\theta_0$. Let $\Phi$ be the standard
+normal distribution function and let $\Phi(z)=1-\alpha$ for
+$0<\alpha<1$. Reject when
+$\overline X>\theta_0+z\sqrt{v/n}$. The power is
+\[
+1-\Phi\bigl(z+(\theta_0-\theta)\sqrt{n/v}\bigr).
+\]
+It increases with $\theta$, equals $\alpha$ at $\theta_0$,
+and exceeds $\alpha$ at every $\theta>\theta_0$. The normal
+law gives zero mass to the threshold, so a tie rule has no
+effect.
+\end{example}
+
+\begin{example}[A null whose largest rejection probability is a limit]
+\label{ex:test-open-null-size}
+Observe one Bernoulli bit and reject on success. Take null
+$p<1/2$ within $[0,1]$ and alternative $p\geq1/2$. The power
+at $p$ is $p$. The size is $1/2$, though the probability of
+rejection is strictly below $1/2$ at every null label.
+\end{example}
+
+\subsection{Testing and separation of laws}
+\label{subsec:test-separation-laws}
+
+\begin{theorem}[Separation of two laws by tests]
+\label{thm:test-total-variation-gap}
+For probability laws $P,Q$ on $(\mathsf X,\mathcal A)$,
+\[
+\sup_{0\leq\phi\leq1}\left(\int\phi\,dQ-\int\phi\,dP\right)
+=d_{\mathrm{TV}}(P,Q),
+\]
+where the supremum ranges over measurable tests and is attained by
+a nonrandomized test. Consequently the smallest possible sum
+of the two error probabilities for testing $P$ against $Q$ is
+$1-d_{\mathrm{TV}}(P,Q)$. A test with type I error at most $\alpha$
+has power at most $\alpha+d_{\mathrm{TV}}(P,Q)$ at $Q$.
+\end{theorem}
+\begin{proof}
+Take densities $p,q$ relative to $P+Q$. The difference is
+$\int\phi(q-p)\,d(P+Q)$. It is at most
+$\int(q-p)_+\,d(P+Q)$, and equality holds for the indicator
+of $\{q>p\}$. The positive and negative parts of $q-p$ have
+equal integrals because both laws have mass one. Thus the positive
+part integrates to $d_{\mathrm{TV}}(P,Q)$ by
+Proposition~\ref{prop:total-variation-density}.
+The sum of errors is one minus the displayed difference, which
+proves the minimum. The power bound follows by adding the type I
+error to the bound on the difference.
+\end{proof}
+
+\begin{example}[The test attaining total variation]
+\label{ex:test-tv-four-outcomes}
+Use the laws of Example~\ref{ex:statistic-increased-testing-risk},
+\[
+P=(1/2,1/8,1/4,1/8),\qquad Q=(1/8,1/4,1/8,1/2).
+\]
+Reject $P$ on $\{2,4\}$, where $Q$ has larger mass. The type I
+error is $1/4$ and the power at $Q$ is $3/4$, so the sum of
+errors is $1/2$. The total variation is $1/2$, which certifies
+optimality for this sum. The statistic grouping the first two
+and last two outcomes yields total variation $1/4$, so the
+smallest error sum based on that statistic is $3/4$.
+\end{example}
+
+\begin{example}[A test with both errors zero]
+\label{ex:test-disjoint-support}
+For null $P=\operatorname{Unif}[0,1]$ and alternative
+$Q=\operatorname{Unif}[1,2]$, reject when $X>1$. Under $P$ the
+rejection probability is zero. Under $Q$ the only possible
+retention in its support is at $1$, which has probability zero,
+so the power is one. In this case $d_{\mathrm{TV}}(P,Q)=1$.
+\end{example}
+
+\subsection{Exercises}
+\label{subsec:exercises-6-1}
+
+\begin{exercise}[A test with one bit]
+\label{exer:test-one-bit-power}
+Let $X\sim\operatorname{Bernoulli}(p)$ and set $\phi(0)=a$ and
+$\phi(1)=b$, with $a,b\in[0,1]$. Compute the power at every $p$.
+When is the power nondecreasing?
+\end{exercise}
+
+\begin{exercise}[Two types of error]
+\label{exer:test-two-error-probabilities}
+In the preceding exercise take $a=0$, $b=3/4$, null $p=1/4$,
+and alternative $p=3/4$. Compute both error probabilities.
+\end{exercise}
+
+\begin{exercise}[Size and level]
+\label{exer:test-size-versus-level}
+A test has rejection probabilities $1/8$ and $1/4$ at its two null
+labels. Give its size and the set of levels at which it qualifies.
+\end{exercise}
+
+\begin{exercise}[A composite alternative]
+\label{exer:test-composite-alternative-power}
+For one Bernoulli draw, reject on success. Take null $p\leq1/3$
+and alternative $p>1/3$. Find the size and the supremum of the
+type II error over the alternative.
+\end{exercise}
+
+\begin{exercise}[An uninformative test]
+\label{exer:test-constant-level}
+For an arbitrary experiment give a test whose power at every label
+is $\alpha$. What are its errors at the null and alternative labels?
+\end{exercise}
+
+\begin{exercise}[A deterministic test as a kernel]
+\label{exer:test-indicator-kernel}
+Given a measurable set $A$, write the two action probabilities of
+the kernel that rejects precisely on $A$. Verify measurability.
+\end{exercise}
+
+\begin{exercise}[Mixing rejection regions]
+\label{exer:test-mixture-overlap}
+Let $A,B$ be measurable rejection regions. Express the test that
+chooses $A$ with probability $t$ and $B$ otherwise at each of the
+four possible membership patterns. Compute its power.
+\end{exercise}
+
+\begin{exercise}[The size of a mixture]
+\label{exer:test-size-mixture-strict}
+Under the null observe a point mass at either zero or one. Take
+two tests that reject at zero and one respectively. Compare the
+size of their equal mixture with the average of their sizes.
+\end{exercise}
+
+\begin{exercise}[Calibration in a finite law]
+\label{exer:test-finite-threshold-gamma}
+Let a statistic have masses $(1/2,1/3,1/6)$ at $0,1,2$ under
+the simple null. Choose an upper threshold and tie probability
+for exact size $1/3$.
+\end{exercise}
+
+\begin{exercise}[A threshold of zero mass]
+\label{exer:test-zero-threshold-atom}
+Let $T$ be uniform on $[0,1]$ under the null. Find an upper
+threshold for exact size $\alpha\in(0,1)$, and show that the tie
+probability has no effect.
+\end{exercise}
+
+\begin{exercise}[An exact lower-tail test]
+\label{exer:test-binomial-lower-tail}
+For the Bernoulli count with $n=2$, take null $p\geq1/2$.
+Give a nonincreasing count test of size $1/2$ and compute its power.
+\end{exercise}
+
+\begin{exercise}[A binomial upper-tail calculation]
+\label{exer:test-binomial-three-calibration}
+Take $n=3$ Bernoulli observations and null $p\leq1/2$.
+Construct an upper-tail count test of size $1/4$ and compute
+its power at $p=3/4$.
+\end{exercise}
+
+\begin{exercise}[An open binomial null]
+\label{exer:test-open-binomial-boundary}
+For $n\geq1$ and null $0\leq p<p_0<1$, show that the size of
+a nondecreasing count test equals its power evaluated at $p_0$.
+Use continuity of the binomial power function.
+\end{exercise}
+
+\begin{exercise}[Normal sample size]
+\label{exer:test-normal-power-sample-size}
+In Example~\ref{ex:test-normal-upper-tail}, fix $\theta_1>\theta_0$,
+$0<\alpha<1/2$, and $1/2<b<1$. Find the smallest integer $n\geq1$
+giving power at least $b$ at $\theta_1$.
+\end{exercise}
+
+\begin{exercise}[The opposite orientation]
+\label{exer:test-total-variation-symmetry}
+Swap the roles of $P$ and $Q$ in Theorem~\ref{thm:test-total-variation-gap}.
+Relate an optimal test for one orientation to an optimal test for
+the other.
+\end{exercise}
+
+\begin{exercise}[Two overlapping uniforms]
+\label{exer:test-overlapping-uniforms}
+Take $P$ uniform on $[0,1]$ and $Q$ uniform on $[a,a+1]$ with
+$0<a<1$. Find their total variation distance and a rejection
+region attaining the minimum sum of errors.
+\end{exercise}
+
+\begin{exercise}[A coarsened observation]
+\label{exer:test-tv-constant-statistic}
+When a test is based on a constant statistic, characterize all
+possible pairs of type I and type II errors for simple hypotheses.
+Compare their sum with the optimum using the full record.
+\end{exercise}
+
+\begin{exercise}[Power and proximity of laws]
+\label{exer:test-power-lipschitz}
+For any test $\phi$, prove
+$|\beta_\phi(\theta)-\beta_\phi(\vartheta)|\leq d_{\mathrm{TV}}(P_\theta,P_\vartheta)$.
+Deduce continuity of power at a label where the laws vary
+continuously in total variation.
+\end{exercise}
+
+\begin{exercise}[The value of randomization for one trial]
+\label{exer:test-one-bernoulli-optimal-power}
+Test $p=p_0$ against $p=p_1$ from one Bernoulli draw, with
+$0<p_0<p_1<1$. Maximize power subject to size at most $\alpha$
+by optimizing over $\phi(0),\phi(1)\in[0,1]$. Derive the
+power as a function of $\alpha$ and identify the levels at
+which a nonrandomized test attains it.
+\end{exercise}
+
+\begin{exercise}[Convexity of the achievable error pairs]
+\label{exer:test-error-region-finite}
+For simple hypotheses on a finite space, show that the set of
+achievable error pairs is the convex hull of the pairs from
+nonrandomized tests. Represent any randomized test as a
+mixture over rejection regions by choosing each outcome for
+the region with the specified rejection probability.
+\end{exercise}
+
+\begin{exercise}[All tests attaining the total variation gap]
+\label{exer:test-tv-equality-set}
+Use densities relative to $P+Q$ to characterize every test attaining
+the supremum in Theorem~\ref{thm:test-total-variation-gap}.
+Explain the freedom on the set where the two densities agree.
+\end{exercise}
+
+\begin{exercise}[Testing against a common mixture]
+\label{exer:test-composite-mixture-tv}
+Let $P_1,\ldots,P_m$ be null laws and $Q$ a simple alternative.
+If $\int\phi\,dP_i\leq\alpha$ for each $i$, show that
+\[
+\int\phi\,dQ\leq\alpha+
+\inf_{w}\,d_{\mathrm{TV}}\!\left(Q,\sum_i w_iP_i\right),
+\]
+where the infimum is over probability weights. Give an example
+where $Q$ equals a mixture of distinct null laws while it is
+different from every individual null law.
+\end{exercise}
+
+\begin{exercise}[A bound from relative entropy]
+\label{exer:test-error-sum-pinsker}
+Combine Theorems~\ref{thm:test-total-variation-gap}
+and~\ref{thm:pinsker} to bound the minimum sum of errors from
+below in terms of $D(P\|Q)$. Apply the bound to $n$ independent
+$N(0,1)$ observations against $n$ independent $N(h,1)$
+observations. Evaluate the result for $h=c/\sqrt n$.
+\end{exercise}
+
+\begin{exercise}[Sufficiency and the attainable power functions]
+\label{exer:test-sufficiency-power-region}
+Suppose a statistic $T$ has a common conditional kernel as in
+Definition~\ref{def:common-conditional-kernel}. Given a test on
+the full record, construct a randomized test based on $T$ with
+the same power at every label. Prove that the two experiments
+have identical attainable power functions.
+\end{exercise}
+
+
 % BEGIN NOTATION INDEX
 \chapter*{Notation index}
 \label{chap:notation-index}
