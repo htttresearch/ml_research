@@ -11479,6 +11479,217 @@ be the first two coordinates of an exchangeable triple? Use the
 variance of the sum of the three bits.
 \end{exercise}
 
+\section{Posterior decisions and credible sets}
+\label{sec:bayesian-decisions-and-credible-sets}
+
+\subsection{Posterior medians and quantiles}
+\label{subsec:bayesian-posterior-quantiles}
+
+For a real target $Z=g(U)$, Proposition~\ref{prop:bayes-squared-mean}
+gives the posterior mean as the Bayes action under squared loss.
+We now change the loss.
+
+\begin{definition}[Quantiles]
+\label{def:bayesian-real-quantiles}
+\indexnotation{F(a-),\ q_\tau(F)}{Left limit of the cdf and its lower quantile.}
+Let $\nu$ be a probability law on $\R$ with distribution function
+$F(a)=\nu((-\infty,a])$. Write $F(a-)=\nu((-\infty,a))$.
+For $0<\tau<1$, a \emph{$\tau$-quantile} is any $a\in\R$ with
+\[
+F(a-)\leq \tau\leq F(a).
+\]
+The \emph{lower $\tau$-quantile} is
+$q_\tau(F)=\inf\{a\in\R:F(a)\geq\tau\}$. A $1/2$-quantile
+is a \emph{median}.
+\end{definition}
+
+\begin{definition}[Quantile loss]
+\label{def:bayesian-quantile-loss}
+\indexnotation{\ell_\tau(z,a)}{Quantile loss for target \(z\) and action \(a\).}
+For $0<\tau<1$ and $z,a\in\R$, the \emph{quantile loss} is
+\[
+\ell_\tau(z,a)=\tau(z-a)_+ +(1-\tau)(a-z)_+,
+\qquad t_+=\max\{t,0\}.
+\]
+For $\tau=1/2$ this is half the absolute loss. If the costs per
+unit of underestimation and overestimation are $c_u,c_o>0$,
+respectively, their loss is $(c_u+c_o)\ell_\tau$ with
+$\tau=c_u/(c_u+c_o)$.
+\end{definition}
+
+\begin{proposition}[Optimal actions for a fixed law]
+\label{prop:bayesian-quantile-loss-minimizers}
+Suppose $\nu$ has finite first absolute moment and set
+$R_\tau(a)=\int_{\R}\ell_\tau(z,a)\,\nu(dz)$. For $a<b$,
+\begin{equation}
+R_\tau(b)-R_\tau(a)=\int_a^b (F(t)-\tau)\,dt.
+\label{eq:bayesian-quantile-risk-gap}
+\end{equation}
+The minimizing actions are exactly the $\tau$-quantiles.
+The lower quantile is finite and is the smallest minimizer.
+\end{proposition}
+\begin{proof}
+As a function of the action, $\ell_\tau(z,\cdot)$ is piecewise affine,
+with slopes $-\tau$ to the left of $z$ and $1-\tau$ to its right.
+Thus its increment from $a$ to $b$ is the integral of
+$\mathbf 1_{\{z\leq t\}}-\tau$ over $[a,b]$. The integrand is bounded,
+so Fubini gives \eqref{eq:bayesian-quantile-risk-gap}.
+
+If $F(a-)\leq\tau\leq F(a)$, then $F(t)-\tau\leq0$ for $t<a$
+and $F(t)-\tau\geq0$ for $t\geq a$. The increment formula shows
+that $a$ minimizes the loss. Conversely, the left and right
+derivatives at $a$ are $F(a-)-\tau$ and $F(a)-\tau$ by the
+corresponding one-sided limits of $F$. At a minimum they are
+respectively nonpositive and nonnegative.
+
+The limits of $F$ at infinity give $q=q_\tau(F)\in\R$.
+Right-continuity gives $F(q)\geq\tau$, and $F(t)<\tau$ for
+$t<q$ gives $F(q-)\leq\tau$. Every minimizer has $F(a)\geq\tau$,
+so $q$ is the smallest one.
+\end{proof}
+
+\begin{theorem}[The posterior quantile rule]
+\label{thm:bayesian-posterior-quantile-rule}
+\indexnotation{F_x,\ d_\tau(x)}{Posterior cdf and lower quantile rule.}
+Suppose a posterior kernel $\Pi$ exists and $g:\Theta\to\R$ is
+measurable with $\int |g|\,d\pi<\infty$. Put
+\[
+F_x(t)=\Pi(x,\{\theta:g(\theta)\leq t\}),\qquad
+d_\tau(x)=q_\tau(F_x).
+\]
+For loss $L(\theta,a)=\ell_\tau(g(\theta),a)$ and real actions,
+$d_\tau$ is a measurable Bayes rule with finite Bayes risk.
+A randomized rule is Bayes if and only if it assigns probability
+one to the $\tau$-quantiles of $F_x$ for $M_\pi$-almost every $x$.
+In particular, the same assertions apply to medians for absolute loss.
+\end{theorem}
+\begin{proof}
+For every $t\in\R$, $\{x:d_\tau(x)\leq t\}=\{x:F_x(t)\geq\tau\}$
+by the definition and right-continuity of $F_x$. The latter set
+is measurable by the kernel property. Proposition~\ref{prop:bayesian-posterior-integration}
+gives $\int |g(\theta)|\,\Pi(x,d\theta)<\infty$ almost surely.
+At each such $x$, Proposition~\ref{prop:bayesian-quantile-loss-minimizers}
+identifies the minimizers of the posterior expected loss $C(x,a)$.
+Equation~\eqref{eq:posterior-risk-averaging} gives optimality
+of $d_\tau$. Its risk is finite since $C(x,d_\tau(x))\leq C(x,0)$
+almost surely and $C(x,0)$ is bounded by the posterior absolute moment.
+
+The excess Bayes risk of a rule $K$ is the integral of the
+nonnegative gap $C(x,a)-C(x,d_\tau(x))$ against
+$M_\pi(dx)K(x,da)$ on the same full-measure set. It vanishes
+exactly when the gap vanishes $K(x,\cdot)$-almost surely for
+$M_\pi$-almost every $x$. This proves the characterization.
+\end{proof}
+
+\begin{example}[A flat interval of optimal actions]
+\label{ex:bayesian-quantile-flat-interval}
+Give $0$ and $4$ posterior masses $2/5$ and $3/5$.
+For $\tau=2/5$, every $a\in[0,4]$ is a quantile, and
+$R_{2/5}(a)=24/25$ throughout the interval. Indeed,
+\[
+R_{2/5}(a)=\frac25\frac35 a+\frac35\frac25(4-a)
+\qquad(0\leq a\leq4).
+\]
+The lower $2/5$-quantile is $0$. The unique median is $4$,
+and the posterior mean is $12/5$.
+\end{example}
+
+\begin{example}[A beta posterior]
+\label{ex:bayesian-quantile-beta}
+After one success under a uniform prior, the posterior for the
+Bernoulli rate is $\operatorname{Beta}(2,1)$ by
+Theorem~\ref{thm:bayesian-beta-bernoulli}. Its density is $2p$ on
+$(0,1)$, so $F_x(t)=t^2$ there. Thus the optimal action under
+absolute loss is $1/\sqrt2$. If underestimation costs three
+times as much per unit as overestimation, the action is
+$\sqrt{3}/2$.
+\end{example}
+
+\begin{example}[Estimating a mean and predicting a measurement]
+\label{ex:bayesian-quantile-normal-prediction}
+In Example~\ref{ex:bayesian-normal-mean-and-draw} the mean has
+posterior $N(3/2,1/2)$ and a future measurement has predictive
+law $N(3/2,9/2)$. For either law $N(m,v)$ the lower
+$\tau$-quantile is $m+\sqrt v\,z_\tau$, where $z_\tau$ is the
+standard normal quantile. Indeed its distribution function at
+$a$ is $\Phi((a-m)/\sqrt v)$.
+At $\tau=3/4$ the two actions are
+$3/2+z_{3/4}/\sqrt2$ and $3/2+3z_{3/4}/\sqrt2$.
+At $\tau=1/2$ they both equal $3/2$.
+\end{example}
+
+\begin{example}[An asymmetric decision from a Bernoulli record]
+\label{ex:bayesian-quantile-two-rate-decision}
+In Example~\ref{ex:bayesian-unequal-bernoulli-rates}, use
+$\ell_{3/4}$ to estimate the rate. After success the lower rate
+has posterior mass $1/2$, so the optimal action is $3/5$.
+Its posterior loss is $(1/2)(1/4)(2/5)=1/20$.
+After failure the lower rate has mass $6/7$, so the optimal
+action is $1/5$, with loss $(1/7)(3/4)(2/5)=3/70$.
+The Bayes risk is $(3/10)(1/20)+(7/10)(3/70)=9/200$.
+\end{example}
+
+\begin{exercise}[Quantiles of a general two-point law]
+\label{exer:bayesian-quantile-two-point}
+Give $u<v$ masses $p$ and $1-p$ with $0<p<1$. Determine the
+set of $\tau$-quantiles for $\tau<p$, $\tau=p$, and $\tau>p$.
+Compute the minimum quantile risk in each case.
+\end{exercise}
+
+\begin{exercise}[Quantiles and their levels]
+\label{exer:bayesian-quantile-monotonicity}
+Prove that $\tau\mapsto q_\tau(F)$ is nondecreasing and
+left-continuous on $(0,1)$. For the law with masses $1/2$ at
+$0$ and $1$, find a level where it is discontinuous from the right.
+\end{exercise}
+
+\begin{exercise}[A strictly increasing transformation]
+\label{exer:bayesian-quantile-transformation}
+Let $h:\R\to\R$ be strictly increasing and continuous. If $F$ is
+the distribution function of $Z$ and $G$ that of $h(Z)$,
+prove that $q_\tau(G)=h(q_\tau(F))$. Apply this to $h(z)=e^z$
+and $Z\sim N(m,v)$.
+\end{exercise}
+
+\begin{exercise}[A beta posterior after failure]
+\label{exer:bayesian-quantile-beta-failure}
+Under a uniform prior, observe a single Bernoulli failure.
+Find the distribution function of the posterior and its lower
+$\tau$-quantile. Compare the posterior mean and median.
+\end{exercise}
+
+\begin{exercise}[A first moment without a second]
+\label{exer:bayesian-quantile-heavy-tail}
+Take the law with density $\tfrac32 z^{-5/2}$ for $z\geq1$ and
+zero elsewhere. Verify that it has finite first moment and find
+its optimal action for quantile loss. Show that the expected
+squared loss is infinite for every real action.
+\end{exercise}
+
+\begin{exercise}[Quantiles with moving support]
+\label{exer:bayesian-quantile-moving-support}
+For $0<x<1$ in Example~\ref{ex:bayesian-uniform-endpoint-posterior},
+derive the posterior $\tau$-quantile as a function of $x$.
+Find its limits as $x$ tends to zero and one, with $\tau$ fixed.
+\end{exercise}
+
+\begin{exercise}[The cost of moving away from a quantile]
+\label{exer:bayesian-quantile-uniform-gap}
+For the uniform law on $[0,1]$, show that
+$R_\tau(a)-R_\tau(\tau)=(a-\tau)^2/2$ for $a\in[0,1]$.
+Find the two affine formulas for the gap outside $[0,1]$.
+\end{exercise}
+
+\begin{exercise}[Quantile decisions on a grid]
+\label{exer:bayesian-quantile-grid}
+Assume the fixed law has finite first moment and a unique
+$\tau$-quantile $q$. Let the real actions form a finite grid
+with at least one point on either side of $q$. Suppose $q$ lies
+strictly between two adjacent grid points. Show that any optimal grid action is one
+of the two grid points adjacent to $q$. Express the comparison
+of their risks as an integral involving $F$.
+\end{exercise}
+
 % BEGIN NOTATION INDEX
 \chapter*{Notation index}
 \label{chap:notation-index}
