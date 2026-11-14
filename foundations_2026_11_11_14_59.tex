@@ -10617,6 +10617,247 @@ $\Pi(x,B)$. Evaluate it for $A=(1/2,1]$ and $B=(3/4,1]$ in
 Example~\ref{ex:bayesian-magnitude-posterior}.
 \end{exercise}
 
+\subsection{Sequential Bayesian updating}
+\label{subsec:bayesian-sequential-updating}
+
+Let $X$ be an initial observation with law $P_\theta$ at parameter
+$\theta$. Let $\Pi$ be its posterior under $\pi$ and $M_\pi$ its
+predictive law. At a pair $(\theta,x)$ the next observation $Y$ has
+law $K((\theta,x),\cdot)$ on $(\mathsf Y,\mathcal Y)$, where $K$ is
+a probability kernel. The joint law of $(U,X,Y)$ is
+$(\pi\ltimes P)\ltimes K$.
+
+\begin{definition}[Conditional predictive law]
+\label{def:bayesian-conditional-predictive}
+\indexnotation{M(\cdot\mid x)}{Predictive law of the next observation after record \(x\).}
+The \emph{conditional predictive law} of $Y$ after $x$ is
+\[
+M(C\mid x)=\int_\Theta K((\theta,x),C)\,\Pi(x,d\theta)
+\qquad(C\in\mathcal Y).
+\]
+\end{definition}
+
+\begin{theorem}[Updating the posterior with a conditional likelihood]
+\label{thm:bayesian-conditional-update}
+\indexnotation{\Pi^+(x,y;\cdot),\ m(y\mid x)}{Updated posterior and conditional predictive density.}
+Suppose $K((\theta,x),\cdot)$ has a jointly measurable
+nonnegative density $f(\theta,x,y)$ with respect to a fixed
+$\sigma$-finite measure $\nu$ on $\mathsf Y$. Put
+\[
+m(y\mid x)=\int_\Theta f(\theta,x,y)\,\Pi(x,d\theta).
+\]
+Then $M(\cdot\mid x)$ is a conditional law of $Y$ given $X$ and has
+density $m(\cdot\mid x)$ for each $x$. A posterior for $U$ given
+$(X,Y)$ is
+\begin{equation}
+\Pi^+(x,y;B)=
+\frac{\int_B f(\theta,x,y)\,\Pi(x,d\theta)}{m(y\mid x)}
+\quad\text{when }0<m(y\mid x)<\infty .
+\label{eq:bayesian-conditional-update}
+\end{equation}
+The other records form a null set for the law of $(X,Y)$.
+On that set one may use $\Pi(x,\cdot)$.
+\end{theorem}
+\begin{proof}
+The kernel integral formula in Proposition~\ref{prop:joint-action-law}
+gives measurability of $M(C\mid x)$ by using the kernel
+$x\mapsto\Pi(x,\cdot)$ with integrand $K((\theta,x),C)$.
+For each $x$, monotone convergence gives countable additivity and
+the total mass is one. For $A\in\mathcal A$ and $C\in\mathcal Y$,
+reversing the first two coordinates of $\pi\ltimes P$ gives
+\[
+\mathbb P(X\in A,\ Y\in C)
+=\int_A\int_\Theta K((\theta,x),C)\,\Pi(x,d\theta)\,M_\pi(dx).
+\]
+Thus the observation law is $M_\pi\ltimes M$, with $M$ the kernel
+$x\mapsto M(\cdot\mid x)$. Tonelli gives the density $m(y\mid x)$ and
+$\int m(y\mid x)\,\nu(dy)=1$ for each $x$. In particular, $m=0$
+and $m=\infty$ both occur on sets of observation probability zero.
+
+For fixed $B$, the numerator in \eqref{eq:bayesian-conditional-update}
+is measurable in $(x,y)$ by the kernel integral formula, using
+$(x,y)\mapsto\Pi(x,\cdot)$. On the stated set it defines, after
+normalization, a probability measure in $B$. The fallback is a
+kernel on the exceptional set. To verify the posterior identity,
+integrate $\Pi^+(x,y;B)$ over an observation rectangle $A\times C$.
+Cancellation of the density gives
+\[
+\int_A\int_C\int_B f(\theta,x,y)\,\Pi(x,d\theta)\,\nu(dy)\,M_\pi(dx)
+=
+\int_A\int_B K((\theta,x),C)\,\Pi(x,d\theta)\,M_\pi(dx).
+\]
+The inner integral on the left is zero where $m=0$, and the set
+$m=\infty$ is $\nu$-null for each $x$. By reversal of the first
+two coordinates, the right side is $\mathbb P(U\in B,X\in A,Y\in C)$.
+For fixed $B$ the two finite measures on the observation space
+agree on rectangles, so they agree everywhere.
+\end{proof}
+
+\begin{proposition}[Sequential and batch updates in a product experiment]
+\label{prop:bayesian-batch-sequential}
+\indexnotation{\Pi_t,\ m_{1:t}}{Posterior kernel and predictive density for the first \(t\) observations.}
+For the product experiment of Definition~\ref{def:product-experiment},
+suppose each $P_{\theta,i}$ has a jointly measurable finite density
+$f_i(\theta,x_i)$ with respect to a fixed $\sigma$-finite measure
+$\mu_i$. For $1\leq t\leq n$ put
+\[
+L_t(\theta;x_{1:t})=\prod_{i=1}^t f_i(\theta,x_i),\qquad
+m_{1:t}(x_{1:t})=\int_\Theta L_t(\theta;x_{1:t})\,\pi(d\theta),
+\qquad m_{1:0}=1.
+\]
+Here $x_{1:t}=(x_1,\ldots,x_t)$. Starting from $\Pi_0=\pi$,
+there is a set of full predictive probability for the complete
+record on which every prefix has $0<m_{1:t}<\infty$. On this set
+the successive normalized updates give, for every $t$,
+\[
+\Pi_t(x_{1:t},d\theta)
+=\frac{L_t(\theta;x_{1:t})}{m_{1:t}(x_{1:t})}\,\pi(d\theta),
+\qquad
+m(x_t\mid x_{1:t-1})
+=\frac{m_{1:t}(x_{1:t})}{m_{1:t-1}(x_{1:t-1})}.
+\]
+In particular, the final update equals the batch update as a
+probability measure on this set.
+\end{proposition}
+\begin{proof}
+The product of the densities is the joint density at each label
+because it gives the product law on rectangles by Tonelli.
+Proposition~\ref{prop:posterior-from-densities} gives the batch formula
+and implies that each prefix has a positive finite predictive density
+almost surely. Intersect the finitely many prefix events under the full
+predictive law.
+
+At a record in this intersection, suppose the batch formula holds at
+$t-1$. Integrating $f_t(\theta,x_t)$ against that posterior gives
+$m_{1:t}/m_{1:t-1}$. Multiplying the same posterior by $f_t$ and
+dividing by this ratio gives the batch formula at $t$ by
+\eqref{eq:bayesian-conditional-update}. For $t=1$ the update is
+Proposition~\ref{prop:posterior-from-densities}. Induction completes
+the proof.
+\end{proof}
+
+\begin{example}[A success followed by a failure]
+\label{ex:bayesian-sequential-two-rates}
+In Example~\ref{ex:bayesian-unequal-bernoulli-rates}, observe two
+conditionally independent Bernoulli trials. A success first leaves
+posterior masses $1/2,1/2$ on the two rates. The next predictive
+failure probability is $(4/5+2/5)/2=3/5$. A failure changes the mass
+of $3/5$ to $(1/2)(2/5)/(3/5)=1/3$. In the batch update the two
+unnormalized masses are
+\[
+(3/4)(1/5)(4/5)=3/25,\qquad
+(1/4)(3/5)(2/5)=3/50.
+\]
+Their sum $9/50$ is also the product $(3/10)(3/5)$ of the
+successive predictive probabilities.
+\end{example}
+
+\begin{example}[Two records with moving support]
+\label{ex:bayesian-sequential-endpoint}
+In Example~\ref{ex:bayesian-uniform-endpoint-posterior}, take two
+conditionally independent draws $x,y$ and set $s=\max(x,y)$.
+For $0<x,y<1$, the second likelihood multiplies the first posterior
+density by $\theta^{-1}\mathbf 1_{\{y<\theta<1\}}$. The resulting
+posterior and next predictive densities are
+\[
+\frac{\theta^{-2}\mathbf 1_{\{s<\theta<1\}}}{1/s-1},
+\qquad m(y\mid x)=\frac{1/s-1}{-\log x}.
+\]
+Indeed, $\int_s^1\theta^{-2}\,d\theta=1/s-1$, which is the joint
+predictive density by the product formula.
+\end{example}
+
+\begin{example}[The first observation is a magnitude]
+\label{ex:bayesian-sequential-noisy-sign}
+In Example~\ref{ex:bayesian-magnitude-posterior}, for $x>0$ the first
+posterior gives equal mass to $x$ and $-x$. A second observation
+reports the sign correctly with probability $3/4$ under either
+sign. Its predictive probability of reporting positive is $1/2$.
+After a positive report the posterior is
+$\tfrac34\delta_x+\tfrac14\delta_{-x}$.
+The update uses counting measure for the sign report. The first
+observation was handled by its posterior kernel.
+\end{example}
+
+\begin{example}[Copying an earlier observation]
+\label{ex:bayesian-sequential-copy}
+Use the prior of Example~\ref{ex:bayesian-unequal-bernoulli-rates},
+observe a Bernoulli bit $X$, and set $Y=X$. The second density is
+$f(\theta,x,y)=\mathbf 1_{\{y=x\}}$ with respect to counting
+measure. At $(1,1)$ it leaves the posterior mass of $3/5$ at $1/2$.
+Treating the copy as a fresh Bernoulli draw would give
+\[
+\frac{(1/2)(3/5)}{(1/2)(1/5)+(1/2)(3/5)}=\frac34.
+\]
+At $(1,0)$ the conditional predictive mass is zero, so the update
+in \eqref{eq:bayesian-conditional-update} uses the fallback there.
+\end{example}
+
+\begin{exercise}[Two successive successes]
+\label{exer:bayesian-sequential-successes}
+In Example~\ref{ex:bayesian-sequential-two-rates}, compute the
+predictive probability of two successes and the corresponding
+posterior mass of $3/5$. Check both by a batch calculation.
+\end{exercise}
+
+\begin{exercise}[Dependence under the predictive law]
+\label{exer:bayesian-sequential-predictive-dependence}
+Under any prior on the Bernoulli rate $p$, prove that the predictive
+covariance of two conditionally independent trials is
+$\operatorname{Var}_\pi(p)$. Determine when the two trials are
+independent under their predictive law.
+\end{exercise}
+
+\begin{exercise}[Reversing the order of observations]
+\label{exer:bayesian-sequential-order}
+For a product experiment with finite jointly measurable densities,
+fix a permutation of the observations. Show that the permuted and
+original updates give the same final posterior on a common set
+of full predictive probability. Compare the intermediate
+posteriors in Example~\ref{ex:bayesian-sequential-two-rates}.
+\end{exercise}
+
+\begin{exercise}[A likelihood that is constant on the posterior support]
+\label{exer:bayesian-sequential-constant-likelihood}
+At a fixed $(x,y)$, suppose $f(\theta,x,y)$ is equal to a common
+positive finite value for $\Pi(x,\cdot)$-almost every $\theta$.
+Show that the posterior at this record stays at $\Pi(x,\cdot)$.
+\end{exercise}
+
+\begin{exercise}[A second experiment chosen from the first record]
+\label{exer:bayesian-sequential-adaptive-experiment}
+Use the prior from Example~\ref{ex:bayesian-unequal-bernoulli-rates}.
+After observing the first Bernoulli bit $X$, draw a fresh
+Bernoulli bit with rate $p$ if $X=1$. If $X=0$, draw a fair bit
+independently of $p$. Write the conditional likelihood and find
+the predictive mass and posterior at each of the four pairs.
+\end{exercise}
+
+\begin{exercise}[The posterior mean changes by a mean-zero increment]
+\label{exer:bayesian-sequential-mean-increment}
+Let $g$ be integrable under $\pi$. Under the hypotheses of
+Theorem~\ref{thm:bayesian-conditional-update}, show that
+$\mathbb E[\Pi^+g(X,Y)\mid \sigma(X)]=\Pi g(X)$ almost surely.
+Here $\Pi^+g(x,y)=\int g(\theta)\,\Pi^+(x,y;d\theta)$ where
+the integral is finite. Derive the identity by integrating over
+sets $\{X\in A\}$.
+\end{exercise}
+
+\begin{exercise}[A decreasing upper tail after more draws]
+\label{exer:bayesian-sequential-endpoint-tail}
+In Example~\ref{ex:bayesian-sequential-endpoint}, for
+$s\leq u\leq1$ compute the posterior probability of $\theta>u$.
+If $0<y\leq x$, compare it with the probability after $x$ alone.
+\end{exercise}
+
+\begin{exercise}[The probability of the record]
+\label{exer:bayesian-sequential-predictive-product}
+Under Proposition~\ref{prop:bayesian-batch-sequential}, prove that the
+product of the one-step predictive densities equals $m_{1:n}$
+on the stated set of full predictive probability. With finite observation spaces and counting measures, show that
+this product is the probability of the record.
+\end{exercise}
+
 % BEGIN NOTATION INDEX
 \chapter*{Notation index}
 \label{chap:notation-index}
