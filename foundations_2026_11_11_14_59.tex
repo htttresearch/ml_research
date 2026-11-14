@@ -10858,6 +10858,208 @@ on the stated set of full predictive probability. With finite observation spaces
 this product is the probability of the record.
 \end{exercise}
 
+\section{Conjugate models and posterior prediction}
+\label{sec:bayesian-conjugate-prediction}
+
+\subsection{Conjugate families and the beta--Bernoulli model}
+\label{subsec:bayesian-beta-bernoulli}
+
+\begin{definition}[Conjugate family]
+\label{def:bayesian-conjugate-family}
+A nonempty family $\mathcal C$ of prior probability measures is
+\emph{conjugate} for an experiment if every $\pi\in\mathcal C$ admits
+a posterior kernel $\Pi$ such that $\Pi(x,\cdot)\in\mathcal C$ outside
+a single $M_\pi$-null set of records.
+\end{definition}
+
+\begin{definition}[Beta law]
+\label{def:bayesian-beta-law}
+\indexnotation{B(a,b),\ \operatorname{Beta}(a,b)}{Beta integral and beta law.}
+For $a,b>0$ put
+\[
+B(a,b)=\int_0^1 p^{a-1}(1-p)^{b-1}\,dp.
+\]
+The law $\operatorname{Beta}(a,b)$ on $[0,1]$ has Lebesgue density
+$p^{a-1}(1-p)^{b-1}/B(a,b)$ on $(0,1)$.
+\end{definition}
+
+\begin{proposition}[Beta recurrences and moments]
+\label{prop:bayesian-beta-moments}
+The beta integral is positive and finite. For $a,b>0$,
+\[
+B(a+1,b)=\frac{a}{a+b}B(a,b),\qquad
+B(a,b+1)=\frac{b}{a+b}B(a,b).
+\]
+If $U\sim\operatorname{Beta}(a,b)$, then
+\[
+\mathbb E U=\frac{a}{a+b},\qquad
+\mathbb E U^2=\frac{a(a+1)}{(a+b)(a+b+1)},\qquad
+\operatorname{Var}(U)=\frac{ab}{(a+b)^2(a+b+1)}.
+\]
+\end{proposition}
+\begin{proof}
+On $(0,1/2]$ the factor $(1-p)^{b-1}$ is bounded and $p^{a-1}$
+is integrable. On $[1/2,1)$ apply the same argument with the roles
+reversed. The integrand is positive on $(0,1)$.
+
+Splitting the integrand by $1=p+(1-p)$ gives
+$B(a+1,b)+B(a,b+1)=B(a,b)$. The function $p^a(1-p)^b$ vanishes
+at both endpoints and has integrable derivative. Integrating the
+derivative on $[\varepsilon,1-\varepsilon]$ and letting
+$\varepsilon\downarrow0$ gives
+$aB(a,b+1)-bB(a+1,b)=0$. Solving these two equations gives the
+recurrences. The first two moments are $B(a+1,b)/B(a,b)$ and
+$B(a+2,b)/B(a,b)$; subtracting the square of the first gives the
+variance.
+\end{proof}
+
+\begin{theorem}[Beta--Bernoulli conjugacy]
+\label{thm:bayesian-beta-bernoulli}
+Given a rate $p\in[0,1]$, let $X_1,\ldots,X_{n+1}$ be independent
+Bernoulli trials with that rate, where $n\geq1$. Use the prior
+$\pi=\operatorname{Beta}(a,b)$, and put $S_n=\sum_{i=1}^n X_i$.
+For a record $x=(x_1,\ldots,x_n)$ with $s=\sum_{i=1}^n x_i$,
+\begin{align}
+M_\pi(\{x\})&=\frac{B(a+s,b+n-s)}{B(a,b)},&
+\mathbb P(S_n=s)&=\binom ns\frac{B(a+s,b+n-s)}{B(a,b)}.
+\label{eq:bayesian-beta-bernoulli-predictive-mass}
+\end{align}
+The posterior at $x$, and the posterior given only $S_n=s$, are both
+$\operatorname{Beta}(a+s,b+n-s)$. In particular the beta family is
+conjugate for the $n$-trial experiment. The next success probability is
+\begin{equation}
+\mathbb P(X_{n+1}=1\mid X_{1:n}=x)
+=\frac{a+s}{a+b+n}
+=\frac{a+b}{a+b+n}\frac{a}{a+b}+\frac{n}{a+b+n}\frac{s}{n}.
+\label{eq:bayesian-beta-bernoulli-next-success}
+\end{equation}
+\end{theorem}
+\begin{proof}
+At $0<p<1$ the likelihood is $p^s(1-p)^{n-s}$. Multiplying by the
+prior density gives
+\[
+\frac{p^{a+s-1}(1-p)^{b+n-s-1}}{B(a,b)}.
+\]
+Its integral is the first mass in
+\eqref{eq:bayesian-beta-bernoulli-predictive-mass}, which is positive.
+Normalization gives the asserted beta law by
+Proposition~\ref{prop:posterior-from-densities}. There are $\binom ns$
+records with $s$ successes. The likelihood for the count is that
+for any one such record multiplied by $\binom ns$, which cancels
+in the posterior. For prediction, integrate the next trial's
+success probability $p$ against the posterior as in
+Definition~\ref{def:bayesian-conditional-predictive}. The first
+moment in Proposition~\ref{prop:bayesian-beta-moments} gives
+\eqref{eq:bayesian-beta-bernoulli-next-success}.
+\end{proof}
+
+\begin{example}[Three successes from a uniform prior]
+\label{ex:bayesian-beta-uniform-record}
+Under $\operatorname{Beta}(1,1)$ the record $(1,0,1,1)$ has
+probability
+\[
+B(4,2)=\int_0^1 p^3(1-p)\,dp=\frac{1}{20}.
+\]
+There are four records with three successes, so
+$\mathbb P(S_4=3)=1/5$. The posterior in either case is
+$\operatorname{Beta}(4,2)$, with density $20p^3(1-p)$.
+The next success has probability $2/3$.
+\end{example}
+
+\begin{example}[Equal prior means and different predictions]
+\label{ex:bayesian-beta-prior-weight}
+The priors $\operatorname{Beta}(1,1)$ and $\operatorname{Beta}(10,10)$
+both have mean $1/2$. After two successes their posteriors are
+$\operatorname{Beta}(3,1)$ and $\operatorname{Beta}(12,10)$.
+The next success probabilities are $3/4$ and $6/11$, respectively.
+The empirical proportion is $1$ in both cases; its weights in
+\eqref{eq:bayesian-beta-bernoulli-next-success} are $2/4$ and $2/22$.
+\end{example}
+
+\begin{example}[A record that increases variance]
+\label{ex:bayesian-beta-variance-increase}
+Take $\operatorname{Beta}(1,4)$. Its variance is $2/75$.
+One success gives $\operatorname{Beta}(2,4)$, with variance
+$2/63>2/75$. One failure gives $\operatorname{Beta}(1,5)$,
+with variance $5/252$. Weighting by the predictive probabilities
+$1/5$ and $4/5$ gives mean posterior variance $1/45<2/75$.
+\end{example}
+
+\begin{example}[Updating a mixture of beta laws]
+\label{ex:bayesian-beta-mixture}
+Take prior $\tfrac12\operatorname{Beta}(1,1)+
+\tfrac12\operatorname{Beta}(3,1)$. The two components give success
+probabilities $1/2$ and $3/4$, so the mixture gives it probability
+$5/8$. Multiplying each prior weight by its success probability
+and dividing by $5/8$ gives posterior weights $2/5$ and $3/5$.
+The component posteriors are $\operatorname{Beta}(2,1)$ and
+$\operatorname{Beta}(4,1)$. Thus the posterior predictive success
+probability is $(2/5)(2/3)+(3/5)(4/5)=56/75$.
+\end{example}
+
+\begin{exercise}[Reflection]
+\label{exer:bayesian-beta-reflection}
+If $U\sim\operatorname{Beta}(a,b)$, find the law of $1-U$.
+Use it to relate the posterior for the failure rate after $s$
+successes in $n$ trials to the posterior obtained by relabelling
+the trials.
+\end{exercise}
+
+\begin{exercise}[A uniform predictive count]
+\label{exer:bayesian-beta-uniform-count}
+Use the beta recurrences and $B(1,1)=1$ to prove that
+$B(r+1,t+1)=r!t!/(r+t+1)!$ for nonnegative integers $r,t$.
+Deduce that under a uniform prior each value of $S_n$ has the
+same predictive probability.
+\end{exercise}
+
+\begin{exercise}[A prior with singularities at both endpoints]
+\label{exer:bayesian-beta-half-parameters}
+Normalize the density for $\operatorname{Beta}(1/2,1/2)$ using
+$p=\sin^2 u$. Find the posterior and the next success probability
+after four failures. Is the posterior density still unbounded
+near $p=1$?
+\end{exercise}
+
+\begin{exercise}[Record probabilities by sequential prediction]
+\label{exer:bayesian-beta-sequential-record}
+Compute the prior predictive masses of $(1,0)$ and $(0,1)$ by
+multiplying successive conditional probabilities. Compare with
+\eqref{eq:bayesian-beta-bernoulli-predictive-mass}, and give the
+intermediate and final posteriors for the two orders.
+\end{exercise}
+
+\begin{exercise}[Holding the prior mean fixed]
+\label{exer:bayesian-beta-predictive-weight}
+Fix $0<q<1$ and use $\operatorname{Beta}(cq,c(1-q))$ for $c>0$.
+For a fixed record, determine when the predictive success
+probability increases or decreases with $c$. Find its limits
+as $c\downarrow0$ and $c\to\infty$.
+\end{exercise}
+
+\begin{exercise}[Expected posterior variance after one trial]
+\label{exer:bayesian-beta-expected-variance}
+For $\operatorname{Beta}(a,b)$, compute the expected posterior
+variance after one trial by averaging the two possible posterior
+variances. Show that the ratio to the prior variance is
+$(a+b)/(a+b+1)$.
+\end{exercise}
+
+\begin{exercise}[A family that fails to be conjugate]
+\label{exer:bayesian-beta-symmetric-nonconjugate}
+Show that $\{\operatorname{Beta}(a,a):a>0\}$ is not conjugate for
+one Bernoulli observation. Give an example of a record with
+positive length for which the posterior is again symmetric.
+\end{exercise}
+
+\begin{exercise}[Finite mixtures]
+\label{exer:bayesian-beta-finite-mixtures}
+Prove that the family of mixtures of at most $k$ beta laws,
+for an integer $k\geq1$, is conjugate for the $n$-trial experiment.
+Express each posterior component and weight in terms of the prior
+components and weights.
+\end{exercise}
+
 % BEGIN NOTATION INDEX
 \chapter*{Notation index}
 \label{chap:notation-index}
