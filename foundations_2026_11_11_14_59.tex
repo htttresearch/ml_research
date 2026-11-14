@@ -11246,6 +11246,239 @@ Show that it is independent of $(Y_1+Y_2)/2$ under the predictive
 law at each record.
 \end{exercise}
 
+\subsection{Joint posterior prediction and exchangeability}
+\label{subsec:bayesian-joint-prediction}
+
+\begin{definition}[Exchangeability]
+\label{def:bayesian-finite-exchangeability}
+A finite vector $(Y_1,\ldots,Y_k)$ with coordinates in the same
+measurable space is \emph{exchangeable} if its joint law is
+invariant under every permutation of its coordinates.
+\end{definition}
+
+Let $\Pi$ be a posterior for $U$ given a record $X$, with record
+law $M_\pi$. Let $Q$ be a probability kernel from $\Theta$ to
+$(\mathsf Y,\mathcal Y)$. After $(U,X)=(\theta,x)$, generate
+$(Y_1,\ldots,Y_k)$ with law $Q_\theta^{\otimes k}$. This uses the
+same parameter for the whole block. Write $Y_{1:k}=(Y_1,\ldots,Y_k)$.
+
+\begin{proposition}[Predicting a block]
+\label{prop:bayesian-predictive-block}
+\indexnotation{M_k(\cdot\mid x)}{Predictive law of \(k\) future observations.}
+A conditional predictive kernel for $Y_{1:k}$ given $X$ is
+\begin{equation}
+M_k(C\mid x)=\int_\Theta Q_\theta^{\otimes k}(C)\,\Pi(x,d\theta),
+\qquad C\in\mathcal Y^{\otimes k}.
+\label{eq:bayesian-predictive-block}
+\end{equation}
+For every $x$ this law is exchangeable and each coordinate has law
+$M_1(\cdot\mid x)$.
+\end{proposition}
+\begin{proof}
+On measurable rectangles $C$, the integrand as a function of
+$\theta$ is a product of measurable functions. The class of $C$
+for which it is measurable contains the whole space and is closed
+under complements and countable disjoint unions. Thus the
+$\pi$--$\lambda$ theorem makes $Q_\theta^{\otimes k}$ a kernel.
+Integrating it against $\Pi(x,\cdot)$ gives a probability kernel
+by Proposition~\ref{prop:joint-action-law}. The joint probability
+of $X\in A$ and $Y_{1:k}\in C$ is
+\[
+\int_A\int_\Theta Q_\theta^{\otimes k}(C)\,\Pi(x,d\theta)\,M_\pi(dx),
+\]
+by the posterior identity and the kernel integral formula.
+This verifies the conditional law. Each product law is invariant
+under permutations and has marginals $Q_\theta$. Both properties
+pass through the integral.
+\end{proof}
+
+\begin{proposition}[Dependence from the shared parameter]
+\label{prop:bayesian-predictive-dependence}
+Fix a record $x$ and $k\geq2$. For real measurable functions $g,h$
+with finite second moments under $M_1(\cdot\mid x)$, put
+$\mu_g(\theta)=\int g\,dQ_\theta$ and similarly for $\mu_h$,
+setting each to zero where its corresponding second moment
+under $Q_\theta$ is infinite. For $i\ne j$,
+\begin{equation}
+\operatorname{Cov}_{M_k(\cdot\mid x)}(g(Y_i),h(Y_j))
+=\operatorname{Cov}_{\Pi(x,\cdot)}(\mu_g,\mu_h).
+\label{eq:bayesian-predictive-covariance}
+\end{equation}
+In particular, the covariance for $h=g$ is
+$\operatorname{Var}_{\Pi(x,\cdot)}(\mu_g)$. The predictive
+coordinates are independent if and only if, for each
+$A\in\mathcal Y$, the function $Q_\theta(A)$ is constant
+$\Pi(x,\cdot)$-almost surely.
+\end{proposition}
+\begin{proof}
+By \eqref{eq:bayesian-predictive-block}, the second moments of $g$
+and $h$ under $Q_\theta$ are finite for $\Pi(x,\cdot)$-almost every
+$\theta$. Cauchy--Schwarz bounds $\mu_g^2$ by $\int g^2\,dQ_\theta$,
+and likewise for $h$. Thus the two conditional means have
+finite second moments. Integrating the product law in
+\eqref{eq:bayesian-predictive-block} gives
+\[
+\mathbb E_{M_k(\cdot\mid x)}[g(Y_i)h(Y_j)]
+=\int_\Theta\mu_g(\theta)\mu_h(\theta)\,\Pi(x,d\theta).
+\]
+The two individual means are the posterior integrals of
+$\mu_g$ and $\mu_h$. Subtraction gives the covariance formula.
+
+For independent coordinates, taking $g=h=\mathbf 1_A$ makes the
+variance of $Q_\theta(A)$ zero. Conversely, if every $Q_\theta(A)$
+is almost surely constant, its constant equals $M_1(A\mid x)$.
+For a rectangle $\prod_{i=1}^k A_i$, all $k$ constants hold off
+the union of the corresponding null sets. Hence
+\[
+M_k\Bigl(\prod_{i=1}^k A_i\mid x\Bigr)=\prod_{i=1}^k M_1(A_i\mid x).
+\]
+Rectangles determine the joint law, so the coordinates are independent.
+\end{proof}
+
+\begin{definition}[Beta--binomial law]
+\label{def:bayesian-beta-binomial}
+\indexnotation{\operatorname{BetaBin}(k,\alpha,\beta)}{Beta--binomial count law.}
+For $k\geq1$ and $\alpha,\beta>0$, let $\operatorname{BetaBin}(k,\alpha,\beta)$
+be the law of the number of successes in $k$ trials obtained by drawing
+a rate $p$ from $\operatorname{Beta}(\alpha,\beta)$ and then drawing
+$k$ independent Bernoulli trials with rate $p$.
+\end{definition}
+
+\begin{theorem}[Predicting a count of successes]
+\label{thm:bayesian-predictive-count}
+Suppose the Bernoulli rate has posterior $\operatorname{Beta}(\alpha,\beta)$
+at $x$. For $k$ further trials, let $T_k=\sum_{i=1}^k Y_i$ and write
+$c=\alpha+\beta$ and $q=\alpha/c$. Then $T_k$ has the
+$\operatorname{BetaBin}(k,\alpha,\beta)$ law under prediction at $x$, with
+\begin{equation}
+M_k(T_k=t\mid x)=\binom kt\frac{B(\alpha+t,\beta+k-t)}{B(\alpha,\beta)}
+\qquad(0\leq t\leq k).
+\label{eq:bayesian-beta-binomial-mass}
+\end{equation}
+Its mean and variance are
+\[
+\mathbb E_{M_k(\cdot\mid x)}T_k=kq,\qquad
+\operatorname{Var}_{M_k(\cdot\mid x)}(T_k)
+=kq(1-q)\frac{c+k}{c+1}.
+\]
+\end{theorem}
+\begin{proof}
+At rate $p$ the mass at $t$ is $\binom kt p^t(1-p)^{k-t}$.
+Integrating it against the posterior density gives
+\eqref{eq:bayesian-beta-binomial-mass}. Each future bit has success
+probability $q$ by the beta mean formula. For distinct bits,
+Proposition~\ref{prop:bayesian-predictive-dependence} makes their
+covariance the posterior variance of $p$. By
+Proposition~\ref{prop:bayesian-beta-moments}, this is
+$q(1-q)/(c+1)$. Summing the $k$ variances and the $k(k-1)$
+off-diagonal covariances gives the claimed variance.
+\end{proof}
+
+\begin{example}[Two future trials after a success]
+\label{ex:bayesian-beta-binomial-two-trials}
+Starting with the uniform prior, one success gives posterior
+$\operatorname{Beta}(2,1)$. The predictive masses at $00,01,10,11$
+are respectively $1/6,1/6,1/6,1/2$. For instance the mass at $11$
+is $\int_0^1 p^2(2p)\,dp=1/2$, and that at $10$ is
+$\int_0^1 p(1-p)(2p)\,dp=1/6$. The count has masses
+$1/6,1/3,1/2$ at $0,1,2$. Both bits have success probability
+$2/3$, and observing the first future success raises the
+probability of the second to $(1/2)/(2/3)=3/4$.
+\end{example}
+
+\begin{example}[Equal success probabilities and different count laws]
+\label{ex:bayesian-beta-binomial-equal-marginals}
+Consider prediction from $\operatorname{Beta}(1,1)$ and from
+$\operatorname{Beta}(2,2)$. Both give marginal success probability
+$1/2$. For three future trials, the first count law is uniform
+on $\{0,1,2,3\}$ by Exercise~\ref{exer:bayesian-beta-uniform-count}.
+For the second, the probability of zero successes is
+$B(2,5)/B(2,2)=1/5$. By symmetry the probability of three is also
+$1/5$, and each middle count has mass $3/10$.
+\end{example}
+
+\begin{example}[Uncertainty about a sign]
+\label{ex:bayesian-predictive-unidentified-sign}
+Let the posterior put mass $1/2$ on each of $-1$ and $1$.
+If $Q_\theta=N(\theta^2,1)$, both parameter values give $N(1,1)$,
+so the predictive law is $N(1,1)^{\otimes k}$. If instead
+$Q_\theta=N(\theta,1)$, a coordinate has mean zero and variance $2$.
+Distinct coordinates have covariance $\operatorname{Var}_{\Pi(x,\cdot)}
+(\theta)=1$ by \eqref{eq:bayesian-predictive-covariance}.
+\end{example}
+
+\begin{example}[An exchangeable pair with negative covariance]
+\label{ex:bayesian-exchangeable-pair-negative-covariance}
+Give $(0,1)$ and $(1,0)$ mass $1/2$ each. The pair is exchangeable.
+The means are both $1/2$, and the product is zero, giving covariance
+$-1/4$. It cannot have the form \eqref{eq:bayesian-predictive-block}
+for any mixture of iid laws, since the covariance formula for
+$g=h$ gives a nonnegative value.
+\end{example}
+
+\begin{exercise}[Marginals of a predictive block]
+\label{exer:bayesian-predictive-block-marginals}
+For $1\leq j\leq k$, show that projecting $M_k(\cdot\mid x)$
+onto any $j$ distinct coordinates gives $M_j(\cdot\mid x)$.
+Verify the equality first on rectangles.
+\end{exercise}
+
+\begin{exercise}[Drawing a fresh rate for each trial]
+\label{exer:bayesian-predictive-fresh-rates}
+Draw $k$ independent rates from a fixed $\operatorname{Beta}(\alpha,\beta)$
+law and draw one bit independently at each of these rates given
+the rates. Prove that the count has a binomial law. Compare its
+mean and variance with those from Theorem~\ref{thm:bayesian-predictive-count}.
+\end{exercise}
+
+\begin{exercise}[Sequential and block prediction after a fixed record]
+\label{exer:bayesian-predictive-sequential-block}
+Start from posterior $\operatorname{Beta}(2,3)$. Compute the
+predictive probabilities of the future strings $1100$ and $0101$
+by successive updates and one-step predictions. Use exchangeability to recover the
+probability of two successes from either string and compare it
+with \eqref{eq:bayesian-beta-binomial-mass}.
+\end{exercise}
+
+\begin{exercise}[Predicting after a future count is revealed]
+\label{exer:bayesian-predictive-after-count}
+Start from $\operatorname{Beta}(\alpha,\beta)$ at $x$.
+Predict a block of $k$ trials followed by a block of $\ell$ trials
+with the same rate. Conditional on the first block having $t$
+successes, find the count law of the second block and its mean.
+\end{exercise}
+
+\begin{exercise}[Covariance of distinct events]
+\label{exer:bayesian-predictive-cross-event}
+For the beta--Bernoulli predictive pair, compute the covariance
+between $\mathbf 1_{\{Y_1=1\}}$ and $\mathbf 1_{\{Y_2=0\}}$.
+Reconcile its sign with Proposition~\ref{prop:bayesian-predictive-dependence}.
+\end{exercise}
+
+\begin{exercise}[The future fraction and the shared rate]
+\label{exer:bayesian-predictive-future-fraction}
+Under the joint law used in Definition~\ref{def:bayesian-beta-binomial},
+compute $\mathbb E[(T_k/k-p)^2]$ by conditioning on $p$.
+Use this identity to find its limit as $k\to\infty$ and compare
+that limit with the limit of $\operatorname{Var}(T_k/k)$.
+\end{exercise}
+
+\begin{exercise}[Recovering the beta shapes from two trials]
+\label{exer:bayesian-predictive-identify-beta}
+Given a predictive pair, let $q$ be its marginal success probability
+and $r$ its probability of two successes. Derive the conditions
+on $(q,r)$ under which it can come from a beta mixture of iid
+Bernoulli trials, assuming exchangeability. In that case recover
+$\alpha$ and $\beta$ uniquely.
+\end{exercise}
+
+\begin{exercise}[Extending an exchangeable pair]
+\label{exer:bayesian-exchangeable-pair-extension}
+Can the pair in Example~\ref{ex:bayesian-exchangeable-pair-negative-covariance}
+be the first two coordinates of an exchangeable triple? Use the
+variance of the sum of the three bits.
+\end{exercise}
+
 % BEGIN NOTATION INDEX
 \chapter*{Notation index}
 \label{chap:notation-index}
