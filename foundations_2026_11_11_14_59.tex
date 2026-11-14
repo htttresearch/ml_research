@@ -11060,6 +11060,192 @@ Express each posterior component and weight in terms of the prior
 components and weights.
 \end{exercise}
 
+\subsection{Normal conjugacy with known sampling variance}
+\label{subsec:bayesian-normal-known-variance}
+
+Write $N(m,v)$ for the normal law with mean $m$ and variance $v>0$.
+
+\begin{definition}[Precision]
+\label{def:bayesian-normal-precision}
+\indexnotation{v^{-1}}{Precision of a law with positive finite variance \(v\).}
+The \emph{precision} of a law with positive finite variance $v$ is
+$1/v$.
+\end{definition}
+
+\begin{theorem}[Normal posterior for a common mean]
+\label{thm:bayesian-normal-mean-posterior}
+\indexnotation{\lambda_n,\ m_n(x),\ v_n}{Normal posterior precision, mean, and variance.}
+Given $\theta\in\R$, let $X_1,\ldots,X_n$ be independent
+$N(\theta,\sigma^2)$ observations, with $n\geq1$ and known
+$\sigma^2>0$. Let the prior for $U$ be $N(m_0,v_0)$, with $v_0>0$,
+and put $\lambda_0=1/v_0$. For $x\in\R^n$ define
+$\bar x=n^{-1}\sum_{i=1}^n x_i$ and set
+\begin{equation}
+\lambda_n=\lambda_0+\frac{n}{\sigma^2},\qquad
+v_n=\frac{1}{\lambda_n},\qquad
+m_n(x)=\frac{\lambda_0m_0+(n/\sigma^2)\bar x}{\lambda_n}.
+\label{eq:bayesian-normal-precision-update}
+\end{equation}
+Then $x\mapsto N(m_n(x),v_n)$ is a posterior kernel.
+The family of normal laws with positive variance is conjugate for
+this experiment. The posterior precision is the sum of the prior
+precision and the sampling precision of $\overline X$.
+\end{theorem}
+\begin{proof}
+The prior density times the likelihood is proportional, as a
+function of $\theta$, to
+\[
+\exp\!\left[-\frac12\left\{
+\lambda_0(\theta-m_0)^2+\frac{1}{\sigma^2}
+\sum_{i=1}^n(x_i-\theta)^2\right\}\right].
+\]
+The expression in braces is a quadratic in $\theta$ with leading
+coefficient $\lambda_n$ and linear coefficient
+$-2(\lambda_0m_0+(n/\sigma^2)\bar x)$. Completing the square
+makes it $\lambda_n(\theta-m_n(x))^2+c(x)$ for a term $c(x)$
+independent of $\theta$. Its exponential with factor $-1/2$
+has a finite positive integral for every $x$. Normalization in
+Proposition~\ref{prop:posterior-from-densities} therefore gives
+$N(m_n(x),v_n)$. Both weights in $m_n(x)$ are positive and sum
+to one. Under $P_\theta$, $\overline X$ has variance $\sigma^2/n$
+by independence, so its precision is $n/\sigma^2$.
+\end{proof}
+
+\begin{proposition}[Predicting one further observation]
+\label{prop:bayesian-normal-predictive}
+Under Theorem~\ref{thm:bayesian-normal-mean-posterior}, let $Y$
+have law $N(\theta,\sigma^2)$ independently of the first $n$
+observations given $\theta$. Then the conditional predictive law
+at $x$ is
+\begin{equation}
+M(\cdot\mid x)=N\bigl(m_n(x),\,\sigma^2+v_n\bigr).
+\label{eq:bayesian-normal-predictive}
+\end{equation}
+\end{proposition}
+\begin{proof}
+Fix $x$. For independent $V\sim N(m_n(x),v_n)$ and
+$Z\sim N(0,\sigma^2)$, integrating the conditional law of $V+Z$
+given $V$ gives
+\[
+\mathbb P(V+Z\in C)
+=\int_{\R}N(\theta,\sigma^2)(C)\,N(m_n(x),v_n)(d\theta)
+=M(C\mid x).
+\]
+The last equality is Definition~\ref{def:bayesian-conditional-predictive}.
+The sum of independent normals is normal, and independence adds
+the variances. The terms $\sigma^2$ and $v_n$ are the sampling
+variance at a fixed mean and the posterior variance of
+the mean, respectively.
+\end{proof}
+
+\begin{example}[The mean and a future measurement]
+\label{ex:bayesian-normal-mean-and-draw}
+Take $N(0,1)$ as the prior and $\sigma^2=4$. For four observations
+with mean $3$, the prior and sample mean both have precision $1$.
+The posterior is $N(3/2,1/2)$ and the predictive law of one more
+measurement is $N(3/2,9/2)$.
+\end{example}
+
+\begin{example}[Updating in two batches]
+\label{ex:bayesian-normal-batches}
+Take prior $N(1,2)$ and sampling variance $2$. Observing $3,5$
+adds $1$ to the precision and $(3+5)/2$ to the product of mean
+and precision. These become $3/2$ and $9/2$, giving posterior
+$N(3,2/3)$. Observing $-1$ next changes the two quantities to
+$2$ and $4$, giving $N(2,1/2)$. Updating once with all three
+observations adds $3/2$ and $(3+5-1)/2$ to the original
+quantities $1/2$ and $1/2$, so gives the same law.
+\end{example}
+
+\begin{example}[Two future measurements]
+\label{ex:bayesian-normal-future-pair}
+Use the posterior from Example~\ref{ex:bayesian-normal-mean-and-draw}.
+Let $Y_1,Y_2$ be independent given the same $U$ and both have
+conditional law $N(U,4)$. Their joint predictive law is the law of
+$(V+Z_1,V+Z_2)$, where $V\sim N(3/2,1/2)$ and $Z_1,Z_2\sim N(0,4)$
+are mutually independent. This follows by integrating the
+conditional product law against the posterior. Each predictive
+variance is $9/2$ and their predictive covariance is
+$\operatorname{Var}(V)=1/2$, so their correlation is $1/9$.
+The predictive law of their average is $N(3/2,5/2)$, since its
+noise term $(Z_1+Z_2)/2$ has variance $2$.
+\end{example}
+
+\begin{example}[Equal posteriors in two experiments]
+\label{ex:bayesian-normal-equal-precision}
+Use $N(0,1)$ in each experiment. In the first observe $x=2$ at
+sampling variance $1$. In the second observe $(0,2,2,4)$ at
+sampling variance $4$. The two sample means are $2$ and their
+sampling precisions are both $1$. The posteriors are both
+$N(1,1/2)$. A fresh measurement in the respective experiment
+has predictive law $N(1,3/2)$ or $N(1,9/2)$.
+\end{example}
+
+\begin{exercise}[Retaining only the sample mean]
+\label{exer:bayesian-normal-mean-only}
+Use the sampling law $N(\theta,\sigma^2/n)$ of $\overline X$
+to update directly from $\bar x$. Derive the same posterior
+as in Theorem~\ref{thm:bayesian-normal-mean-posterior}.
+\end{exercise}
+
+\begin{exercise}[Unequal sampling variances]
+\label{exer:bayesian-normal-unequal-variance}
+Let the independent observations given $\theta$ have laws
+$N(\theta,s_i^2)$ for known $s_i^2>0$. With prior $N(m_0,v_0)$,
+derive the posterior by completing the square. Compute the
+posterior for prior $N(0,1)$ and records $(3,-1)$ and $(-1,3)$
+when $(s_1^2,s_2^2)=(1,4)$.
+\end{exercise}
+
+\begin{exercise}[Two risks under squared loss]
+\label{exer:bayesian-normal-estimate-and-predict}
+Find the Bayes rule and its Bayes risk for estimating $U$ under
+squared loss. Then find the action minimizing conditional expected
+squared loss for predicting $Y$ in
+Proposition~\ref{prop:bayesian-normal-predictive} and the
+corresponding conditional risk.
+\end{exercise}
+
+\begin{exercise}[Spreading out the prior]
+\label{exer:bayesian-normal-diffuse-limit}
+Fix $x$, $n$, $\sigma^2$, and $m_0$. As $v_0\to\infty$,
+find the limits of the posterior mean and variance and of the
+predictive mean and variance. What is the limiting predictive
+variance if $n=1$?
+\end{exercise}
+
+\begin{exercise}[Averaging future measurements]
+\label{exer:bayesian-normal-future-average}
+For $k$ future measurements with sampling variance $\sigma^2$,
+conditionally independent of each other and the observed sample
+given $U$, derive the predictive law of their average. For fixed
+$x$ and $n$, find the limit of the variance as $k\to\infty$.
+\end{exercise}
+
+\begin{exercise}[Variation of the posterior mean across records]
+\label{exer:bayesian-normal-prior-mean-variation}
+Under the prior predictive law, find the distribution of
+$\overline X$ by representing it as $U$ plus independent
+normal noise. Deduce the law of $m_n(X_{1:n})$ and prove that
+its variance is $v_0-v_n$.
+\end{exercise}
+
+\begin{exercise}[A fixed true mean]
+\label{exer:bayesian-normal-fixed-mean-risk}
+For a fixed $\theta$ under $P_\theta$, compute the bias and mean
+squared error of $m_n(X_{1:n})$. Determine for which values of
+$\theta$ this error is smaller than that of $\overline X$.
+\end{exercise}
+
+\begin{exercise}[Predicting a difference]
+\label{exer:bayesian-normal-future-difference}
+In the setting of Example~\ref{ex:bayesian-normal-future-pair}
+with arbitrary sampling variance $\sigma^2>0$ and posterior
+variance $v_n>0$, find the predictive law of $Y_1-Y_2$.
+Show that it is independent of $(Y_1+Y_2)/2$ under the predictive
+law at each record.
+\end{exercise}
+
 % BEGIN NOTATION INDEX
 \chapter*{Notation index}
 \label{chap:notation-index}
