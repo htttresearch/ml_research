@@ -11690,6 +11690,210 @@ of the two grid points adjacent to $q$. Express the comparison
 of their risks as an integral involving $F$.
 \end{exercise}
 
+\subsection{Credible sets and pointwise coverage}
+\label{subsec:bayesian-credible-sets}
+
+\begin{definition}[Credible set]
+\label{def:bayesian-credible-set}
+\indexnotation{\operatorname{cred}_C(x)}{Posterior probability of the reported set \(C(x)\).}
+Given a posterior kernel $\Pi$, let $C(x)\subseteq\Theta$ have
+measurable graph $G_C=\{(x,\theta):\theta\in C(x)\}$ as in
+Definition~\ref{def:confidence-set-coverage}. Its
+\emph{posterior credibility} at $x$ is
+\[
+\operatorname{cred}_C(x)=\Pi(x,C(x)).
+\]
+For $0<\alpha<1$, it is a \emph{credible set at level $1-\alpha$} if
+$\operatorname{cred}_C(x)\geq1-\alpha$ for $M_\pi$-almost every $x$.
+The credibility is \emph{exact} at that level if equality holds
+almost everywhere. For a measurable real target $g$, an interval
+$I(x)$ for $g(U)$ corresponds to the set $C(x)=g^{-1}(I(x))$.
+\end{definition}
+
+\begin{proposition}[Credibility and coverage averaged under the prior]
+\label{prop:bayesian-credibility-coverage-average}
+For any such procedure the credibility and coverage functions
+are measurable, and
+\begin{equation}
+\int_{\mathsf X}\operatorname{cred}_C(x)\,M_\pi(dx)
+=\mathbb P\{U\in C(X)\}
+=\int_\Theta\operatorname{cov}_C(\theta)\,\pi(d\theta),
+\label{eq:bayesian-credibility-coverage-average}
+\end{equation}
+where the probability is under the joint law of $(U,X)$.
+In particular, a set with exact posterior credibility $1-\alpha$
+has prior average coverage $1-\alpha$.
+\end{proposition}
+\begin{proof}
+The kernel integral formula in Proposition~\ref{prop:joint-action-law}
+applied to $\mathbf 1_{G_C}(x,\theta)$ gives measurability in
+each conditioning variable. Its integral under $M_\pi\ltimes\Pi$
+is the left side, and its integral with coordinates reversed
+under $\pi\ltimes P$ is the right side. These are the same
+joint probability by the posterior identity.
+\end{proof}
+
+\begin{proposition}[Credible intervals from quantiles]
+\label{prop:bayesian-credible-quantile-interval}
+\indexnotation{I_{u,v}(x)}{Closed interval between two lower posterior quantiles.}
+Let $F_x$ be the posterior distribution function of $g(U)$ and
+fix $0<u<v<1$. Put
+\[
+I_{u,v}(x)=[q_u(F_x),q_v(F_x)].
+\]
+The interval and its inverse image under $g$ have measurable
+graphs. Its posterior probability is at least $v-u$ at every
+record, with equality if $F_x$ is continuous at its two endpoints.
+For $u=\alpha/2$ and $v=1-\alpha/2$ this is the
+\emph{equal-tailed credible interval} at level $1-\alpha$.
+\end{proposition}
+\begin{proof}
+For each level $t$, the lower quantile is measurable in $x$ since
+$\{x:q_t(F_x)\leq a\}=\{x:F_x(a)\geq t\}$ for each $a$.
+The graph of the interval consists of the two measurable
+endpoint inequalities. For the inverse image use the same
+inequalities with $g(\theta)$ in place of the interval coordinate.
+
+For fixed $x$, write $a=q_u(F_x)$ and $b=q_v(F_x)$. The lower
+quantile inequalities give $F_x(a-)\leq u$ and $F_x(b)\geq v$.
+They follow from monotonicity and right-continuity of $F_x$,
+as in Proposition~\ref{prop:bayesian-quantile-loss-minimizers}.
+Thus the two strict tails have probabilities at most $u$ and
+$1-v$, and
+\[
+\Pi(x,\{\theta:a\leq g(\theta)\leq b\})=F_x(b)-F_x(a-)\geq v-u.
+\]
+At points of continuity the quantile inequalities are equalities,
+so the posterior probability of the interval is exactly $v-u$.
+\end{proof}
+
+\begin{example}[Two credible intervals for a Bernoulli rate]
+\label{ex:bayesian-credible-beta}
+After one success from a uniform prior, the posterior is
+$\operatorname{Beta}(2,1)$ and $F_x(t)=t^2$ on $[0,1]$.
+The equal-tailed interval at level $1/2$ is
+$[1/2,\sqrt3/2]$. Its mass is $3/4-1/4=1/2$.
+The interval $[1/\sqrt2,1]$ also has mass $1/2$, since it
+excludes only the lower half of the posterior.
+\end{example}
+
+\begin{example}[Atoms at both endpoints]
+\label{ex:bayesian-credible-two-atoms}
+In Example~\ref{ex:bayesian-unequal-bernoulli-rates}, after a
+success the posterior masses at $1/5$ and $3/5$ are both $1/2$.
+Its lower $1/4$- and $3/4$-quantiles are $1/5$ and $3/5$.
+The resulting equal-tailed interval at level $1/2$
+has posterior mass one. Either singleton consisting of an
+endpoint has posterior mass exactly $1/2$.
+\end{example}
+
+\begin{example}[Coverage of a normal credible interval]
+\label{ex:bayesian-credible-normal-coverage}
+Use the normal model of Theorem~\ref{thm:bayesian-normal-mean-posterior}.
+Put $s=\sigma/\sqrt n$ and $w=v_0/(v_0+s^2)$. The posterior
+mean is $m_n(X)=(1-w)m_0+w\overline X$ and its variance is
+$ws^2$. For $z=z_{1-\alpha/2}$, the equal-tailed interval is
+\[
+C(X)=[m_n(X)-z\sqrt w\,s,\ m_n(X)+z\sqrt w\,s].
+\]
+Its posterior probability is $1-\alpha$ at every record.
+At fixed $\theta$ we have $\overline X=\theta+sZ$ with
+$Z\sim N(0,1)$ under $P_\theta$. The coverage event is
+$|wsZ-(1-w)(\theta-m_0)|\leq z\sqrt w\,s$, so, with
+$b=(1-w)(\theta-m_0)/(ws)$,
+\[
+\operatorname{cov}_C(\theta)
+=\Phi(b+z/\sqrt w)-\Phi(b-z/\sqrt w).
+\]
+At $\theta=m_0$ this is $2\Phi(z/\sqrt w)-1>1-\alpha$.
+It tends to zero as $|\theta-m_0|\to\infty$.
+The confidence interval in Example~\ref{ex:confidence-normal-known-variance}
+has center $\overline X$, half-width $zs$, and coverage $1-\alpha$
+at every $\theta$.
+\end{example}
+
+\begin{example}[Exact coverage with varying credibility]
+\label{ex:bayesian-exact-coverage-varying-credibility}
+Let $\Theta=\mathsf X=\{0,1,2\}$ with prior masses $1/2,1/3,1/6$.
+At each label the record $X$ is uniform on $\mathsf X$, so the
+posterior is the prior at all three records. Report $C(x)=\{x\}$.
+The coverage is $1/3$ at each label, while the posterior
+credibilities at the three records are $1/2,1/3,1/6$.
+Their average under the uniform record law is $1/3$.
+\end{example}
+
+\begin{exercise}[Allocating the posterior tails]
+\label{exer:bayesian-credible-tail-allocation}
+In Example~\ref{ex:bayesian-credible-beta}, fix $0<\alpha<1$.
+For $0<u<\alpha$ compute the interval $I_{u,u+1-\alpha}(x)$
+and the probabilities in its two tails. Find the limiting
+interval as $u\uparrow\alpha$.
+\end{exercise}
+
+\begin{exercise}[Including and excluding atoms]
+\label{exer:bayesian-credible-interval-endpoints}
+A posterior gives $-1,0,2$ masses $1/5,3/10,1/2$.
+Find its lower quantile endpoints at $u=1/5$ and $v=7/10$.
+Compute the posterior mass with both endpoints included,
+both excluded, and each endpoint excluded separately.
+\end{exercise}
+
+\begin{exercise}[Transforming a credible interval]
+\label{exer:bayesian-credible-transform}
+Let $h$ be strictly increasing and continuous on $\R$.
+Show that the equal-tailed interval for $h(g(U))$ is the
+image under $h$ of the interval for $g(U)$ at the same level.
+Compare the two procedures' coverage probabilities for their
+respective targets at every fixed $\theta$.
+\end{exercise}
+
+\begin{exercise}[Exact mass by randomizing a reported set]
+\label{exer:bayesian-credible-randomization}
+At a fixed record, take a posterior with two atoms of masses
+$3/10$ and $7/10$. Show that no subset of the two labels has
+posterior mass $1/2$. Using a randomizer independent of the
+parameter given the record, report a singleton so that the
+posterior probability of containing the parameter, averaged
+over the randomizer, is exactly $1/2$.
+\end{exercise}
+
+\begin{exercise}[Computing both averages in a finite experiment]
+\label{exer:bayesian-credible-finite-averages}
+In Example~\ref{ex:bayesian-unequal-bernoulli-rates}, report
+$C(1)=\{3/5\}$ and $C(0)=\{1/5\}$. Compute the credibility at
+each record and the coverage at each rate. Verify
+\eqref{eq:bayesian-credibility-coverage-average} by summation.
+\end{exercise}
+
+\begin{exercise}[Exact credibility on observation events]
+\label{exer:bayesian-credible-record-events}
+Show that $\operatorname{cred}_C(x)=1-\alpha$ almost everywhere
+if and only if
+\[
+\mathbb P\{U\in C(X),\ X\in A\}=(1-\alpha)M_\pi(A)
+\qquad\text{for every } A\in\mathcal A.
+\]
+\end{exercise}
+
+\begin{exercise}[A diffuse normal prior]
+\label{exer:bayesian-credible-normal-diffuse}
+In Example~\ref{ex:bayesian-credible-normal-coverage}, let
+$v_0\to\infty$ while $m_0$, $n$, and $\sigma^2$ stay fixed.
+Find the limits of the credible interval endpoints at each
+record and the limit of the coverage at each fixed $\theta$.
+Determine whether the convergence of coverage is uniform in $\theta$.
+\end{exercise}
+
+\begin{exercise}[A shortest beta credible interval]
+\label{exer:bayesian-credible-beta-shortest}
+For the posterior $\operatorname{Beta}(2,1)$ and $0<\alpha<1$,
+find the shortest closed subinterval of $[0,1]$ with probability
+at least $1-\alpha$. Show that among intervals of a fixed
+length, the one ending at $1$ has the greatest probability.
+Compare your interval at level $1/2$ with those in
+Example~\ref{ex:bayesian-credible-beta}.
+\end{exercise}
+
 % BEGIN NOTATION INDEX
 \chapter*{Notation index}
 \label{chap:notation-index}
