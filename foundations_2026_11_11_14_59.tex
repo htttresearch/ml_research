@@ -8835,6 +8835,4221 @@ attains the bound at any $\lambda>0$.
 \end{exercise}
 
 
+
+\chapter{Tests and confidence procedures}
+\label{chap:tests-confidence}
+\notationgroup{Tests and confidence procedures}
+\section{Hypotheses, randomized tests, size, and power}
+\label{sec:hypotheses-size-power}
+
+Fix an experiment $\mathcal E=(\mathsf X,\mathcal A,
+(P_\theta)_{\theta\in\Theta})$.
+
+\subsection{Hypotheses and test functions}
+\label{subsec:test-functions}
+
+\begin{definition}[Hypotheses and tests]
+\label{def:hypotheses-test-function}
+\indexnotation{\Theta_0,\ \Theta_1,\ \phi}{Null and alternative parameter sets, and conditional probability of rejection.}
+Let $\Theta_0,\Theta_1$ be nonempty disjoint subsets of $\Theta$,
+called the \emph{null} and \emph{alternative} parameter sets.
+A hypothesis is \emph{simple} if it specifies a single observation
+law and \emph{composite} if it specifies more than one.
+A \emph{test function} is a measurable $\phi:\mathsf X\to[0,1]$.
+At record $x$ the probability of rejecting the null is $\phi(x)$.
+A test is \emph{nonrandomized} if $\phi$ takes only the values zero
+and one. Its \emph{rejection region} is $\{x:\phi(x)=1\}$.
+\end{definition}
+
+\begin{definition}[Power, errors, size, and level]
+\label{def:test-size-power}
+\indexnotation{\beta_\phi(\theta),\ \alpha(\phi)}{Power function and size of a test.}
+The \emph{power function} is $\beta_\phi(\theta)=\mathbb E_\theta\phi(X)$.
+At $\theta\in\Theta_0$ this is the probability of a \emph{type I error}.
+At $\theta\in\Theta_1$, the probability of a \emph{type II error} is
+$1-\beta_\phi(\theta)$. The \emph{size} is
+\[
+\alpha(\phi)=\sup_{\theta\in\Theta_0}\beta_\phi(\theta).
+\]
+For $0\leq\alpha\leq1$, a test has \emph{level} $\alpha$ if its
+size is at most $\alpha$.
+\end{definition}
+
+\begin{proposition}[Binary decisions and randomized tests]
+\label{prop:binary-decision-test}
+Test functions correspond bijectively to decision kernels with
+actions $0$ (retain the null) and $1$ (reject it). The test
+$\phi$ is implemented by rejecting when $U<\phi(X)$, where
+$U$ is an independent uniform random variable on $[0,1]$.
+A mixture $t\phi+(1-t)\psi$ of two test functions, for $t\in[0,1]$,
+has power $t\beta_\phi+(1-t)\beta_\psi$. In particular,
+the level-$\alpha$ tests form a convex set.
+\end{proposition}
+\begin{proof}
+In Definition~\ref{def:randomized-rule}, the two masses of the
+kernel at $x$ are $1-\phi(x)$ and $\phi(x)$. These determine the
+kernel, and any kernel on these actions gives a measurable $\phi$.
+The independent uniform variable implements this kernel since the
+Lebesgue measure of $\{u\in[0,1]:u<\phi(x)\}$ is $\phi(x)$.
+Linearity of integration gives the power of a mixture. Under each
+null label, a mixture of two powers at most $\alpha$ is at most
+$\alpha$.
+\end{proof}
+
+\begin{example}[Two labels with the same observation law]
+\label{ex:test-bernoulli-aliased}
+Let $P_\theta$ be the Bernoulli law with probability $\theta^2$,
+where $\theta\in[-1,1]$. For null $\{-1/2\}$ and alternative
+$\{1/2\}$, every test has the same rejection probability under
+both hypotheses. Thus every level-$\alpha$ test has power at
+most $\alpha$ at the alternative. The constant test
+$\phi(x)=\alpha$ attains this power.
+\end{example}
+
+\subsection{Calibrating rejection probabilities}
+\label{subsec:test-calibration}
+
+\begin{proposition}[Randomization at a threshold]
+\label{prop:test-threshold-randomization}
+For a measurable real statistic $T$, threshold $c$, and
+$\gamma\in[0,1]$, define
+\[
+\phi_{c,\gamma}(x)=\mathbf 1_{\{T(x)>c\}}
++\gamma\mathbf 1_{\{T(x)=c\}} .
+\]
+Its power is $P_\theta(T>c)+\gamma P_\theta(T=c)$.
+For a simple null with law $P_0$, if
+$P_0(T>c)\leq\alpha\leq P_0(T\geq c)$ and $P_0(T=c)>0$, then
+$\gamma=(\alpha-P_0(T>c))/P_0(T=c)$ gives size $\alpha$.
+If $P_0(T=c)=0$ and the same inequalities hold, every $\gamma$
+gives size $\alpha$.
+\end{proposition}
+\begin{proof}
+Integrate the two indicators. When the atom has positive mass,
+the inequalities on $\alpha$ put the stated $\gamma$ in $[0,1]$.
+Substitution gives size $\alpha$. When the atom has mass zero
+the two tail probabilities are equal, so the inequalities already
+force the size to be $\alpha$.
+\end{proof}
+
+\begin{proposition}[Calibration at the upper endpoint of a binomial null]
+\label{prop:test-binomial-composite-calibration}
+Let $S$ be the number of successes in $n\geq1$ iid Bernoulli
+trials with parameter $p\in[0,1]$. Every test of the form $r(S)$
+with $r$ nondecreasing has nondecreasing power in $p$.
+For $\Theta_0=[0,p_0]$, its size is its power at $p_0$.
+For every $\alpha\in[0,1]$, a test of the form $\phi_{c,\gamma}$
+with $T=S$ attains size $\alpha$.
+\end{proposition}
+\begin{proof}
+On a common probability space take independent uniforms
+$U_1,\ldots,U_n$ on $[0,1]$. For each $p$ the sum
+$\sum_i\mathbf 1_{\{U_i<p\}}$ has the required binomial law.
+This sum is nondecreasing in $p$ for every realization, hence so is
+its image under $r$. Taking expectations proves monotonicity.
+The null includes its upper endpoint, so the supremum is attained
+there. Under $p_0$ the tail probabilities $P_{p_0}(S\geq j)$ for
+$j=0,\ldots,n+1$ decrease from one to zero. Some consecutive pair
+brackets $\alpha$. Use that pair as $P_{p_0}(S\geq c)$ and
+$P_{p_0}(S>c)$ in Proposition~\ref{prop:test-threshold-randomization}.
+\end{proof}
+
+\begin{example}[Exact size for two Bernoulli trials]
+\label{ex:test-binomial-randomized-tie}
+For two iid Bernoulli trials, take null $p\leq1/2$ and target
+size $1/2$. With $S$ the count, reject at $S=2$, reject with
+probability $1/2$ at $S=1$, and retain the null at $S=0$.
+The power is $p^2+\tfrac12(2p(1-p))=p$, so the size is $1/2$.
+The nonrandomized upper-tail test rejecting only at $S=2$
+has size $1/4$. Rejecting at both $S=1$ and $S=2$ gives size
+$3/4$.
+\end{example}
+
+\begin{example}[A continuous upper-tail test]
+\label{ex:test-normal-upper-tail}
+Let $X_1,\ldots,X_n$ be iid $N(\theta,v)$ for known $v>0$,
+and take null $\theta\leq\theta_0$. Let $\Phi$ be the standard
+normal distribution function and let $\Phi(z)=1-\alpha$ for
+$0<\alpha<1$. Reject when
+$\overline X>\theta_0+z\sqrt{v/n}$. The power is
+\[
+1-\Phi\bigl(z+(\theta_0-\theta)\sqrt{n/v}\bigr).
+\]
+It increases with $\theta$, equals $\alpha$ at $\theta_0$,
+and exceeds $\alpha$ at every $\theta>\theta_0$. The normal
+law gives zero mass to the threshold, so a tie rule has no
+effect.
+\end{example}
+
+\begin{example}[A null whose largest rejection probability is a limit]
+\label{ex:test-open-null-size}
+Observe one Bernoulli bit and reject on success. Take null
+$p<1/2$ within $[0,1]$ and alternative $p\geq1/2$. The power
+at $p$ is $p$. The size is $1/2$, though the probability of
+rejection is strictly below $1/2$ at every null label.
+\end{example}
+
+\subsection{Testing and separation of laws}
+\label{subsec:test-separation-laws}
+
+\begin{theorem}[Separation of two laws by tests]
+\label{thm:test-total-variation-gap}
+For probability laws $P,Q$ on $(\mathsf X,\mathcal A)$,
+\[
+\sup_{0\leq\phi\leq1}\left(\int\phi\,dQ-\int\phi\,dP\right)
+=d_{\mathrm{TV}}(P,Q),
+\]
+where the supremum ranges over measurable tests and is attained by
+a nonrandomized test. Consequently the smallest possible sum
+of the two error probabilities for testing $P$ against $Q$ is
+$1-d_{\mathrm{TV}}(P,Q)$. A test with type I error at most $\alpha$
+has power at most $\alpha+d_{\mathrm{TV}}(P,Q)$ at $Q$.
+\end{theorem}
+\begin{proof}
+Take densities $p,q$ relative to $P+Q$. The difference is
+$\int\phi(q-p)\,d(P+Q)$. It is at most
+$\int(q-p)_+\,d(P+Q)$, and equality holds for the indicator
+of $\{q>p\}$. The positive and negative parts of $q-p$ have
+equal integrals because both laws have mass one. Thus the positive
+part integrates to $d_{\mathrm{TV}}(P,Q)$ by
+Proposition~\ref{prop:total-variation-density}.
+The sum of errors is one minus the displayed difference, which
+proves the minimum. The power bound follows by adding the type I
+error to the bound on the difference.
+\end{proof}
+
+\begin{example}[The test attaining total variation]
+\label{ex:test-tv-four-outcomes}
+Use the laws of Example~\ref{ex:statistic-increased-testing-risk},
+\[
+P=(1/2,1/8,1/4,1/8),\qquad Q=(1/8,1/4,1/8,1/2).
+\]
+Reject $P$ on $\{2,4\}$, where $Q$ has larger mass. The type I
+error is $1/4$ and the power at $Q$ is $3/4$, so the sum of
+errors is $1/2$. The total variation is $1/2$, which certifies
+optimality for this sum. The statistic grouping the first two
+and last two outcomes yields total variation $1/4$, so the
+smallest error sum based on that statistic is $3/4$.
+\end{example}
+
+\begin{example}[A test with both errors zero]
+\label{ex:test-disjoint-support}
+For null $P=\operatorname{Unif}[0,1]$ and alternative
+$Q=\operatorname{Unif}[1,2]$, reject when $X>1$. Under $P$ the
+rejection probability is zero. Under $Q$ the only possible
+retention in its support is at $1$, which has probability zero,
+so the power is one. In this case $d_{\mathrm{TV}}(P,Q)=1$.
+\end{example}
+
+\subsection{Exercises}
+\label{subsec:exercises-6-1}
+
+\begin{exercise}[A test with one bit]
+\label{exer:test-one-bit-power}
+Let $X\sim\operatorname{Bernoulli}(p)$ and set $\phi(0)=a$ and
+$\phi(1)=b$, with $a,b\in[0,1]$. Compute the power at every $p$.
+When is the power nondecreasing?
+\end{exercise}
+
+\begin{exercise}[Two types of error]
+\label{exer:test-two-error-probabilities}
+In the preceding exercise take $a=0$, $b=3/4$, null $p=1/4$,
+and alternative $p=3/4$. Compute both error probabilities.
+\end{exercise}
+
+\begin{exercise}[Size and level]
+\label{exer:test-size-versus-level}
+A test has rejection probabilities $1/8$ and $1/4$ at its two null
+labels. Give its size and the set of levels at which it qualifies.
+\end{exercise}
+
+\begin{exercise}[A composite alternative]
+\label{exer:test-composite-alternative-power}
+For one Bernoulli draw, reject on success. Take null $p\leq1/3$
+and alternative $p>1/3$. Find the size and the supremum of the
+type II error over the alternative.
+\end{exercise}
+
+\begin{exercise}[An uninformative test]
+\label{exer:test-constant-level}
+For an arbitrary experiment give a test whose power at every label
+is $\alpha$. What are its errors at the null and alternative labels?
+\end{exercise}
+
+\begin{exercise}[A deterministic test as a kernel]
+\label{exer:test-indicator-kernel}
+Given a measurable set $A$, write the two action probabilities of
+the kernel that rejects precisely on $A$. Verify measurability.
+\end{exercise}
+
+\begin{exercise}[Mixing rejection regions]
+\label{exer:test-mixture-overlap}
+Let $A,B$ be measurable rejection regions. Express the test that
+chooses $A$ with probability $t$ and $B$ otherwise at each of the
+four possible membership patterns. Compute its power.
+\end{exercise}
+
+\begin{exercise}[The size of a mixture]
+\label{exer:test-size-mixture-strict}
+Under the null observe a point mass at either zero or one. Take
+two tests that reject at zero and one respectively. Compare the
+size of their equal mixture with the average of their sizes.
+\end{exercise}
+
+\begin{exercise}[Calibration in a finite law]
+\label{exer:test-finite-threshold-gamma}
+Let a statistic have masses $(1/2,1/3,1/6)$ at $0,1,2$ under
+the simple null. Choose an upper threshold and tie probability
+for exact size $1/3$.
+\end{exercise}
+
+\begin{exercise}[A threshold of zero mass]
+\label{exer:test-zero-threshold-atom}
+Let $T$ be uniform on $[0,1]$ under the null. Find an upper
+threshold for exact size $\alpha\in(0,1)$, and show that the tie
+probability has no effect.
+\end{exercise}
+
+\begin{exercise}[An exact lower-tail test]
+\label{exer:test-binomial-lower-tail}
+For the Bernoulli count with $n=2$, take null $p\geq1/2$.
+Give a nonincreasing count test of size $1/2$ and compute its power.
+\end{exercise}
+
+\begin{exercise}[A binomial upper-tail calculation]
+\label{exer:test-binomial-three-calibration}
+Take $n=3$ Bernoulli observations and null $p\leq1/2$.
+Construct an upper-tail count test of size $1/4$ and compute
+its power at $p=3/4$.
+\end{exercise}
+
+\begin{exercise}[An open binomial null]
+\label{exer:test-open-binomial-boundary}
+For $n\geq1$ and null $0\leq p<p_0<1$, show that the size of
+a nondecreasing count test equals its power evaluated at $p_0$.
+Use continuity of the binomial power function.
+\end{exercise}
+
+\begin{exercise}[Normal sample size]
+\label{exer:test-normal-power-sample-size}
+In Example~\ref{ex:test-normal-upper-tail}, fix $\theta_1>\theta_0$,
+$0<\alpha<1/2$, and $1/2<b<1$. Find the smallest integer $n\geq1$
+giving power at least $b$ at $\theta_1$.
+\end{exercise}
+
+\begin{exercise}[The opposite orientation]
+\label{exer:test-total-variation-symmetry}
+Swap the roles of $P$ and $Q$ in Theorem~\ref{thm:test-total-variation-gap}.
+Relate an optimal test for one orientation to an optimal test for
+the other.
+\end{exercise}
+
+\begin{exercise}[Two overlapping uniforms]
+\label{exer:test-overlapping-uniforms}
+Take $P$ uniform on $[0,1]$ and $Q$ uniform on $[a,a+1]$ with
+$0<a<1$. Find their total variation distance and a rejection
+region attaining the minimum sum of errors.
+\end{exercise}
+
+\begin{exercise}[A coarsened observation]
+\label{exer:test-tv-constant-statistic}
+When a test is based on a constant statistic, characterize all
+possible pairs of type I and type II errors for simple hypotheses.
+Compare their sum with the optimum using the full record.
+\end{exercise}
+
+\begin{exercise}[Power and proximity of laws]
+\label{exer:test-power-lipschitz}
+For any test $\phi$, prove
+$|\beta_\phi(\theta)-\beta_\phi(\vartheta)|\leq d_{\mathrm{TV}}(P_\theta,P_\vartheta)$.
+Deduce continuity of power at a label where the laws vary
+continuously in total variation.
+\end{exercise}
+
+\begin{exercise}[The value of randomization for one trial]
+\label{exer:test-one-bernoulli-optimal-power}
+Test $p=p_0$ against $p=p_1$ from one Bernoulli draw, with
+$0<p_0<p_1<1$. Maximize power subject to size at most $\alpha$
+by optimizing over $\phi(0),\phi(1)\in[0,1]$. Derive the
+power as a function of $\alpha$ and identify the levels at
+which a nonrandomized test attains it.
+\end{exercise}
+
+\begin{exercise}[Convexity of the achievable error pairs]
+\label{exer:test-error-region-finite}
+For simple hypotheses on a finite space, show that the set of
+achievable error pairs is the convex hull of the pairs from
+nonrandomized tests. Represent any randomized test as a
+mixture over rejection regions by choosing each outcome for
+the region with the specified rejection probability.
+\end{exercise}
+
+\begin{exercise}[All tests attaining the total variation gap]
+\label{exer:test-tv-equality-set}
+Use densities relative to $P+Q$ to characterize every test attaining
+the supremum in Theorem~\ref{thm:test-total-variation-gap}.
+Explain the freedom on the set where the two densities agree.
+\end{exercise}
+
+\begin{exercise}[Testing against a common mixture]
+\label{exer:test-composite-mixture-tv}
+Let $P_1,\ldots,P_m$ be null laws and $Q$ a simple alternative.
+If $\int\phi\,dP_i\leq\alpha$ for each $i$, show that
+\[
+\int\phi\,dQ\leq\alpha+
+\inf_{w}\,d_{\mathrm{TV}}\!\left(Q,\sum_i w_iP_i\right),
+\]
+where the infimum is over probability weights. Give an example
+where $Q$ equals a mixture of distinct null laws while it is
+different from every individual null law.
+\end{exercise}
+
+\begin{exercise}[A bound from relative entropy]
+\label{exer:test-error-sum-pinsker}
+Combine Theorems~\ref{thm:test-total-variation-gap}
+and~\ref{thm:pinsker} to bound the minimum sum of errors from
+below in terms of $D(P\|Q)$. Apply the bound to $n$ independent
+$N(0,1)$ observations against $n$ independent $N(h,1)$
+observations. Evaluate the result for $h=c/\sqrt n$.
+\end{exercise}
+
+\begin{exercise}[Sufficiency and the attainable power functions]
+\label{exer:test-sufficiency-power-region}
+Suppose a statistic $T$ has a common conditional kernel as in
+Definition~\ref{def:common-conditional-kernel}. Given a test on
+the full record, construct a randomized test based on $T$ with
+the same power at every label. Prove that the two experiments
+have identical attainable power functions.
+\end{exercise}
+
+
+
+\clearpage
+\section{Neyman--Pearson theory and composite hypotheses}
+\label{sec:neyman-pearson-composite}
+
+\subsection{Optimal tests for two simple hypotheses}
+\label{subsec:neyman-pearson-lemma}
+
+\begin{definition}[Most powerful tests]
+\label{def:most-powerful-test}
+A level-$\alpha$ test is \emph{most powerful} against a specified
+alternative law if its power at that law is at least that of
+every level-$\alpha$ test for the same null. It is \emph{uniformly
+most powerful} (UMP) against an alternative family if the
+same test is most powerful at every law in that family.
+\end{definition}
+
+For a simple null law $P$ and alternative law $Q$, write $p,q$
+for their densities relative to $\mu=P+Q$. Define the extended
+likelihood ratio $\Lambda=q/p$ on $\{p>0\}$, set $\Lambda=+\infty$
+on $\{p=0<q\}$, and set $\Lambda=0$ where both densities vanish.
+\indexnotation{\Lambda=q/p}{Likelihood ratio of the alternative law to the null law.}
+
+\begin{theorem}[Neyman--Pearson lemma]
+\label{thm:neyman-pearson}
+Let $0<\alpha<1$. There are $k\geq0$ finite and $\gamma\in[0,1]$
+such that
+\[
+\phi^\star=\mathbf 1_{\{\Lambda>k\}}+
+\gamma\mathbf 1_{\{\Lambda=k\}},
+\qquad \int\phi^\star\,dP=\alpha .
+\]
+Every such test is most powerful for testing $P$ against $Q$
+at level $\alpha$. A level-$\alpha$ test $\phi$ has the same
+power as $\phi^\star$ exactly when it agrees with $\phi^\star$
+$\mu$-almost everywhere on $\{q\ne kp\}$ and
+$k(\alpha-\int\phi\,dP)=0$.
+\end{theorem}
+\begin{proof}
+Under $P$, $\Lambda$ is finite almost surely. Let $F$ be its
+distribution function and take
+$k=\inf\{t\geq0:F(t)\geq1-\alpha\}$. Since $F$ tends to one,
+$k$ is finite. Right continuity gives $F(k)\geq1-\alpha$ and
+the left limit satisfies $F(k-)\leq1-\alpha$, including at zero.
+Thus $P(\Lambda>k)\leq\alpha\leq P(\Lambda\geq k)$. If the tie
+has positive mass, choose $\gamma$ to fill the difference as in
+Proposition~\ref{prop:test-threshold-randomization}. If the
+tie has mass zero, the upper tail already has mass $\alpha$.
+
+For any level-$\alpha$ test $\phi$, subtract its power from
+that of $\phi^\star$ and write the difference as
+\[
+\int(\phi^\star-\phi)(q-kp)\,d\mu
++k\left(\alpha-\int\phi\,dP\right).
+\]
+The first integrand is nonnegative. Where $q>kp$ the threshold
+test is one, and where $q<kp$ it is zero. The second term is
+nonnegative by the size constraint. The sum is zero exactly
+when both terms vanish. The first term vanishes precisely
+when the tests agree almost everywhere on $\{q\ne kp\}$.
+\end{proof}
+
+\begin{example}[Randomization at a binomial likelihood ratio]
+\label{ex:np-two-bernoulli}
+For two iid Bernoulli observations, test $p=1/4$ against $p=3/4$
+at level $\alpha=1/4$. The likelihood ratios at counts zero,
+one, and two are $1/9,1,9$. Under the null the upper count
+has mass $1/16$ and the middle count has mass $6/16$, so a
+most powerful test rejects at count two and rejects with
+probability $1/2$ at count one. Its power is
+$9/16+(1/2)(6/16)=3/4$.
+\end{example}
+
+\begin{example}[An alternative with mass outside the null support]
+\label{ex:np-singular-alternative}
+Let $P$ be uniform on $[0,1]$ and let $Q$ be the equally weighted
+mixture of $P$ and the uniform law on $[2,3]$. The ratio is
+infinite on $[2,3]$ and $1/2$ on $[0,1]$, up to $\mu$-null sets.
+A most powerful level-$\alpha$ test rejects on $[2,3]$ and
+rejects with probability $\alpha$ on $[0,1]$. Its power is
+$(1+\alpha)/2$.
+\end{example}
+
+\begin{example}[A most powerful test with size below its level]
+\label{ex:np-unused-size}
+On three outcomes take masses $P=(1/2,1/2,0)$ and
+$Q=(1/4,0,3/4)$. Rejecting on the first and third outcomes
+has size $1/2$ and power one. At level $3/4$ one can raise the
+size to $3/4$ by rejecting with probability $1/2$ on the
+second outcome, without changing the power. The exact-size
+Neyman--Pearson test has threshold $k=0$ here.
+\end{example}
+
+\subsection{Monotone likelihood ratios and one-sided tests}
+\label{subsec:monotone-likelihood-ratio}
+
+\begin{definition}[Monotone likelihood ratio]
+\label{def:monotone-likelihood-ratio}
+Let $\Theta\subseteq\R$ be ordered by the usual order. Suppose the
+model has densities relative to a common $\sigma$-finite measure
+and a common measurable set $S$ on which each density is positive
+almost everywhere. Each density vanishes almost everywhere off $S$.
+The model has a \emph{monotone likelihood ratio} in a real statistic
+$T$ if, for each $\theta_1<\theta_2$, the ratio
+$f_{\theta_2}/f_{\theta_1}$ equals $r_{\theta_1,\theta_2}(T)$
+almost everywhere on $S$ for some nonnegative nondecreasing
+Borel function $r_{\theta_1,\theta_2}:\R\to[0,\infty]$.
+\end{definition}
+
+\begin{theorem}[One-sided tests with a monotone likelihood ratio]
+\label{thm:ump-monotone-likelihood-ratio}
+Suppose the model has a monotone likelihood ratio in $T$, and
+let $\theta_0\in\Theta$. For $0<\alpha<1$, choose $c\in\R$ and
+$\gamma\in[0,1]$ so the threshold test of
+Proposition~\ref{prop:test-threshold-randomization} has rejection
+probability $\alpha$ under $P_{\theta_0}$. Such a choice exists.
+The test is UMP of size $\alpha$ for the null $\theta\leq\theta_0$
+against $\theta>\theta_0$.
+\end{theorem}
+\begin{proof}
+The same quantile argument as in Theorem~\ref{thm:neyman-pearson},
+now for the real statistic $T$ under $P_{\theta_0}$, gives a finite
+$c$ whose upper tails bracket $\alpha$. Choose $\gamma$ using
+Proposition~\ref{prop:test-threshold-randomization}. Write $\phi^\star$
+for the resulting test.
+
+For $\theta<\theta_0$, let $r(T)=f_{\theta_0}/f_\theta$ on $S$.
+Under $P_\theta$, $r(T)$ is integrable with mean one. Write
+$\phi^\star=a(T)$ with $a$ nondecreasing. If $T'$ is an independent
+copy of $T$ under $P_\theta$, then
+\[
+2\operatorname{Cov}_\theta(a(T),r(T))
+=\mathbb E_\theta[(a(T)-a(T'))(r(T)-r(T'))]\geq0 .
+\]
+The product is integrable since $a$ is bounded. Changing
+measure, $\mathbb E_{\theta_0}\phi^\star=\mathbb E_\theta[a(T)r(T)]$
+is therefore at least $\mathbb E_\theta\phi^\star$. Hence the
+size is attained at $\theta_0$.
+
+Fix $\theta>\theta_0$ and let $r(T)=f_\theta/f_{\theta_0}$.
+Put $k=r(c)$. This is finite since $r$ is nondecreasing,
+finite $P_{\theta_0}$-almost surely at $T$, and
+$P_{\theta_0}(T\geq c)\geq\alpha>0$. On $S$, the test is
+one wherever $r(T)>k$ and zero wherever $r(T)<k$, almost
+everywhere. Thus for any composite-null level-$\alpha$
+test $\phi$, the same difference-of-power identity as in the
+Neyman--Pearson proof applies with $p=f_{\theta_0}$ and
+$q=f_\theta$. Its first term is nonnegative by these comparisons.
+Its second term is nonnegative because $\theta_0$ is in the null.
+This proves optimality at each $\theta>\theta_0$.
+\end{proof}
+
+\begin{example}[A binomial upper-tail test is UMP]
+\label{ex:ump-binomial-upper-tail}
+For iid Bernoulli trials with $0<p<1$, the likelihood ratio for
+$p_2>p_1$ is
+\[
+\left(\frac{1-p_2}{1-p_1}\right)^n
+\left(\frac{p_2(1-p_1)}{p_1(1-p_2)}\right)^S
+\]
+where $S$ is the count. The base of the second factor exceeds
+one, so the ratio increases in $S$. For null $p\leq p_0$, the
+upper-tail count test calibrated at $p_0$ is UMP by
+Theorem~\ref{thm:ump-monotone-likelihood-ratio}.
+\end{example}
+
+\begin{example}[A normal upper-tail test is UMP]
+\label{ex:ump-normal-upper-tail}
+For iid $N(\theta,v)$ observations with known $v>0$, the log
+likelihood ratio for $\theta_2>\theta_1$ is
+\[
+\frac{n(\theta_2-\theta_1)}{v}\overline X
+-\frac{n(\theta_2^2-\theta_1^2)}{2v}.
+\]
+The ratio increases in $\overline X$, so the calibrated test
+in Example~\ref{ex:test-normal-upper-tail} is UMP against
+$\theta>\theta_0$.
+\end{example}
+
+\subsection{A two-sided alternative}
+\label{subsec:np-no-ump-two-sided}
+
+\begin{example}[No UMP test for two opposite normal shifts]
+\label{ex:no-ump-opposite-normal-shifts}
+Observe $X\sim N(\theta,1)$. Test $\theta=0$ against
+$\theta\in\{-a,a\}$ with $a>0$ and $0<\alpha<1$.
+Against $a$, the likelihood ratio is $\exp(ax-a^2/2)$,
+strictly increasing in $x$. The unique most powerful test
+up to null sets rejects on the right tail of null mass $\alpha$,
+by the equality condition in Theorem~\ref{thm:neyman-pearson}
+and the absence of atoms. Against $-a$, the ratio is strictly
+decreasing, so the unique most powerful test rejects on the
+left tail of null mass $\alpha$. The two regions differ on
+a set of positive null mass. Therefore no level-$\alpha$ test
+is most powerful against both alternatives.
+\end{example}
+
+\subsection{Exercises}
+\label{subsec:exercises-6-2}
+
+\begin{exercise}[A likelihood ratio on four outcomes]
+\label{exer:np-four-ratios}
+Let $P=(1/4,1/4,1/4,1/4)$ and $Q=(1/8,1/8,1/4,1/2)$.
+Find an exact-size test at level $1/4$ and compute its power.
+\end{exercise}
+
+\begin{exercise}[A tie at the critical ratio]
+\label{exer:np-finite-tie}
+For the laws of Exercise~\ref{exer:np-four-ratios}, find all
+most powerful level-$5/8$ tests. Identify where they can differ.
+\end{exercise}
+
+\begin{exercise}[An alternative equal to the null]
+\label{exer:np-identical-laws}
+For $P=Q$, compute the maximum power at level $\alpha$ and
+characterize all tests attaining it.
+\end{exercise}
+
+\begin{exercise}[Disjoint supports]
+\label{exer:np-mutually-singular}
+Suppose $P$ and $Q$ are mutually singular. Construct a
+nonrandomized test of size zero and power one. Describe an
+exact-size randomized test at an arbitrary level $0<\alpha<1$.
+\end{exercise}
+
+\begin{exercise}[A zero ratio at the threshold]
+\label{exer:np-zero-threshold-condition}
+In Example~\ref{ex:np-unused-size}, determine all most powerful
+tests at level $3/4$ on the three outcomes.
+\end{exercise}
+
+\begin{exercise}[One Bernoulli trial revisited]
+\label{exer:np-one-bit-ratio}
+For $0<p_0<p_1<1$, order the two likelihood ratios of one
+Bernoulli draw and use a randomized threshold to derive
+the maximum power for $0<\alpha<1$.
+\end{exercise}
+
+\begin{exercise}[Changing which law is the null]
+\label{exer:np-swap-null-alternative}
+Reverse the hypotheses in Example~\ref{ex:np-two-bernoulli}.
+At level $1/4$, find the critical count, tie probability, and power.
+\end{exercise}
+
+\begin{exercise}[A positive critical ratio]
+\label{exer:np-positive-critical-ratio}
+Suppose $P$ and $Q$ have positive masses on the same finite space.
+Show that every most powerful test at level $0<\alpha<1$ has
+size exactly $\alpha$.
+\end{exercise}
+
+\begin{exercise}[Testing a normal scale]
+\label{exer:np-normal-scale}
+For one draw, test $N(0,1)$ against $N(0,4)$. Show that the
+likelihood ratio increases with $|x|$ and give the most powerful
+level-$\alpha$ rule in terms of the standard normal distribution.
+\end{exercise}
+
+\begin{exercise}[Testing an exponential rate]
+\label{exer:np-exponential-rate-simple}
+For one exponential draw, test rate $\lambda_0$ against rate
+$\lambda_1>\lambda_0>0$. Determine the direction of the
+threshold, calibrate it, and compute the power.
+\end{exercise}
+
+\begin{exercise}[Poisson likelihood ratios]
+\label{exer:np-poisson-mlr}
+For $n$ independent Poisson counts of common rate $\lambda>0$,
+show that the family has a monotone likelihood ratio in the
+total count. Specify the UMP rule for $\lambda\leq\lambda_0$
+against $\lambda>\lambda_0$ in terms of a null quantile.
+\end{exercise}
+
+\begin{exercise}[A lower-tail normal test]
+\label{exer:np-normal-lower-tail}
+In the known-variance normal location model, construct a UMP
+test for $\theta\geq\theta_0$ against $\theta<\theta_0$ by
+reversing the order of the parameter and the sample mean.
+\end{exercise}
+
+\begin{exercise}[Monotonicity by a change of measure]
+\label{exer:np-monotone-power-functions}
+Under the hypotheses of Theorem~\ref{thm:ump-monotone-likelihood-ratio},
+show that every bounded nondecreasing function of $T$ has
+nondecreasing expectation in $\theta$.
+\end{exercise}
+
+\begin{exercise}[A change of scale for the statistic]
+\label{exer:np-mlr-increasing-transform}
+Suppose the statistic takes finitely many real values and a model
+has a monotone likelihood ratio in that statistic. Show that any
+strictly increasing real transformation of its values preserves
+the likelihood ratio property and the threshold tests.
+\end{exercise}
+
+\begin{exercise}[An endpoint not in the null]
+\label{exer:np-open-normal-null}
+For a normal mean with known variance, take null $\theta<0$
+and alternative $\theta>0$. Show that every level-$\alpha$
+test also has rejection probability at most $\alpha$ at $\theta=0$.
+Use continuity in total variation to conclude that the usual
+upper-tail test calibrated at zero is UMP.
+\end{exercise}
+
+\begin{exercise}[A shared rejection region]
+\label{exer:np-common-region-different-ratios}
+Give two distinct alternative laws on a finite space for which
+the same nonrandomized level-$\alpha$ test is most powerful
+against either one at a specified simple null.
+\end{exercise}
+
+\begin{exercise}[A necessary condition for two-sided optimality]
+\label{exer:np-two-sided-uniqueness}
+In Example~\ref{ex:no-ump-opposite-normal-shifts}, write the two
+critical regions using the standard normal quantiles. Show
+that they differ on a set of positive null probability even
+when $\alpha>1/2$.
+\end{exercise}
+
+\begin{exercise}[Testing after observing a sufficient count]
+\label{exer:np-full-vs-count}
+For $n$ iid Bernoulli observations and two distinct interior
+parameters, compare the likelihood ratio on the record with
+the ratio on the count. Explain how this gives an optimal
+test on the full record.
+\end{exercise}
+
+\begin{exercise}[Power as a function of level]
+\label{exer:np-power-concavity}
+For a fixed simple null and simple alternative, show that
+the supremum of the power over level-$\alpha$ tests is a
+nondecreasing concave function of $\alpha$ on $[0,1]$.
+Use mixtures of tests to prove concavity.
+\end{exercise}
+
+\begin{exercise}[Optimal tests for a finite family of alternatives]
+\label{exer:np-finite-common-order}
+Let $P$ have positive masses on a finite space and let
+$Q_1,\ldots,Q_m$ be alternatives. Suppose one ordering of the
+outcomes makes all the ratios $q_j/p$ nonincreasing. Construct
+a test that is most powerful against every $Q_j$ at level
+$\alpha$, and prove its optimality even when some ratios tie.
+\end{exercise}
+
+\begin{exercise}[Finite composite null and a mixture certificate]
+\label{exer:np-null-mixture-certificate}
+Let the null consist of laws $P_1,\ldots,P_m$ and let $Q$
+be a simple alternative. Suppose a test is most powerful at
+level $\alpha$ for the simple null $\sum_i w_iP_i$, where
+the $w_i$ are probability weights. If it also has level
+$\alpha$ for the composite null, show that it is most powerful
+for the composite problem. Give a finite example with at least
+two positive weights where the certificate applies.
+\end{exercise}
+
+\begin{exercise}[A unique nonrandomized test and a randomized tie]
+\label{exer:np-finite-uniqueness}
+Assume a simple null and alternative have positive masses
+on the same finite space and all likelihood ratios are distinct.
+For $0<\alpha<1$, prove that the most powerful test is unique.
+Give a necessary and sufficient condition on $\alpha$ for that
+test to be nonrandomized.
+\end{exercise}
+
+\begin{exercise}[A maximin test for opposite normal shifts]
+\label{exer:np-maximin-opposite-shifts}
+In Example~\ref{ex:no-ump-opposite-normal-shifts}, maximize the
+smaller of the powers at $-a$ and $a$ at level $\alpha$.
+First apply Neyman--Pearson to the equal mixture of the two
+alternatives. Use the symmetry of the maximizing test to show
+that it solves the maximin problem.
+\end{exercise}
+
+\begin{exercise}[A moving-support one-sided test]
+\label{exer:np-uniform-one-sided}
+Let $X_1,\ldots,X_n$ be iid uniform on $[0,\theta]$, $\theta>0$.
+Test $\theta\leq\theta_0$ against $\theta>\theta_0$ by rejecting
+for large sample maximum. Calibrate to size $\alpha\in(0,1)$
+and prove the test is UMP by applying Neyman--Pearson at the
+boundary null for each alternative. Include the region outside
+the support at $\theta_0$.
+\end{exercise}
+
+
+
+\clearpage
+\section{Confidence sets and inversion of tests}
+\label{sec:confidence-sets-test-inversion}
+
+Fix an experiment $\mathcal E=(\mathsf X,\mathcal A,
+(P_\theta)_{\theta\in\Theta})$ and equip $\Theta$ with a
+sigma algebra $\mathcal T$.
+
+\subsection{Coverage and test inversion}
+\label{subsec:confidence-coverage-inversion}
+
+\begin{definition}[Confidence set and coverage]
+\label{def:confidence-set-coverage}
+\indexnotation{C(X),\ \operatorname{cov}_C(\theta)}{Confidence set and its coverage at parameter \(\theta\).}
+A confidence procedure assigns a subset $C(x)\subseteq\Theta$ to
+each record $x$, with measurable graph
+\[
+G_C=\{(x,t):t\in C(x)\}\in\mathcal A\otimes\mathcal T .
+\]
+Its coverage at $\theta$ is
+$\operatorname{cov}_C(\theta)=P_\theta\{\theta\in C(X)\}$.
+It has confidence level $1-\alpha$ if
+$\inf_{\theta\in\Theta}\operatorname{cov}_C(\theta)\geq1-\alpha$.
+It has \emph{pointwise exact coverage} $1-\alpha$ if equality
+holds at every $\theta$. A randomized procedure may use an
+independent $U$ uniform on $[0,1]$ as part of the observation.
+Coverage then uses $P_\theta\otimes\operatorname{Unif}[0,1]$.
+\end{definition}
+
+\begin{theorem}[Test--confidence duality]
+\label{thm:test-confidence-duality}
+Suppose $\phi(x,t)\in[0,1]$ is product measurable and
+$\mathbb E_t[\phi(X,t)]\leq\alpha$ for every $t\in\Theta$.
+Using a single independent uniform $U$, form
+\[
+C(x,u)=\{t\in\Theta:u\geq\phi(x,t)\}.
+\]
+This is a confidence procedure with
+$\operatorname{cov}_C(\theta)=1-\mathbb E_\theta[\phi(X,\theta)]$.
+If the tests are nonrandomized one can use
+$C(x)=\{t:\phi(x,t)=0\}$. Conversely, a confidence procedure of
+level $1-\alpha$ gives a level-$\alpha$ test of each point
+null $t$ by rejecting when $t\notin C$. For a randomized
+confidence procedure the corresponding test function averages
+this rejection indicator over $U$.
+\end{theorem}
+\begin{proof}
+The graph is measurable since it is defined by the comparison
+$u\geq\phi(x,t)$ of two product-measurable functions.
+At $\theta$, conditional on $X=x$, the probability that $C$
+excludes $\theta$ is $\phi(x,\theta)$. Integration gives the
+coverage identity. For nonrandomized tests, the graph given by
+$\phi(x,t)=0$ gives the same identity.
+
+Conversely, the test function at $t$ is the indicator of
+$t\notin C(x)$ in the nonrandomized case. In the randomized case it is
+$\int_0^1\mathbf 1_{\{t\notin C(x,u)\}}\,du$, product measurable by
+integration of the graph indicator. Its rejection probability
+at $t$ is $1-\operatorname{cov}_C(t)\leq\alpha$ by Tonelli.
+\end{proof}
+
+\begin{example}[Exact coverage with one Bernoulli observation]
+\label{ex:confidence-bernoulli-shared-randomizer}
+For $X$ Bernoulli of parameter $t$, fix $0<\alpha<1$.
+Against larger success probabilities, the exact-size test
+of $t$ rejects at $X=1$ with probability $\min\{1,\alpha/t\}$
+for $t>0$ and with probability one for $t=0$. At $X=0$ it
+rejects with probability $(\alpha-t)/(1-t)$ for $t<\alpha$
+and with probability zero for $t\geq\alpha$.
+For $t\geq\alpha$ its rejection probability under $t$ is
+$t(\alpha/t)=\alpha$. For $t<\alpha$ the probability is
+$t+(1-t)(\alpha-t)/(1-t)=\alpha$. Inversion gives pointwise
+exact coverage using the same $U$ for every $t$.
+\end{example}
+
+\subsection{Pivots and continuous models}
+\label{subsec:confidence-pivots}
+
+\begin{definition}[Pivot]
+\label{def:confidence-pivot}
+\indexnotation{W(X,\theta)}{Pivot whose law at the true parameter is parameter independent.}
+A real pivot is a product-measurable function $W(x,t)$ whose
+law under $P_\theta$ at $t=\theta$ is the same for all $\theta$.
+\end{definition}
+
+\begin{proposition}[Inverting a pivot]
+\label{prop:confidence-pivot-inversion}
+Let $W$ be a pivot with common law $\nu$ at the true label.
+If $A$ is Borel and $\nu(A)\geq1-\alpha$, then
+\[
+C(x)=\{t:W(x,t)\in A\}
+\]
+has coverage $\nu(A)$ at every label.
+\end{proposition}
+\begin{proof}
+The graph is the inverse image of $A$ under $W$. The event
+that $C(X)$ contains $\theta$ is $\{W(X,\theta)\in A\}$, of
+probability $\nu(A)$.
+\end{proof}
+
+\begin{example}[A normal mean with known variance]
+\label{ex:confidence-normal-known-variance}
+For iid $N(\theta,v)$ observations with known $v>0$,
+$W(X,\theta)=(\overline X-\theta)\sqrt{n/v}$ has law $N(0,1)$.
+Write $z_u=\Phi^{-1}(u)$ for $0<u<1$. The region
+$[-z_{1-\alpha/2},z_{1-\alpha/2}]$ has mass $1-\alpha$.
+Inversion gives
+\[
+\left[\overline X-z_{1-\alpha/2}\sqrt{v/n},\
+      \overline X+z_{1-\alpha/2}\sqrt{v/n}\right].
+\]
+The same interval results from inverting the two-tailed
+tests that reject $t$ when $|(\overline X-t)\sqrt{n/v}|$
+exceeds $z_{1-\alpha/2}$.
+\end{example}
+
+\begin{example}[A uniform endpoint]
+\label{ex:confidence-uniform-endpoint}
+For iid $\operatorname{Unif}[0,\theta]$ observations let $T$ be
+the maximum. By Example~\ref{ex:statistic-uniform-maximum},
+$(T/\theta)^n$ is uniform on $[0,1]$. Inverting the pivot
+region $[\alpha,1]$ yields
+\[
+C(X)=[T,T\alpha^{-1/n}]\cap(0,\infty).
+\]
+Its coverage is exactly $1-\alpha$ for every $\theta>0$.
+The parameter at the true endpoint enters through the support,
+and the argument uses the distribution of the maximum directly.
+\end{example}
+
+
+\begin{example}[Changing the allocation of the normal tails]
+\label{ex:confidence-normal-tail-allocation}
+In the known-variance normal model, assign probability $a$
+to the lower pivot tail and $b$ to the upper tail, where
+$a,b>0$ and $a+b=\alpha$. The interval is
+\[
+[\overline X-z_{1-b}\sqrt{v/n},\
+ \overline X-z_a\sqrt{v/n}].
+\]
+Its coverage is $1-\alpha$. For $b<a$ its lower endpoint
+is farther below $\overline X$ than in the equal-tail
+interval, while the upper endpoint also moves downward.
+Both facts follow from strict monotonicity of the normal quantiles.
+\end{example}
+
+\subsection{Discrete tails and binomial intervals}
+\label{subsec:confidence-discrete}
+
+\begin{definition}[$p$-value]
+\label{def:test-p-value}
+\indexnotation{p_t(X)}{\(p\)-value for the null label \(t\).}
+A $p$-value for the null label $t$ is a measurable
+$p_t:\mathsf X\to[0,1]$ satisfying
+\[
+P_t\{p_t(X)\leq u\}\leq u\qquad(0\leq u\leq1).
+\]
+The same definition applies on the augmented observation space
+when the $p$-value uses independent randomization.
+\end{definition}
+
+\begin{proposition}[Discrete upper tails]
+\label{prop:discrete-tail-pvalues}
+Let $S$ take finitely many ordered real values and set
+\[
+p_t^+(s)=P_t(S\geq s),\qquad
+\widetilde p_t^+(s,u)=P_t(S>s)+uP_t(S=s).
+\]
+The first expression evaluated at $S$ is a $p$-value.
+For independent $U$ uniform on $[0,1]$, the second expression
+evaluated at $(S,U)$ is uniform on $[0,1]$ under $P_t$.
+The corresponding lower-tail statements follow by replacing
+$S$ with $-S$.
+\end{proposition}
+\begin{proof}
+For the first statement, if there is a possible value $s$ with
+$p_t^+(s)\leq u$, let $s_0$ be the smallest such value.
+Then the event $\{p_t^+(S)\leq u\}$ is $\{S\geq s_0\}$ and has
+probability $p_t^+(s_0)\leq u$. If there is no such value the
+event is empty.
+
+For the second statement, conditional on a value $s$ with
+positive mass, $\widetilde p_t^+(s,U)$ is uniform on
+$[P_t(S>s),P_t(S\geq s)]$. In descending order of $s$, these
+intervals cover $[0,1]$ with disjoint interiors. Each interval
+is selected with probability equal to its length. The
+resulting distribution is uniform, as is seen by summing
+the lengths of the intersections with any Borel set.
+\end{proof}
+
+\begin{proposition}[Equal-tail binomial interval]
+\label{prop:clopper-pearson-interval}
+Let $S$ be the count of $n\geq1$ iid Bernoulli draws with
+parameter $p\in[0,1]$. For $0<\alpha<1$, put $a=\alpha/2$.
+At observed count $k$, define $L_0=0$, $U_n=1$, and the
+remaining endpoints by
+\[
+P_{L_k}(S\geq k)=a\quad (1\leq k\leq n),\qquad
+P_{U_k}(S\leq k)=a\quad (0\leq k<n).
+\]
+The equations have unique solutions in $(0,1)$. The set
+$[L_k,U_k]$, called the Clopper--Pearson interval, has
+coverage at least $1-\alpha$ at every $p$.
+\end{proposition}
+\begin{proof}
+The binomial upper tail at $k\geq1$ is continuous in $p$ and
+strictly increases from zero to one. For strict increase
+between two interior probabilities $p<q$, use the shared
+uniform construction in Proposition~\ref{prop:test-binomial-composite-calibration}.
+There is positive probability that exactly $k-1$ uniforms
+are below $p$, one is in $(p,q)$, and all others exceed $q$.
+The count crosses $k$ on this event. The lower tail at
+$k<n$ is one minus the upper tail at $k+1$, so it strictly
+decreases. This proves existence and uniqueness of the roots.
+For $0<k<n$, at $p=L_k$ the lower tail is at least
+$1-P_{L_k}(S\geq k)=1-a>a$. Hence $L_k<U_k$, and the endpoint
+cases also satisfy $L_k\leq U_k$.
+
+At the true $p$, exclusion by the lower endpoint requires
+$P_p(S\geq k)<a$, by monotonicity. Exclusion by the upper
+endpoint requires $P_p(S\leq k)<a$. Each event has probability
+at most $a$ by Proposition~\ref{prop:discrete-tail-pvalues}.
+The union has probability at most $2a=\alpha$.
+\end{proof}
+
+\begin{example}[Coverage on a finite space]
+\label{ex:confidence-binomial-boundary}
+At count zero the binomial interval is
+$[0,1-(\alpha/2)^{1/n}]$ since $P_p(S=0)=(1-p)^n$.
+At count $n$ it is $[(\alpha/2)^{1/n},1]$.
+At $p=0$ and $p=1$ the true label is included with probability
+one, so the interval's uniform coverage guarantee can be
+strict.
+\end{example}
+
+\begin{example}[An exact randomized one-sided bound]
+\label{ex:confidence-binomial-randomized-bound}
+Let $S$ be the binomial count and let $U$ be independent and
+uniform on $[0,1]$. Put
+\[
+C(S,U)=\{p\in[0,1]:\widetilde p_p^+(S,U)>\alpha\}.
+\]
+The graph is measurable since for each $s$ the randomized
+tail is a polynomial in $p$ with coefficients depending
+continuously on $U$. Under the true $p$ it is uniform by
+Proposition~\ref{prop:discrete-tail-pvalues}, so the coverage
+is $1-\alpha$ even at $p=0,1$. For fixed $(s,u)$ the tail is
+$(1-u)P_p(S>s)+uP_p(S\geq s)$, a nondecreasing function of
+$p$. Thus $C$ is an upper interval in the parameter space,
+possibly empty or the whole space.
+\end{example}
+
+\subsection{Exercises}
+\label{subsec:exercises-6-3}
+
+\begin{exercise}[Reading coverage]
+\label{exer:coverage-from-acceptance}
+If a point-null test rejects the true label $t$ with probability
+$0.04$ at every $t$, find the coverage of its inversion.
+\end{exercise}
+
+\begin{exercise}[Restricting the parameter space]
+\label{exer:confidence-restricted-parameter}
+For the normal mean interval in Example~\ref{ex:confidence-normal-known-variance},
+intersect the interval with a known parameter space $[0,\infty)$.
+Prove that coverage remains exact at every allowed label.
+\end{exercise}
+
+\begin{exercise}[Randomization on a singleton model]
+\label{exer:confidence-singleton-randomization}
+For a model with one label and a constant observation, describe
+all possible coverages of nonrandomized confidence sets. Construct
+a randomized confidence set with coverage $1-\alpha$.
+\end{exercise}
+
+\begin{exercise}[When the set is empty]
+\label{exer:confidence-empty-set-bound}
+Show that a level-$1-\alpha$ confidence procedure produces the
+empty set with probability at most $\alpha$ at each label,
+provided the empty-set event is measurable.
+\end{exercise}
+
+\begin{exercise}[Inversion on two labels]
+\label{exer:confidence-two-label-inversion}
+Let the labels be $0,1$ and let $P_t(X=t)=3/4$ for a binary
+observation. Invert the tests that each reject their own label
+when $X\ne t$. Find the resulting set and its coverage.
+\end{exercise}
+
+\begin{exercise}[An upper bound for a normal mean]
+\label{exer:confidence-normal-upper-bound}
+Invert the lower-tail point-null tests at level $\alpha$ for
+a normal mean with known variance. Write the resulting
+one-sided confidence set and verify coverage directly.
+\end{exercise}
+
+\begin{exercise}[Interval length and sample size]
+\label{exer:confidence-normal-fixed-width}
+In Example~\ref{ex:confidence-normal-known-variance}, find
+the smallest $n\geq1$ giving interval length at most $w>0$.
+\end{exercise}
+
+\begin{exercise}[A pivot for a uniform minimum]
+\label{exer:confidence-uniform-minimum}
+For $n$ iid draws from $\operatorname{Unif}[0,\theta]$, $\theta>0$,
+find the law of the sample minimum divided by $\theta$. Invert a
+central pivot region to obtain an interval for $\theta$.
+\end{exercise}
+
+\begin{exercise}[Reallocating pivot tails]
+\label{exer:confidence-uniform-pivot-tail-allocation}
+In Example~\ref{ex:confidence-uniform-endpoint}, invert
+$[a,1-b]$ for $a>0$, $b\geq0$, and $a+b=\alpha$.
+Compare the lower and upper endpoints with those for $b=0$.
+\end{exercise}
+
+\begin{exercise}[A transformed normal interval]
+\label{exer:confidence-normal-exp-transform}
+For a normal mean with known variance, transform both
+endpoints of the usual interval by the exponential map.
+Find its coverage for the target $e^\theta$.
+\end{exercise}
+
+\begin{exercise}[A finite upper-tail p-value]
+\label{exer:confidence-discrete-tail-table}
+Let $S$ have masses $(1/2,1/3,1/6)$ at $0,1,2$ under a
+point null. Tabulate $P(S\geq s)$ and compute the size of
+the test that rejects when this tail is at most $1/4$.
+\end{exercise}
+
+\begin{exercise}[Randomization intervals]
+\label{exer:confidence-discrete-randomization-table}
+For the law in Exercise~\ref{exer:confidence-discrete-tail-table},
+list the three intervals used by the randomized upper-tail
+$p$-value. Compute its rejection probability at level $1/4$.
+\end{exercise}
+
+\begin{exercise}[Omitting the observed atom]
+\label{exer:confidence-strict-tail-invalid}
+For one fair Bernoulli draw, show that $P(S>s)$ evaluated
+at the observed $s=S$ is not a valid $p$-value. Exhibit a
+level at which it rejects too often.
+\end{exercise}
+
+\begin{exercise}[A two-tailed p-value]
+\label{exer:confidence-two-tail-union-bound}
+Suppose $p^-,p^+$ are valid $p$-values under the same law.
+Show that $\min\{1,2\min(p^-,p^+)\}$ is also valid.
+Which inequality in the proof can be strict?
+\end{exercise}
+
+\begin{exercise}[Endpoints with one draw]
+\label{exer:confidence-cp-one-draw}
+Write the Clopper--Pearson intervals at counts zero and one
+when $n=1$. Determine the coverage function on $[0,1]$,
+including at the two interior interval endpoints.
+\end{exercise}
+
+\begin{exercise}[Binomial symmetry]
+\label{exer:confidence-cp-symmetry}
+Show that the equal-tail binomial endpoints satisfy
+$L_k=1-U_{n-k}$ for $0\leq k\leq n$.
+\end{exercise}
+
+\begin{exercise}[A randomized lower bound at the boundary]
+\label{exer:confidence-randomized-bound-zero}
+In Example~\ref{ex:confidence-binomial-randomized-bound}, take
+the true parameter to be zero. Determine the event in $U$
+on which zero belongs to the set. When does the set contain
+the entire parameter space?
+\end{exercise}
+
+\begin{exercise}[Conservatism at an interior label]
+\label{exer:confidence-binomial-interior-conservatism}
+For $n=2$ and nominal confidence level $3/4$, use the
+binomial tail probabilities at $p=1/2$ to compute the
+coverage of the equal-tail interval there.
+\end{exercise}
+
+\begin{exercise}[Nested tests and confidence sets]
+\label{exer:confidence-inversion-nesting}
+Suppose $\phi_\alpha(x,t)$ is nondecreasing in $\alpha$ for
+every $(x,t)$, with level $\alpha$ at each point null.
+Use one common $U$ to prove nesting of the inverted
+confidence sets as $\alpha$ varies.
+\end{exercise}
+
+\begin{exercise}[Expected length from inclusion probabilities]
+\label{exer:confidence-expected-length-tonelli}
+Let $\Theta\subseteq\R$ be Borel and let $C$ have a
+measurable graph. Use Tonelli to write the expected Lebesgue
+measure of $C(X)$ under $P_\theta$ as an integral of
+inclusion probabilities. Interpret the integrand for a false
+label in terms of the inverted test.
+\end{exercise}
+
+\begin{exercise}[Exclusion probabilities for one-sided intervals]
+\label{exer:confidence-normal-ump-lower-bound}
+In the known-variance normal location model, restrict to
+confidence procedures whose sets are upper intervals in $\R$.
+For fixed $t$, compare exclusion probabilities under $\theta>t$
+using Theorem~\ref{thm:ump-monotone-likelihood-ratio}.
+Show that inverting its tests maximizes those exclusion
+probabilities simultaneously for all $t<\theta$.
+\end{exercise}
+
+\begin{exercise}[An exact two-sided randomized binomial procedure]
+\label{exer:confidence-binomial-two-sided-randomized}
+Use $R=\widetilde p_p^+(S,U)$ and reject the point null $p$
+when $R\leq\alpha/2$ or $R\geq1-\alpha/2$. Prove that
+the inverted set has exact coverage at every label and
+is an interval when nonempty. Allow open endpoints.
+\end{exercise}
+
+\begin{exercise}[Testing power and confidence-set discrimination]
+\label{exer:confidence-false-label-power}
+For two normal means $t<\theta$, invert the family of
+level-$\alpha$ upper-tail tests. Compute $P_\theta(t\notin C(X))$.
+Show that no other level-$1-\alpha$ confidence procedure
+excludes $t$ with greater probability under $P_\theta$.
+\end{exercise}
+
+\begin{exercise}[Inverting tests for a function of the parameter]
+\label{exer:confidence-target-composite-null}
+Let $g:\Theta\to\R$ be measurable. For each possible target
+value $r$, suppose a product-measurable test family has
+size at most $\alpha$ for the null $\{\theta:g(\theta)=r\}$.
+Construct a confidence set for $g(\theta)$ and prove its
+uniform coverage. Explain how to use a fixed independent
+uniform variable for all target values.
+\end{exercise}
+
+
+
+\clearpage
+\section{Multiple decisions and error criteria}
+\label{sec:multiple-decisions-error-criteria}
+
+\subsection{Choosing one of several labels}
+\label{subsec:multiclass-decision-error}
+
+\begin{definition}[Classification error]
+\label{def:multiclass-error}
+Let $\Theta=\{1,\ldots,m\}$ with observation laws $P_i$. A
+classification rule is a decision kernel with the same set of
+actions. Write $q_j(x)$ for the probability of choosing $j$ at $x$.
+The zero-one risk at $i$ is $e_i(q)=1-\int q_i\,dP_i$.
+For a prior $\pi$ on the labels the average error is
+$e_\pi(q)=\sum_i\pi_i e_i(q)$ and the worst-case error is
+$\max_i e_i(q)$.
+\end{definition}
+
+\begin{proposition}[Minimum average classification error]
+\label{prop:multiclass-bayes-error}
+Let $f_i=dP_i/d\mu$ for a common finite dominating measure.
+The minimum average error is
+\[
+1-\int \max_i\{\pi_i f_i(x)\}\,\mu(dx).
+\]
+A rule attains it exactly when it puts all its action mass on
+maximizers of $\pi_i f_i(x)$ for $\mu$-almost every $x$.
+\end{proposition}
+\begin{proof}
+The prior probability of a correct decision is
+$\int\sum_i q_i(x)\pi_i f_i(x)\,\mu(dx)$.
+The integrand is a convex combination bounded by the maximum.
+Choosing the first maximizing index is measurable by finite
+comparisons and attains that bound. For equality, the nonnegative
+gap must vanish almost everywhere, which holds exactly when
+each index with positive action mass maximizes the weighted density.
+\end{proof}
+
+\begin{example}[Average and worst-case errors]
+\label{ex:multiclass-no-observation}
+Suppose all three labels give the same observation law. Every
+rule has a common marginal action distribution $(r_1,r_2,r_3)$
+and error vector $(1-r_1,1-r_2,1-r_3)$. For prior
+$(1/2,1/3,1/6)$ the average error is minimized by always choosing
+label one, giving average error $1/2$ and worst-case error one.
+The minimum worst-case error is $2/3$, attained by choosing
+each label with probability $1/3$. Indeed, at least one $r_i$
+is at most $1/3$.
+\end{example}
+
+\begin{example}[Three labels with a shared observation]
+\label{ex:multiclass-shared-observation}
+For $i=1,2,3$, let $P_i$ assign mass $3/4$ to outcome $i$
+and $1/4$ to outcome $0$. Under the uniform prior, choose $i$
+at outcome $i$ and randomize uniformly at zero. At each label
+the error is $(1/4)(2/3)=1/6$. This is Bayes by
+Proposition~\ref{prop:multiclass-bayes-error}. The worst-case
+error of any rule is at least its uniform prior average,
+so the same rule is minimax.
+\end{example}
+
+\subsection{Rejecting several hypotheses}
+\label{subsec:multiple-testing-errors}
+
+\begin{definition}[Family-wise error and false discovery rate]
+\label{def:fwer-fdr}
+\indexnotation{\mathcal I_0(\theta),\ R,\ V}{Indices of true nulls, number of rejections, and number of false rejections.}
+\indexnotation{\operatorname{FWER},\ \operatorname{FDR}}{Family-wise error rate and false discovery rate.}
+Let $H_1,\ldots,H_m$ be null hypotheses, each a subset of the
+parameter space. A multiple testing procedure returns a measurable
+random subset of rejected indices. Under label $\theta$ put
+$\mathcal I_0(\theta)=\{i:\theta\in H_i\}$. Let $R$ count all
+rejections and $V$ count rejections in $\mathcal I_0(\theta)$. Define
+\[
+\operatorname{FWER}_\theta=P_\theta(V\geq1),\qquad
+\operatorname{FDR}_\theta=\mathbb E_\theta\!\left[\frac{V}{\max\{R,1\}}\right].
+\]
+If the procedure uses auxiliary randomness these probabilities and
+expectations include that randomness. Control at level $\alpha$
+means that the specified rate is at most $\alpha$ at every label.
+\end{definition}
+
+\begin{proposition}[Comparing error criteria]
+\label{prop:fdr-fwer-comparison}
+At each $\theta$, $\operatorname{FDR}_\theta\leq
+\operatorname{FWER}_\theta$. The two rates agree when every
+null is true. If $\mathcal I_0(\theta)=\varnothing$, both
+rates are zero.
+\end{proposition}
+\begin{proof}
+The fraction $V/\max\{R,1\}$ is bounded by $\mathbf 1_{\{V\geq1\}}$.
+If all nulls are true, $V=R$ and this bound is an equality.
+If there are no true nulls then $V=0$.
+\end{proof}
+
+\begin{example}[One false rejection among several rejections]
+\label{ex:fdr-fwer-separated}
+For a fixed label, suppose the procedure always rejects four
+false nulls and also rejects the only true null with probability
+$1/4$. Then $\operatorname{FWER}_\theta=1/4$. On a false
+rejection the fraction is $1/5$, and otherwise it is zero.
+Thus $\operatorname{FDR}_\theta=1/20$.
+\end{example}
+
+\begin{example}[Separate level guarantees]
+\label{ex:multiple-independent-null-unadjusted}
+Under the global null, let the $m$ $p$-values be independent
+uniform random variables on $[0,1]$. Rejecting each at threshold
+$\alpha$ gives marginal rejection probability $\alpha$ and
+family-wise error $1-(1-\alpha)^m$. For $m>1$ and $0<\alpha<1$
+this exceeds $\alpha$.
+\end{example}
+
+\subsection{Family-wise control from marginal \texorpdfstring{$p$}{p}-values}
+\label{subsec:bonferroni-holm}
+
+For each $i$, let $p_i$ satisfy $P_\theta(p_i\leq u)\leq u$
+for every $\theta\in H_i$ and $0\leq u\leq1$. This extends
+Definition~\ref{def:test-p-value} to a composite null.
+
+\begin{theorem}[Bonferroni control]
+\label{thm:bonferroni-control}
+Let $w_i\geq0$ with $\sum_i w_i=1$, and let $0\leq\alpha\leq1$.
+Reject $i$ when $p_i\leq\alpha w_i$. The procedure controls
+family-wise error at level $\alpha$.
+\end{theorem}
+\begin{proof}
+At $\theta$ a false rejection means that
+$p_i\leq\alpha w_i$ for at least one $i\in\mathcal I_0(\theta)$.
+By the union bound and marginal validity its probability is at
+most $\alpha\sum_{i\in\mathcal I_0(\theta)}w_i\leq\alpha$.
+\end{proof}
+
+\begin{theorem}[Holm's step-down procedure]
+\label{thm:holm-control}
+Order the $p$-values as $p_{(1)}\leq\cdots\leq p_{(m)}$,
+breaking ties by index. Reject in order as long as
+$p_{(j)}\leq\alpha/(m-j+1)$, stopping at the first failure.
+This procedure controls family-wise error at level $\alpha$
+and rejects every hypothesis rejected by equal-weight Bonferroni.
+\end{theorem}
+\begin{proof}
+Fix $\theta$ and let $m_0$ be the number of true nulls.
+When $m_0=0$ there is no false rejection. Otherwise let $j$
+be the rank of the first true null. A false rejection requires
+rejection at rank $j$. Since at least $m_0$ hypotheses remain
+at that rank, the smallest true-null $p$-value must be at most
+$\alpha/(m-j+1)\leq\alpha/m_0$. A union bound over the $m_0$
+true nulls bounds this probability by $\alpha$.
+
+All ranks at or before an equal-weight Bonferroni rejection
+have $p$-value at most $\alpha/m$. Each step-down threshold
+is at least $\alpha/m$, so none of those ranks stops the
+procedure.
+\end{proof}
+
+\begin{example}[Holm can reject more hypotheses]
+\label{ex:holm-extra-rejections}
+Take level $0.06$ and ordered values
+\[(0.01,0.025,0.04).\]
+Equal-weight Bonferroni rejects only the first, at threshold
+$0.02$. Holm compares the three values successively with
+$0.02,0.03,0.06$ and rejects all three.
+\end{example}
+
+\begin{example}[Simultaneous confidence sets]
+\label{ex:bonferroni-simultaneous-confidence}
+Suppose $C_1,\ldots,C_m$ have marginal coverage at least
+$1-\alpha/m$ for targets $g_1(\theta),\ldots,g_m(\theta)$,
+respectively. The product set $\prod_i C_i$ covers the full
+target vector with probability at least $1-\alpha$. Indeed,
+its failure is the union of the marginal failures. For $m$
+normal means with known variances, this gives simultaneous
+intervals by using the quantile $z_{1-\alpha/(2m)}$ in each
+interval from Example~\ref{ex:confidence-normal-known-variance}.
+\end{example}
+
+\subsection{False discovery rate under independence}
+\label{subsec:benjamini-hochberg}
+
+\begin{theorem}[Benjamini--Hochberg control]
+\label{thm:benjamini-hochberg-independence}
+At a label $\theta$, suppose each true-null $p$-value is independent
+of the vector of the other $p$-values. For $0<\alpha<1$, set
+\[
+r=\max\bigl(\{j:1\leq j\leq m,\ p_{(j)}\leq\alpha j/m\}\cup\{0\}\bigr).
+\]
+Reject the first $r$ hypotheses in the ordering. If $m_0$ nulls
+are true, then $\operatorname{FDR}_\theta\leq\alpha m_0/m$.
+Equality holds if every true-null $p$-value is uniform.
+\end{theorem}
+\begin{proof}
+Write $N(t)=\#\{i:p_i\leq t\}$. The condition at rank $j$
+is $N(\alpha j/m)\geq j$. If $r>0$, then
+$N(\alpha r/m)=r$, since a larger count would make rank $r+1$
+pass its threshold. Thus the rejected indices are exactly those
+with $p_i\leq\alpha r/m$ when $r>0$.
+
+For a true null $i$, let $r_i$ be the rejection count after
+setting $p_i=0$. Then $r_i\geq1$ and $r_i\geq r$. If $i$ is
+rejected originally, replacing its value by zero leaves all
+counts at thresholds of ranks greater than $r$ unchanged.
+Hence $r_i=r$. Conversely, if $p_i\leq\alpha r_i/m$, the
+count at threshold $\alpha r_i/m$ is unchanged by the replacement,
+so $r\geq r_i$. Thus $r=r_i$ and $i$ is rejected. Its contribution
+to the expected false discovery proportion is therefore
+\[
+\sum_{k=1}^m \frac{1}{k}
+ P_\theta(r_i=k,\ p_i\leq\alpha k/m)
+\leq \sum_{k=1}^m \frac{\alpha}{m}P_\theta(r_i=k)
+=\frac{\alpha}{m}.
+\]
+The inequality uses independence since $r_i$ depends only on
+the other $p$-values. It is an equality for a uniform $p_i$.
+Summing over the true nulls proves both assertions.
+\end{proof}
+
+\subsection{Exercises}
+\label{subsec:exercises-6-4}
+
+\begin{exercise}[A binary rule as a classifier]
+\label{exer:multiple-binary-classification}
+For two labels, express the two classification errors in terms of the power of the test that rejects label one by choosing label two.
+\end{exercise}
+
+\begin{exercise}[Equal laws and a uniform prior]
+\label{exer:multiple-equal-laws}
+For $m$ labels with identical observation laws, compute the Bayes error under a uniform prior. Characterize all Bayes rules.
+\end{exercise}
+
+\begin{exercise}[A point mass and a shared atom]
+\label{exer:multiple-shared-atom}
+Extend Example~\ref{ex:multiclass-shared-observation} to $m$ labels with mass $a$ at zero and $1-a$ at its own label. Compute the minimax error.
+\end{exercise}
+
+\begin{exercise}[Weighted densities on two outcomes]
+\label{exer:multiple-weighted-densities}
+Use laws $(1/4,3/4)$, $(1/2,1/2)$, and $(3/4,1/4)$ on two outcomes, with equal priors. Find the Bayes action at each outcome and its average error.
+\end{exercise}
+
+\begin{exercise}[A label with zero prior mass]
+\label{exer:multiple-zero-prior}
+In Proposition~\ref{prop:multiclass-bayes-error}, explain when a label of prior mass zero can be a maximizing action.
+\end{exercise}
+
+\begin{exercise}[No rejections]
+\label{exer:multiple-no-rejections}
+For a procedure that rejects nothing, compute $R$, $V$, FDR, and FWER at every label.
+\end{exercise}
+
+\begin{exercise}[Two true nulls]
+\label{exer:multiple-global-null}
+When both nulls are true, tabulate the false discovery proportion for all possible rejection sets and recover the equality of the two error rates.
+\end{exercise}
+
+\begin{exercise}[One true and one false null]
+\label{exer:multiple-two-null-rates}
+Suppose the false null is always rejected and the true null is rejected with probability $b$. Compute both rates.
+\end{exercise}
+
+\begin{exercise}[A bound involving the expected number of false rejections]
+\label{exer:multiple-expected-false-count}
+Show that $P_\theta(V\geq1)\leq\mathbb E_\theta V$, and characterize equality.
+\end{exercise}
+
+\begin{exercise}[Independent uniform null values]
+\label{exer:multiple-independent-bonferroni}
+For Example~\ref{ex:multiple-independent-null-unadjusted}, compute FWER when the marginal threshold is $\alpha/m$.
+\end{exercise}
+
+\begin{exercise}[Identical null values]
+\label{exer:multiple-identical-pvalues}
+Take $p_i=U$ for all $i$, with a single uniform $U$ under the global null. Compute FWER for both Bonferroni and Holm.
+\end{exercise}
+
+\begin{exercise}[A choice of weights]
+\label{exer:multiple-weights}
+For $m=3$ and weights $(1/2,1/4,1/4)$, tabulate the rejection thresholds at level $0.04$.
+\end{exercise}
+
+\begin{exercise}[A zero weight]
+\label{exer:multiple-zero-weight}
+Show that a valid $p$-value equals zero with probability zero under its null. Explain what a zero weight can do under the alternative.
+\end{exercise}
+
+\begin{exercise}[First failure in Holm's rule]
+\label{exer:multiple-holm-first-failure}
+At level $0.05$, compare Holm, Bonferroni, and Benjamini--Hochberg
+on $(0.012,0.028,0.029)$. Explain the role of stopping.
+\end{exercise}
+
+\begin{exercise}[An order-invariant tie]
+\label{exer:multiple-holm-tie}
+Show that the Holm rejection set does not depend on the ordering within a block of equal $p$-values.
+\end{exercise}
+
+\begin{exercise}[Only one true null]
+\label{exer:multiple-single-true-null}
+At a label with exactly one true null, relate FWER to the rejection probability of that null. Give an example with strict inequality between FDR and FWER.
+\end{exercise}
+
+\begin{exercise}[The probability of joint coverage]
+\label{exer:multiple-joint-coverage}
+For $m$ independent intervals each of exact coverage $1-\alpha/m$, compute the coverage of their product.
+\end{exercise}
+
+\begin{exercise}[Weighted simultaneous intervals]
+\label{exer:multiple-weighted-coverage}
+Generalize Example~\ref{ex:bonferroni-simultaneous-confidence} to marginal noncoverage bounds $\alpha w_i$.
+\end{exercise}
+
+\begin{exercise}[Dependent null values making Bonferroni exact]
+\label{exer:multiple-exact-bonferroni}
+For $0<\alpha<1$, construct $m$ jointly distributed uniform $p$-values for which the events $\{p_i\leq\alpha/m\}$ are pairwise disjoint up to null sets. Verify exact FWER.
+\end{exercise}
+
+\begin{exercise}[Subset coverage from a family of intervals]
+\label{exer:multiple-subset-coverage}
+Given simultaneous confidence sets $C_i$ for $g_i(\theta)$, reject the null $g_i(\theta)=t_i$ when $t_i\notin C_i$. Prove FWER control even if some nulls are false.
+\end{exercise}
+
+\begin{exercise}[Holm adjusted values]
+\label{exer:multiple-holm-adjusted}
+Show that Holm rejects an index at rank $j$ exactly when $\min\{1,\max_{k\leq j}(m-k+1)p_{(k)}\}\leq\alpha$ for $0\leq\alpha<1$.
+\end{exercise}
+
+\begin{exercise}[Counting false rejections]
+\label{exer:multiple-false-count-tails}
+Let $m_0$ nulls be true. If each is rejected with probability at most $\alpha/m$, bound $\mathbb E_\theta V$ and $P_\theta(V\geq k)$ for every integer $k\geq1$.
+\end{exercise}
+
+\begin{exercise}[Minimax randomization on a shared atom]
+\label{exer:multiple-deterministic-minimax}
+In Example~\ref{ex:multiclass-shared-observation}, compute the smallest worst-case error among deterministic rules. Compare it with the randomized minimax value.
+\end{exercise}
+
+\begin{exercise}[Worst-case error and a prior bound]
+\label{exer:multiple-equal-risk-prior}
+Show that any classifier whose errors are equal at all labels and whose prior average error is Bayes for some prior is minimax. Explain which inequalities become equalities.
+\end{exercise}
+
+
+\chapter{Bayesian inference}
+\label{chap:bayesian-inference}
+\notationgroup{Bayesian inference}
+
+\section{Priors, posterior laws, and existence conditions}
+\label{sec:bayesian-posteriors}
+
+\subsection{Posterior kernels and their existence}
+\label{subsec:bayesian-posterior-existence}
+
+Let $P$ be a probability kernel from $(\Theta,\mathcal T)$ to
+$(\mathsf X,\mathcal A)$ and let $\pi$ be a prior. On
+$(\Theta\times\mathsf X,\mathcal T\otimes\mathcal A)$ with law
+$J_\pi=\pi\ltimes P$, write $U$ for the parameter coordinate and $X$
+for the observation coordinate. Their marginal laws are $\pi$ and
+$M_\pi$ (Definition~\ref{def:prior-predictive}). A posterior $\Pi$ is
+the conditional law of $U$ given $X$ in the sense of
+Definition~\ref{def:posterior-kernel}.
+
+\begin{definition}[Standard Borel space]
+\label{def:standard-borel-space}
+A measurable space is \emph{standard Borel} if it admits a bijection
+onto a Borel subset of $\R$, with its trace Borel sigma algebra, such
+that both the bijection and its inverse are measurable. A countable
+space with all subsets measurable and a Borel subset of $\R$ with
+its Borel sigma algebra are examples.
+\end{definition}
+
+We use the distribution-function theorem on $\R$. Every nondecreasing,
+right-continuous function with limits zero at $-\infty$ and one at
+$+\infty$ determines a unique Borel probability law having that
+distribution function.
+
+\begin{theorem}[Existence and uniqueness of a posterior]
+\label{thm:bayesian-posterior-existence}
+If $(\Theta,\mathcal T)$ is standard Borel, then $\pi$ and $P$
+admit a posterior kernel. Any two posterior kernels agree as
+probability measures outside a single $M_\pi$-null set of records.
+The observation space may be arbitrary.
+\end{theorem}
+\begin{proof}
+Choose a measurable isomorphism $h:\Theta\to S$ onto a Borel subset
+$S$ of $\R$. For $q\in\mathbb Q$, the measure
+\[
+A\longmapsto J_\pi\{X\in A,\ h(U)\leq q\}
+\]
+is bounded by $M_\pi$. Let $f_q:\mathsf X\to[0,1]$ be a
+Radon--Nikodym density. Off a single measurable $M_\pi$-null set,
+\[
+f_q\leq f_r\ (q<r),\qquad
+f_{q+1/n}\downarrow f_q,\qquad
+f_{-n}\downarrow 0,\qquad f_n\uparrow 1 .
+\]
+The inequalities follow from the ordering of the measures. For each
+displayed limit, integrate over any $A\in\mathcal A$ and use bounded
+convergence and the corresponding limit of events. Uniqueness of the
+densities identifies the limits. There are countably many conditions.
+
+At each record outside that set, put $F_x(t)=\inf_{q>t,\ q\in\mathbb Q}
+f_q(x)$. It is nondecreasing and right-continuous. Indeed, if $t_k\downarrow
+t$, each rational $q>t$ is greater than $t_k$ eventually, so
+$\lim_k F_x(t_k)\leq f_q(x)$. Taking the infimum and using monotonicity
+gives $\lim_k F_x(t_k)=F_x(t)$. The rational limits above give
+$F_x(q)=f_q(x)$ and the limits zero and one at the two ends of $\R$.
+Thus $F_x$ determines a probability law $Q(x,\cdot)$ on $\R$ by the
+distribution-function theorem. On the exceptional set use a fixed point
+mass at $h(\theta_0)$, where $\theta_0\in\Theta$.
+
+The sets $C$ for which $x\mapsto Q(x,C)$ is measurable form a
+Dynkin system containing the rational lower half-lines and $\R$.
+They therefore include all Borel sets. For each $A\in\mathcal A$,
+the two measures
+\[
+C\longmapsto \int_A Q(x,C)\,M_\pi(dx),\qquad
+C\longmapsto J_\pi\{X\in A,\ h(U)\in C\}
+\]
+agree on the same generating system by the defining densities and
+hence on all Borel sets. In particular, with $A=\mathsf X$ and
+$C=S$, their common mass is one, so $Q(x,S)=1$ almost surely.
+Where $Q(x,S)=1$, set $\Pi(x,B)=Q(x,h(B))$. Elsewhere set
+$\Pi(x,\cdot)=\delta_{\theta_0}$. Each $h(B)$ is Borel, so $\Pi$
+is a kernel and satisfies \eqref{eq:posterior-rectangles}.
+
+The inverse images of the rational lower half-lines, together with
+$\Theta$, form a countable generating system closed under finite
+intersections. Uniqueness now follows from
+Proposition~\ref{prop:conditional-law-versions}.
+\end{proof}
+
+For the regular conditional distribution theorem, see J.~Norris,
+\href{https://www.statslab.cam.ac.uk/~jrn10/Lectures/ap.pdf}{\emph{Advanced
+Probability}}, Section~1.6.
+
+\begin{proposition}[Posterior integration]
+\label{prop:bayesian-posterior-integration}
+\indexnotation{\Pi g(x)}{Posterior integral of a parameter function \(g\).}
+Suppose a posterior exists. For measurable $g:\Theta\to[0,\infty]$,
+or real $g$ with $\int |g|\,d\pi<\infty$, put
+$\Pi g(x)=\int g(\theta)\,\Pi(x,d\theta)$. In the integrable case use
+a measurable real extension where the posterior absolute moment is
+infinite.
+Then $(\Pi g)(X)$ is a version of $\mathbb E_{J_\pi}[g(U)\mid\sigma(X)]$,
+and
+\[
+\int_{\mathsf X}\Pi g(x)\,M_\pi(dx)=\int_\Theta g\,d\pi .
+\]
+\end{proposition}
+\begin{proof}
+Apply \eqref{eq:kernel-iterated-integral} to the reversed joint law
+$M_\pi\ltimes\Pi$ with integrand $(x,\theta)\mapsto\mathbf 1_A(x)g(\theta)$
+for each $A\in\mathcal A$. For integrable $g$, the same formula for
+$|g|$ gives finiteness of its posterior integral almost surely, so one
+may take the difference of the positive and negative parts. Taking
+$A=\mathsf X$ gives the displayed identity.
+\end{proof}
+
+\begin{example}[Two Bernoulli rates]
+\label{ex:bayesian-unequal-bernoulli-rates}
+Give the rates $1/5$ and $3/5$ prior masses $3/4$ and $1/4$.
+For one Bernoulli observation, $M_\pi(\{1\})=3/10$ and
+$M_\pi(\{0\})=7/10$. By Proposition~\ref{prop:posterior-from-densities},
+the posterior mass of $3/5$ is
+\[
+\frac{(1/4)(3/5)}{3/10}=\frac12\quad\text{after success},\qquad
+\frac{(1/4)(2/5)}{7/10}=\frac17\quad\text{after failure}.
+\]
+Averaging these two masses with the predictive weights gives $1/4$.
+\end{example}
+
+\begin{example}[A continuous observation with moving support]
+\label{ex:bayesian-uniform-endpoint-posterior}
+Give $\theta$ the uniform prior on $(0,1)$ and take
+$X\mid U=\theta$ uniform on $(0,\theta)$. For $0<x<1$ the
+predictive density is $m(x)=\int_x^1 d\theta/\theta=-\log x$.
+The posterior density at $x$ is
+\[
+\theta\longmapsto \frac{\mathbf 1_{\{x<\theta<1\}}}{-\theta\log x}.
+\]
+For $x\leq t\leq1$ its probability of $(0,t]$ is
+$\log(t/x)/\log(1/x)$. In particular, its median is $\sqrt{x}$.
+\end{example}
+
+\begin{example}[An exact continuous observation]
+\label{ex:bayesian-exact-continuous-record}
+Let $\Theta=\mathsf X=[0,1]$, with Borel sets, take the uniform prior,
+and put $P_\theta=\delta_\theta$. Then $M_\pi=\pi$ and
+$\Pi(x,\cdot)=\delta_x$, since both sides of
+\eqref{eq:posterior-rectangles} are $\pi(A\cap B)$. The posterior is
+a point mass even though $M_\pi(\{x\})=0$ for every $x$. No
+$\sigma$-finite measure dominates all the $P_\theta$: such a measure
+would have to assign positive mass to uncountably many singletons,
+whereas a finite-measure set contains at most countably many
+positive-mass singletons.
+\end{example}
+
+\begin{example}[A magnitude without its sign]
+\label{ex:bayesian-magnitude-posterior}
+Take $U$ uniform on $[-1,1]$ and $X=|U|$. The predictive law is
+uniform on $[0,1]$. For Borel $A\subseteq[0,1]$ and
+$B\subseteq[-1,1]$,
+\[
+J_\pi\{X\in A,\ U\in B\}
+=\tfrac12\int_A\bigl(\mathbf 1_B(x)+\mathbf 1_B(-x)\bigr)\,dx.
+\]
+Thus $\tfrac12\delta_x+\tfrac12\delta_{-x}$ is a posterior at $x$.
+At $x=0$ its value is $\delta_0$. Replacing this value by $\delta_1$
+also gives a posterior kernel, since the predictive mass of
+$\{0\}$ is zero.
+\end{example}
+
+\begin{exercise}[A record of positive mass]
+\label{exer:bayesian-posterior-atom}
+Suppose $\{x\}\in\mathcal A$ and $M_\pi(\{x\})>0$. Derive the
+posterior at $x$ by taking $A=\{x\}$ in
+\eqref{eq:posterior-rectangles}. Show that its density with respect
+to $\pi$ is $P_\theta(\{x\})/M_\pi(\{x\})$.
+\end{exercise}
+
+\begin{exercise}[One uninformative experiment]
+\label{exer:bayesian-constant-kernel}
+Suppose $P_\theta=Q$ at every label. Verify that the constant kernel
+$\Pi(x,\cdot)=\pi$ is a posterior. Under the hypotheses of
+Theorem~\ref{thm:bayesian-posterior-existence}, show that every
+posterior agrees with it outside a single $Q$-null set.
+\end{exercise}
+
+\begin{exercise}[An erased binary observation]
+\label{exer:bayesian-erased-label-posterior}
+Put prior mass $s\in(0,1)$ on label one and mass $1-s$ on label zero.
+The observation gives the label with probability $1-e$ and an erasure
+with probability $e\in(0,1)$ at both labels. Compute the predictive law
+and all posterior laws at the three records.
+\end{exercise}
+
+\begin{exercise}[Posterior moments in the endpoint model]
+\label{exer:bayesian-endpoint-posterior-moments}
+In Example~\ref{ex:bayesian-uniform-endpoint-posterior}, compute
+$\Pi g(x)$ for $g(\theta)=\theta^a$ and $a>0$. Integrate the result
+against $m(x)\,dx$ to recover the prior moment.
+\end{exercise}
+
+\begin{exercise}[A change on a null set]
+\label{exer:bayesian-posterior-null-replacement}
+Given a posterior $\Pi$, replace it on a measurable $M_\pi$-null
+set by any other probability kernel. Show that the resulting kernel
+is a posterior. Give a replacement on a set of positive predictive
+probability that fails the rectangle identity.
+\end{exercise}
+
+\begin{exercise}[A biased sign]
+\label{exer:bayesian-biased-sign-posterior}
+Let $V$ be uniform on $[0,1]$. Given $V=v$, let $U=v$ with
+probability $v$ and $U=-v$ with probability $1-v$. For $X=|U|$,
+find a posterior for $U$ and verify it on rectangles. Compute
+$\mathbb E[U\mid X]$.
+\end{exercise}
+
+\begin{exercise}[Exact observation mixed with noise]
+\label{exer:bayesian-exact-or-noise}
+Let $U$ and $Z$ be independent uniforms on $[0,1]$. Independently
+draw a Bernoulli variable with success probability $r\in(0,1)$ and
+record $X=U$ on success and $X=Z$ on failure. Find $M_\pi$ and
+verify that the posterior is $r\delta_x+(1-r)\pi$.
+\end{exercise}
+
+\begin{exercise}[Observation events and posterior probabilities]
+\label{exer:bayesian-average-event-posterior}
+For $A\in\mathcal A$ with $M_\pi(A)>0$, express the conditional
+probability of $U\in B$ given $X\in A$ as an average of
+$\Pi(x,B)$. Evaluate it for $A=(1/2,1]$ and $B=(3/4,1]$ in
+Example~\ref{ex:bayesian-magnitude-posterior}.
+\end{exercise}
+
+\subsection{Sequential Bayesian updating}
+\label{subsec:bayesian-sequential-updating}
+
+Let $X$ be an initial observation with law $P_\theta$ at parameter
+$\theta$. Let $\Pi$ be its posterior under $\pi$ and $M_\pi$ its
+predictive law. At a pair $(\theta,x)$ the next observation $Y$ has
+law $K((\theta,x),\cdot)$ on $(\mathsf Y,\mathcal Y)$, where $K$ is
+a probability kernel. The joint law of $(U,X,Y)$ is
+$(\pi\ltimes P)\ltimes K$.
+
+\begin{definition}[Conditional predictive law]
+\label{def:bayesian-conditional-predictive}
+\indexnotation{M(\cdot\mid x)}{Predictive law of the next observation after record \(x\).}
+The \emph{conditional predictive law} of $Y$ after $x$ is
+\[
+M(C\mid x)=\int_\Theta K((\theta,x),C)\,\Pi(x,d\theta)
+\qquad(C\in\mathcal Y).
+\]
+\end{definition}
+
+\begin{theorem}[Updating the posterior with a conditional likelihood]
+\label{thm:bayesian-conditional-update}
+\indexnotation{\Pi^+(x,y;\cdot),\ m(y\mid x)}{Updated posterior and conditional predictive density.}
+Suppose $K((\theta,x),\cdot)$ has a jointly measurable
+nonnegative density $f(\theta,x,y)$ with respect to a fixed
+$\sigma$-finite measure $\nu$ on $\mathsf Y$. Put
+\[
+m(y\mid x)=\int_\Theta f(\theta,x,y)\,\Pi(x,d\theta).
+\]
+Then $M(\cdot\mid x)$ is a conditional law of $Y$ given $X$ and has
+density $m(\cdot\mid x)$ for each $x$. A posterior for $U$ given
+$(X,Y)$ is
+\begin{equation}
+\Pi^+(x,y;B)=
+\frac{\int_B f(\theta,x,y)\,\Pi(x,d\theta)}{m(y\mid x)}
+\quad\text{when }0<m(y\mid x)<\infty .
+\label{eq:bayesian-conditional-update}
+\end{equation}
+The other records form a null set for the law of $(X,Y)$.
+On that set one may use $\Pi(x,\cdot)$.
+\end{theorem}
+\begin{proof}
+The kernel integral formula in Proposition~\ref{prop:joint-action-law}
+gives measurability of $M(C\mid x)$ by using the kernel
+$x\mapsto\Pi(x,\cdot)$ with integrand $K((\theta,x),C)$.
+For each $x$, monotone convergence gives countable additivity and
+the total mass is one. For $A\in\mathcal A$ and $C\in\mathcal Y$,
+reversing the first two coordinates of $\pi\ltimes P$ gives
+\[
+\mathbb P(X\in A,\ Y\in C)
+=\int_A\int_\Theta K((\theta,x),C)\,\Pi(x,d\theta)\,M_\pi(dx).
+\]
+Thus the observation law is $M_\pi\ltimes M$, with $M$ the kernel
+$x\mapsto M(\cdot\mid x)$. Tonelli gives the density $m(y\mid x)$ and
+$\int m(y\mid x)\,\nu(dy)=1$ for each $x$. In particular, $m=0$
+and $m=\infty$ both occur on sets of observation probability zero.
+
+For fixed $B$, the numerator in \eqref{eq:bayesian-conditional-update}
+is measurable in $(x,y)$ by the kernel integral formula, using
+$(x,y)\mapsto\Pi(x,\cdot)$. On the stated set it defines, after
+normalization, a probability measure in $B$. The fallback is a
+kernel on the exceptional set. To verify the posterior identity,
+integrate $\Pi^+(x,y;B)$ over an observation rectangle $A\times C$.
+Cancellation of the density gives
+\[
+\int_A\int_C\int_B f(\theta,x,y)\,\Pi(x,d\theta)\,\nu(dy)\,M_\pi(dx)
+=
+\int_A\int_B K((\theta,x),C)\,\Pi(x,d\theta)\,M_\pi(dx).
+\]
+The inner integral on the left is zero where $m=0$, and the set
+$m=\infty$ is $\nu$-null for each $x$. By reversal of the first
+two coordinates, the right side is $\mathbb P(U\in B,X\in A,Y\in C)$.
+For fixed $B$ the two finite measures on the observation space
+agree on rectangles, so they agree everywhere.
+\end{proof}
+
+\begin{proposition}[Sequential and batch updates in a product experiment]
+\label{prop:bayesian-batch-sequential}
+\indexnotation{\Pi_t,\ m_{1:t}}{Posterior kernel and predictive density for the first \(t\) observations.}
+For the product experiment of Definition~\ref{def:product-experiment},
+suppose each $P_{\theta,i}$ has a jointly measurable finite density
+$f_i(\theta,x_i)$ with respect to a fixed $\sigma$-finite measure
+$\mu_i$. For $1\leq t\leq n$ put
+\[
+L_t(\theta;x_{1:t})=\prod_{i=1}^t f_i(\theta,x_i),\qquad
+m_{1:t}(x_{1:t})=\int_\Theta L_t(\theta;x_{1:t})\,\pi(d\theta),
+\qquad m_{1:0}=1.
+\]
+Here $x_{1:t}=(x_1,\ldots,x_t)$. Starting from $\Pi_0=\pi$,
+there is a set of full predictive probability for the complete
+record on which every prefix has $0<m_{1:t}<\infty$. On this set
+the successive normalized updates give, for every $t$,
+\[
+\Pi_t(x_{1:t},d\theta)
+=\frac{L_t(\theta;x_{1:t})}{m_{1:t}(x_{1:t})}\,\pi(d\theta),
+\qquad
+m(x_t\mid x_{1:t-1})
+=\frac{m_{1:t}(x_{1:t})}{m_{1:t-1}(x_{1:t-1})}.
+\]
+In particular, the final update equals the batch update as a
+probability measure on this set.
+\end{proposition}
+\begin{proof}
+The product of the densities is the joint density at each label
+because it gives the product law on rectangles by Tonelli.
+Proposition~\ref{prop:posterior-from-densities} gives the batch formula
+and implies that each prefix has a positive finite predictive density
+almost surely. Intersect the finitely many prefix events under the full
+predictive law.
+
+At a record in this intersection, suppose the batch formula holds at
+$t-1$. Integrating $f_t(\theta,x_t)$ against that posterior gives
+$m_{1:t}/m_{1:t-1}$. Multiplying the same posterior by $f_t$ and
+dividing by this ratio gives the batch formula at $t$ by
+\eqref{eq:bayesian-conditional-update}. For $t=1$ the update is
+Proposition~\ref{prop:posterior-from-densities}. Induction completes
+the proof.
+\end{proof}
+
+\begin{example}[A success followed by a failure]
+\label{ex:bayesian-sequential-two-rates}
+In Example~\ref{ex:bayesian-unequal-bernoulli-rates}, observe two
+conditionally independent Bernoulli trials. A success first leaves
+posterior masses $1/2,1/2$ on the two rates. The next predictive
+failure probability is $(4/5+2/5)/2=3/5$. A failure changes the mass
+of $3/5$ to $(1/2)(2/5)/(3/5)=1/3$. In the batch update the two
+unnormalized masses are
+\[
+(3/4)(1/5)(4/5)=3/25,\qquad
+(1/4)(3/5)(2/5)=3/50.
+\]
+Their sum $9/50$ is also the product $(3/10)(3/5)$ of the
+successive predictive probabilities.
+\end{example}
+
+\begin{example}[Two records with moving support]
+\label{ex:bayesian-sequential-endpoint}
+In Example~\ref{ex:bayesian-uniform-endpoint-posterior}, take two
+conditionally independent draws $x,y$ and set $s=\max(x,y)$.
+For $0<x,y<1$, the second likelihood multiplies the first posterior
+density by $\theta^{-1}\mathbf 1_{\{y<\theta<1\}}$. The resulting
+posterior and next predictive densities are
+\[
+\frac{\theta^{-2}\mathbf 1_{\{s<\theta<1\}}}{1/s-1},
+\qquad m(y\mid x)=\frac{1/s-1}{-\log x}.
+\]
+Indeed, $\int_s^1\theta^{-2}\,d\theta=1/s-1$, which is the joint
+predictive density by the product formula.
+\end{example}
+
+\begin{example}[The first observation is a magnitude]
+\label{ex:bayesian-sequential-noisy-sign}
+In Example~\ref{ex:bayesian-magnitude-posterior}, for $x>0$ the first
+posterior gives equal mass to $x$ and $-x$. A second observation
+reports the sign correctly with probability $3/4$ under either
+sign. Its predictive probability of reporting positive is $1/2$.
+After a positive report the posterior is
+$\tfrac34\delta_x+\tfrac14\delta_{-x}$.
+The update uses counting measure for the sign report. The first
+observation was handled by its posterior kernel.
+\end{example}
+
+\begin{example}[Copying an earlier observation]
+\label{ex:bayesian-sequential-copy}
+Use the prior of Example~\ref{ex:bayesian-unequal-bernoulli-rates},
+observe a Bernoulli bit $X$, and set $Y=X$. The second density is
+$f(\theta,x,y)=\mathbf 1_{\{y=x\}}$ with respect to counting
+measure. At $(1,1)$ it leaves the posterior mass of $3/5$ at $1/2$.
+Treating the copy as a fresh Bernoulli draw would give
+\[
+\frac{(1/2)(3/5)}{(1/2)(1/5)+(1/2)(3/5)}=\frac34.
+\]
+At $(1,0)$ the conditional predictive mass is zero, so the update
+in \eqref{eq:bayesian-conditional-update} uses the fallback there.
+\end{example}
+
+\begin{exercise}[Two successive successes]
+\label{exer:bayesian-sequential-successes}
+In Example~\ref{ex:bayesian-sequential-two-rates}, compute the
+predictive probability of two successes and the corresponding
+posterior mass of $3/5$. Check both by a batch calculation.
+\end{exercise}
+
+\begin{exercise}[Dependence under the predictive law]
+\label{exer:bayesian-sequential-predictive-dependence}
+Under any prior on the Bernoulli rate $p$, prove that the predictive
+covariance of two conditionally independent trials is
+$\operatorname{Var}_\pi(p)$. Determine when the two trials are
+independent under their predictive law.
+\end{exercise}
+
+\begin{exercise}[Reversing the order of observations]
+\label{exer:bayesian-sequential-order}
+For a product experiment with finite jointly measurable densities,
+fix a permutation of the observations. Show that the permuted and
+original updates give the same final posterior on a common set
+of full predictive probability. Compare the intermediate
+posteriors in Example~\ref{ex:bayesian-sequential-two-rates}.
+\end{exercise}
+
+\begin{exercise}[A likelihood that is constant on the posterior support]
+\label{exer:bayesian-sequential-constant-likelihood}
+At a fixed $(x,y)$, suppose $f(\theta,x,y)$ is equal to a common
+positive finite value for $\Pi(x,\cdot)$-almost every $\theta$.
+Show that the posterior at this record stays at $\Pi(x,\cdot)$.
+\end{exercise}
+
+\begin{exercise}[A second experiment chosen from the first record]
+\label{exer:bayesian-sequential-adaptive-experiment}
+Use the prior from Example~\ref{ex:bayesian-unequal-bernoulli-rates}.
+After observing the first Bernoulli bit $X$, draw a fresh
+Bernoulli bit with rate $p$ if $X=1$. If $X=0$, draw a fair bit
+independently of $p$. Write the conditional likelihood and find
+the predictive mass and posterior at each of the four pairs.
+\end{exercise}
+
+\begin{exercise}[The posterior mean changes by a mean-zero increment]
+\label{exer:bayesian-sequential-mean-increment}
+Let $g$ be integrable under $\pi$. Under the hypotheses of
+Theorem~\ref{thm:bayesian-conditional-update}, show that
+$\mathbb E[\Pi^+g(X,Y)\mid \sigma(X)]=\Pi g(X)$ almost surely.
+Here $\Pi^+g(x,y)=\int g(\theta)\,\Pi^+(x,y;d\theta)$ where
+the integral is finite. Derive the identity by integrating over
+sets $\{X\in A\}$.
+\end{exercise}
+
+\begin{exercise}[A decreasing upper tail after more draws]
+\label{exer:bayesian-sequential-endpoint-tail}
+In Example~\ref{ex:bayesian-sequential-endpoint}, for
+$s\leq u\leq1$ compute the posterior probability of $\theta>u$.
+If $0<y\leq x$, compare it with the probability after $x$ alone.
+\end{exercise}
+
+\begin{exercise}[The probability of the record]
+\label{exer:bayesian-sequential-predictive-product}
+Under Proposition~\ref{prop:bayesian-batch-sequential}, prove that the
+product of the one-step predictive densities equals $m_{1:n}$
+on the stated set of full predictive probability. With finite observation spaces and counting measures, show that
+this product is the probability of the record.
+\end{exercise}
+
+\section{Conjugate models and posterior prediction}
+\label{sec:bayesian-conjugate-prediction}
+
+\subsection{Conjugate families and the beta--Bernoulli model}
+\label{subsec:bayesian-beta-bernoulli}
+
+\begin{definition}[Conjugate family]
+\label{def:bayesian-conjugate-family}
+A nonempty family $\mathcal C$ of prior probability measures is
+\emph{conjugate} for an experiment if every $\pi\in\mathcal C$ admits
+a posterior kernel $\Pi$ such that $\Pi(x,\cdot)\in\mathcal C$ outside
+a single $M_\pi$-null set of records.
+\end{definition}
+
+\begin{definition}[Beta law]
+\label{def:bayesian-beta-law}
+\indexnotation{B(a,b),\ \operatorname{Beta}(a,b)}{Beta integral and beta law.}
+For $a,b>0$ put
+\[
+B(a,b)=\int_0^1 p^{a-1}(1-p)^{b-1}\,dp.
+\]
+The law $\operatorname{Beta}(a,b)$ on $[0,1]$ has Lebesgue density
+$p^{a-1}(1-p)^{b-1}/B(a,b)$ on $(0,1)$.
+\end{definition}
+
+\begin{proposition}[Beta recurrences and moments]
+\label{prop:bayesian-beta-moments}
+The beta integral is positive and finite. For $a,b>0$,
+\[
+B(a+1,b)=\frac{a}{a+b}B(a,b),\qquad
+B(a,b+1)=\frac{b}{a+b}B(a,b).
+\]
+If $U\sim\operatorname{Beta}(a,b)$, then
+\[
+\mathbb E U=\frac{a}{a+b},\qquad
+\mathbb E U^2=\frac{a(a+1)}{(a+b)(a+b+1)},\qquad
+\operatorname{Var}(U)=\frac{ab}{(a+b)^2(a+b+1)}.
+\]
+\end{proposition}
+\begin{proof}
+On $(0,1/2]$ the factor $(1-p)^{b-1}$ is bounded and $p^{a-1}$
+is integrable. On $[1/2,1)$ apply the same argument with the roles
+reversed. The integrand is positive on $(0,1)$.
+
+Splitting the integrand by $1=p+(1-p)$ gives
+$B(a+1,b)+B(a,b+1)=B(a,b)$. The function $p^a(1-p)^b$ vanishes
+at both endpoints and has integrable derivative. Integrating the
+derivative on $[\varepsilon,1-\varepsilon]$ and letting
+$\varepsilon\downarrow0$ gives
+$aB(a,b+1)-bB(a+1,b)=0$. Solving these two equations gives the
+recurrences. The first two moments are $B(a+1,b)/B(a,b)$ and
+$B(a+2,b)/B(a,b)$; subtracting the square of the first gives the
+variance.
+\end{proof}
+
+\begin{theorem}[Beta--Bernoulli conjugacy]
+\label{thm:bayesian-beta-bernoulli}
+Given a rate $p\in[0,1]$, let $X_1,\ldots,X_{n+1}$ be independent
+Bernoulli trials with that rate, where $n\geq1$. Use the prior
+$\pi=\operatorname{Beta}(a,b)$, and put $S_n=\sum_{i=1}^n X_i$.
+For a record $x=(x_1,\ldots,x_n)$ with $s=\sum_{i=1}^n x_i$,
+\begin{align}
+M_\pi(\{x\})&=\frac{B(a+s,b+n-s)}{B(a,b)},&
+\mathbb P(S_n=s)&=\binom ns\frac{B(a+s,b+n-s)}{B(a,b)}.
+\label{eq:bayesian-beta-bernoulli-predictive-mass}
+\end{align}
+The posterior at $x$, and the posterior given only $S_n=s$, are both
+$\operatorname{Beta}(a+s,b+n-s)$. In particular the beta family is
+conjugate for the $n$-trial experiment. The next success probability is
+\begin{equation}
+\mathbb P(X_{n+1}=1\mid X_{1:n}=x)
+=\frac{a+s}{a+b+n}
+=\frac{a+b}{a+b+n}\frac{a}{a+b}+\frac{n}{a+b+n}\frac{s}{n}.
+\label{eq:bayesian-beta-bernoulli-next-success}
+\end{equation}
+\end{theorem}
+\begin{proof}
+At $0<p<1$ the likelihood is $p^s(1-p)^{n-s}$. Multiplying by the
+prior density gives
+\[
+\frac{p^{a+s-1}(1-p)^{b+n-s-1}}{B(a,b)}.
+\]
+Its integral is the first mass in
+\eqref{eq:bayesian-beta-bernoulli-predictive-mass}, which is positive.
+Normalization gives the asserted beta law by
+Proposition~\ref{prop:posterior-from-densities}. There are $\binom ns$
+records with $s$ successes. The likelihood for the count is that
+for any one such record multiplied by $\binom ns$, which cancels
+in the posterior. For prediction, integrate the next trial's
+success probability $p$ against the posterior as in
+Definition~\ref{def:bayesian-conditional-predictive}. The first
+moment in Proposition~\ref{prop:bayesian-beta-moments} gives
+\eqref{eq:bayesian-beta-bernoulli-next-success}.
+\end{proof}
+
+\begin{example}[Three successes from a uniform prior]
+\label{ex:bayesian-beta-uniform-record}
+Under $\operatorname{Beta}(1,1)$ the record $(1,0,1,1)$ has
+probability
+\[
+B(4,2)=\int_0^1 p^3(1-p)\,dp=\frac{1}{20}.
+\]
+There are four records with three successes, so
+$\mathbb P(S_4=3)=1/5$. The posterior in either case is
+$\operatorname{Beta}(4,2)$, with density $20p^3(1-p)$.
+The next success has probability $2/3$.
+\end{example}
+
+\begin{example}[Equal prior means and different predictions]
+\label{ex:bayesian-beta-prior-weight}
+The priors $\operatorname{Beta}(1,1)$ and $\operatorname{Beta}(10,10)$
+both have mean $1/2$. After two successes their posteriors are
+$\operatorname{Beta}(3,1)$ and $\operatorname{Beta}(12,10)$.
+The next success probabilities are $3/4$ and $6/11$, respectively.
+The empirical proportion is $1$ in both cases; its weights in
+\eqref{eq:bayesian-beta-bernoulli-next-success} are $2/4$ and $2/22$.
+\end{example}
+
+\begin{example}[A record that increases variance]
+\label{ex:bayesian-beta-variance-increase}
+Take $\operatorname{Beta}(1,4)$. Its variance is $2/75$.
+One success gives $\operatorname{Beta}(2,4)$, with variance
+$2/63>2/75$. One failure gives $\operatorname{Beta}(1,5)$,
+with variance $5/252$. Weighting by the predictive probabilities
+$1/5$ and $4/5$ gives mean posterior variance $1/45<2/75$.
+\end{example}
+
+\begin{example}[Updating a mixture of beta laws]
+\label{ex:bayesian-beta-mixture}
+Take prior $\tfrac12\operatorname{Beta}(1,1)+
+\tfrac12\operatorname{Beta}(3,1)$. The two components give success
+probabilities $1/2$ and $3/4$, so the mixture gives it probability
+$5/8$. Multiplying each prior weight by its success probability
+and dividing by $5/8$ gives posterior weights $2/5$ and $3/5$.
+The component posteriors are $\operatorname{Beta}(2,1)$ and
+$\operatorname{Beta}(4,1)$. Thus the posterior predictive success
+probability is $(2/5)(2/3)+(3/5)(4/5)=56/75$.
+\end{example}
+
+\begin{exercise}[Reflection]
+\label{exer:bayesian-beta-reflection}
+If $U\sim\operatorname{Beta}(a,b)$, find the law of $1-U$.
+Use it to relate the posterior for the failure rate after $s$
+successes in $n$ trials to the posterior obtained by relabelling
+the trials.
+\end{exercise}
+
+\begin{exercise}[A uniform predictive count]
+\label{exer:bayesian-beta-uniform-count}
+Use the beta recurrences and $B(1,1)=1$ to prove that
+$B(r+1,t+1)=r!t!/(r+t+1)!$ for nonnegative integers $r,t$.
+Deduce that under a uniform prior each value of $S_n$ has the
+same predictive probability.
+\end{exercise}
+
+\begin{exercise}[A prior with singularities at both endpoints]
+\label{exer:bayesian-beta-half-parameters}
+Normalize the density for $\operatorname{Beta}(1/2,1/2)$ using
+$p=\sin^2 u$. Find the posterior and the next success probability
+after four failures. Is the posterior density still unbounded
+near $p=1$?
+\end{exercise}
+
+\begin{exercise}[Record probabilities by sequential prediction]
+\label{exer:bayesian-beta-sequential-record}
+Compute the prior predictive masses of $(1,0)$ and $(0,1)$ by
+multiplying successive conditional probabilities. Compare with
+\eqref{eq:bayesian-beta-bernoulli-predictive-mass}, and give the
+intermediate and final posteriors for the two orders.
+\end{exercise}
+
+\begin{exercise}[Holding the prior mean fixed]
+\label{exer:bayesian-beta-predictive-weight}
+Fix $0<q<1$ and use $\operatorname{Beta}(cq,c(1-q))$ for $c>0$.
+For a fixed record, determine when the predictive success
+probability increases or decreases with $c$. Find its limits
+as $c\downarrow0$ and $c\to\infty$.
+\end{exercise}
+
+\begin{exercise}[Expected posterior variance after one trial]
+\label{exer:bayesian-beta-expected-variance}
+For $\operatorname{Beta}(a,b)$, compute the expected posterior
+variance after one trial by averaging the two possible posterior
+variances. Show that the ratio to the prior variance is
+$(a+b)/(a+b+1)$.
+\end{exercise}
+
+\begin{exercise}[A family that fails to be conjugate]
+\label{exer:bayesian-beta-symmetric-nonconjugate}
+Show that $\{\operatorname{Beta}(a,a):a>0\}$ is not conjugate for
+one Bernoulli observation. Give an example of a record with
+positive length for which the posterior is again symmetric.
+\end{exercise}
+
+\begin{exercise}[Finite mixtures]
+\label{exer:bayesian-beta-finite-mixtures}
+Prove that the family of mixtures of at most $k$ beta laws,
+for an integer $k\geq1$, is conjugate for the $n$-trial experiment.
+Express each posterior component and weight in terms of the prior
+components and weights.
+\end{exercise}
+
+\subsection{Normal conjugacy with known sampling variance}
+\label{subsec:bayesian-normal-known-variance}
+
+Write $N(m,v)$ for the normal law with mean $m$ and variance $v>0$.
+
+\begin{definition}[Precision]
+\label{def:bayesian-normal-precision}
+\indexnotation{v^{-1}}{Precision of a law with positive finite variance \(v\).}
+The \emph{precision} of a law with positive finite variance $v$ is
+$1/v$.
+\end{definition}
+
+\begin{theorem}[Normal posterior for a common mean]
+\label{thm:bayesian-normal-mean-posterior}
+\indexnotation{\lambda_n,\ m_n(x),\ v_n}{Normal posterior precision, mean, and variance.}
+Given $\theta\in\R$, let $X_1,\ldots,X_n$ be independent
+$N(\theta,\sigma^2)$ observations, with $n\geq1$ and known
+$\sigma^2>0$. Let the prior for $U$ be $N(m_0,v_0)$, with $v_0>0$,
+and put $\lambda_0=1/v_0$. For $x\in\R^n$ define
+$\bar x=n^{-1}\sum_{i=1}^n x_i$ and set
+\begin{equation}
+\lambda_n=\lambda_0+\frac{n}{\sigma^2},\qquad
+v_n=\frac{1}{\lambda_n},\qquad
+m_n(x)=\frac{\lambda_0m_0+(n/\sigma^2)\bar x}{\lambda_n}.
+\label{eq:bayesian-normal-precision-update}
+\end{equation}
+Then $x\mapsto N(m_n(x),v_n)$ is a posterior kernel.
+The family of normal laws with positive variance is conjugate for
+this experiment. The posterior precision is the sum of the prior
+precision and the sampling precision of $\overline X$.
+\end{theorem}
+\begin{proof}
+The prior density times the likelihood is proportional, as a
+function of $\theta$, to
+\[
+\exp\!\left[-\frac12\left\{
+\lambda_0(\theta-m_0)^2+\frac{1}{\sigma^2}
+\sum_{i=1}^n(x_i-\theta)^2\right\}\right].
+\]
+The expression in braces is a quadratic in $\theta$ with leading
+coefficient $\lambda_n$ and linear coefficient
+$-2(\lambda_0m_0+(n/\sigma^2)\bar x)$. Completing the square
+makes it $\lambda_n(\theta-m_n(x))^2+c(x)$ for a term $c(x)$
+independent of $\theta$. Its exponential with factor $-1/2$
+has a finite positive integral for every $x$. Normalization in
+Proposition~\ref{prop:posterior-from-densities} therefore gives
+$N(m_n(x),v_n)$. Both weights in $m_n(x)$ are positive and sum
+to one. Under $P_\theta$, $\overline X$ has variance $\sigma^2/n$
+by independence, so its precision is $n/\sigma^2$.
+\end{proof}
+
+\begin{proposition}[Predicting one further observation]
+\label{prop:bayesian-normal-predictive}
+Under Theorem~\ref{thm:bayesian-normal-mean-posterior}, let $Y$
+have law $N(\theta,\sigma^2)$ independently of the first $n$
+observations given $\theta$. Then the conditional predictive law
+at $x$ is
+\begin{equation}
+M(\cdot\mid x)=N\bigl(m_n(x),\,\sigma^2+v_n\bigr).
+\label{eq:bayesian-normal-predictive}
+\end{equation}
+\end{proposition}
+\begin{proof}
+Fix $x$. For independent $V\sim N(m_n(x),v_n)$ and
+$Z\sim N(0,\sigma^2)$, integrating the conditional law of $V+Z$
+given $V$ gives
+\[
+\mathbb P(V+Z\in C)
+=\int_{\R}N(\theta,\sigma^2)(C)\,N(m_n(x),v_n)(d\theta)
+=M(C\mid x).
+\]
+The last equality is Definition~\ref{def:bayesian-conditional-predictive}.
+The sum of independent normals is normal, and independence adds
+the variances. The terms $\sigma^2$ and $v_n$ are the sampling
+variance at a fixed mean and the posterior variance of
+the mean, respectively.
+\end{proof}
+
+\begin{example}[The mean and a future measurement]
+\label{ex:bayesian-normal-mean-and-draw}
+Take $N(0,1)$ as the prior and $\sigma^2=4$. For four observations
+with mean $3$, the prior and sample mean both have precision $1$.
+The posterior is $N(3/2,1/2)$ and the predictive law of one more
+measurement is $N(3/2,9/2)$.
+\end{example}
+
+\begin{example}[Updating in two batches]
+\label{ex:bayesian-normal-batches}
+Take prior $N(1,2)$ and sampling variance $2$. Observing $3,5$
+adds $1$ to the precision and $(3+5)/2$ to the product of mean
+and precision. These become $3/2$ and $9/2$, giving posterior
+$N(3,2/3)$. Observing $-1$ next changes the two quantities to
+$2$ and $4$, giving $N(2,1/2)$. Updating once with all three
+observations adds $3/2$ and $(3+5-1)/2$ to the original
+quantities $1/2$ and $1/2$, so gives the same law.
+\end{example}
+
+\begin{example}[Two future measurements]
+\label{ex:bayesian-normal-future-pair}
+Use the posterior from Example~\ref{ex:bayesian-normal-mean-and-draw}.
+Let $Y_1,Y_2$ be independent given the same $U$ and both have
+conditional law $N(U,4)$. Their joint predictive law is the law of
+$(V+Z_1,V+Z_2)$, where $V\sim N(3/2,1/2)$ and $Z_1,Z_2\sim N(0,4)$
+are mutually independent. This follows by integrating the
+conditional product law against the posterior. Each predictive
+variance is $9/2$ and their predictive covariance is
+$\operatorname{Var}(V)=1/2$, so their correlation is $1/9$.
+The predictive law of their average is $N(3/2,5/2)$, since its
+noise term $(Z_1+Z_2)/2$ has variance $2$.
+\end{example}
+
+\begin{example}[Equal posteriors in two experiments]
+\label{ex:bayesian-normal-equal-precision}
+Use $N(0,1)$ in each experiment. In the first observe $x=2$ at
+sampling variance $1$. In the second observe $(0,2,2,4)$ at
+sampling variance $4$. The two sample means are $2$ and their
+sampling precisions are both $1$. The posteriors are both
+$N(1,1/2)$. A fresh measurement in the respective experiment
+has predictive law $N(1,3/2)$ or $N(1,9/2)$.
+\end{example}
+
+\begin{exercise}[Retaining only the sample mean]
+\label{exer:bayesian-normal-mean-only}
+Use the sampling law $N(\theta,\sigma^2/n)$ of $\overline X$
+to update directly from $\bar x$. Derive the same posterior
+as in Theorem~\ref{thm:bayesian-normal-mean-posterior}.
+\end{exercise}
+
+\begin{exercise}[Unequal sampling variances]
+\label{exer:bayesian-normal-unequal-variance}
+Let the independent observations given $\theta$ have laws
+$N(\theta,s_i^2)$ for known $s_i^2>0$. With prior $N(m_0,v_0)$,
+derive the posterior by completing the square. Compute the
+posterior for prior $N(0,1)$ and records $(3,-1)$ and $(-1,3)$
+when $(s_1^2,s_2^2)=(1,4)$.
+\end{exercise}
+
+\begin{exercise}[Two risks under squared loss]
+\label{exer:bayesian-normal-estimate-and-predict}
+Find the Bayes rule and its Bayes risk for estimating $U$ under
+squared loss. Then find the action minimizing conditional expected
+squared loss for predicting $Y$ in
+Proposition~\ref{prop:bayesian-normal-predictive} and the
+corresponding conditional risk.
+\end{exercise}
+
+\begin{exercise}[Spreading out the prior]
+\label{exer:bayesian-normal-diffuse-limit}
+Fix $x$, $n$, $\sigma^2$, and $m_0$. As $v_0\to\infty$,
+find the limits of the posterior mean and variance and of the
+predictive mean and variance. What is the limiting predictive
+variance if $n=1$?
+\end{exercise}
+
+\begin{exercise}[Averaging future measurements]
+\label{exer:bayesian-normal-future-average}
+For $k$ future measurements with sampling variance $\sigma^2$,
+conditionally independent of each other and the observed sample
+given $U$, derive the predictive law of their average. For fixed
+$x$ and $n$, find the limit of the variance as $k\to\infty$.
+\end{exercise}
+
+\begin{exercise}[Variation of the posterior mean across records]
+\label{exer:bayesian-normal-prior-mean-variation}
+Under the prior predictive law, find the distribution of
+$\overline X$ by representing it as $U$ plus independent
+normal noise. Deduce the law of $m_n(X_{1:n})$ and prove that
+its variance is $v_0-v_n$.
+\end{exercise}
+
+\begin{exercise}[A fixed true mean]
+\label{exer:bayesian-normal-fixed-mean-risk}
+For a fixed $\theta$ under $P_\theta$, compute the bias and mean
+squared error of $m_n(X_{1:n})$. Determine for which values of
+$\theta$ this error is smaller than that of $\overline X$.
+\end{exercise}
+
+\begin{exercise}[Predicting a difference]
+\label{exer:bayesian-normal-future-difference}
+In the setting of Example~\ref{ex:bayesian-normal-future-pair}
+with arbitrary sampling variance $\sigma^2>0$ and posterior
+variance $v_n>0$, find the predictive law of $Y_1-Y_2$.
+Show that it is independent of $(Y_1+Y_2)/2$ under the predictive
+law at each record.
+\end{exercise}
+
+\subsection{Joint posterior prediction and exchangeability}
+\label{subsec:bayesian-joint-prediction}
+
+\begin{definition}[Exchangeability]
+\label{def:bayesian-finite-exchangeability}
+A finite vector $(Y_1,\ldots,Y_k)$ with coordinates in the same
+measurable space is \emph{exchangeable} if its joint law is
+invariant under every permutation of its coordinates.
+\end{definition}
+
+Let $\Pi$ be a posterior for $U$ given a record $X$, with record
+law $M_\pi$. Let $Q$ be a probability kernel from $\Theta$ to
+$(\mathsf Y,\mathcal Y)$. After $(U,X)=(\theta,x)$, generate
+$(Y_1,\ldots,Y_k)$ with law $Q_\theta^{\otimes k}$. This uses the
+same parameter for the whole block. Write $Y_{1:k}=(Y_1,\ldots,Y_k)$.
+
+\begin{proposition}[Predicting a block]
+\label{prop:bayesian-predictive-block}
+\indexnotation{M_k(\cdot\mid x)}{Predictive law of \(k\) future observations.}
+A conditional predictive kernel for $Y_{1:k}$ given $X$ is
+\begin{equation}
+M_k(C\mid x)=\int_\Theta Q_\theta^{\otimes k}(C)\,\Pi(x,d\theta),
+\qquad C\in\mathcal Y^{\otimes k}.
+\label{eq:bayesian-predictive-block}
+\end{equation}
+For every $x$ this law is exchangeable and each coordinate has law
+$M_1(\cdot\mid x)$.
+\end{proposition}
+\begin{proof}
+On measurable rectangles $C$, the integrand as a function of
+$\theta$ is a product of measurable functions. The class of $C$
+for which it is measurable contains the whole space and is closed
+under complements and countable disjoint unions. Thus the
+$\pi$--$\lambda$ theorem makes $Q_\theta^{\otimes k}$ a kernel.
+Integrating it against $\Pi(x,\cdot)$ gives a probability kernel
+by Proposition~\ref{prop:joint-action-law}. The joint probability
+of $X\in A$ and $Y_{1:k}\in C$ is
+\[
+\int_A\int_\Theta Q_\theta^{\otimes k}(C)\,\Pi(x,d\theta)\,M_\pi(dx),
+\]
+by the posterior identity and the kernel integral formula.
+This verifies the conditional law. Each product law is invariant
+under permutations and has marginals $Q_\theta$. Both properties
+pass through the integral.
+\end{proof}
+
+\begin{proposition}[Dependence from the shared parameter]
+\label{prop:bayesian-predictive-dependence}
+Fix a record $x$ and $k\geq2$. For real measurable functions $g,h$
+with finite second moments under $M_1(\cdot\mid x)$, put
+$\mu_g(\theta)=\int g\,dQ_\theta$ and similarly for $\mu_h$,
+setting each to zero where its corresponding second moment
+under $Q_\theta$ is infinite. For $i\ne j$,
+\begin{equation}
+\operatorname{Cov}_{M_k(\cdot\mid x)}(g(Y_i),h(Y_j))
+=\operatorname{Cov}_{\Pi(x,\cdot)}(\mu_g,\mu_h).
+\label{eq:bayesian-predictive-covariance}
+\end{equation}
+In particular, the covariance for $h=g$ is
+$\operatorname{Var}_{\Pi(x,\cdot)}(\mu_g)$. The predictive
+coordinates are independent if and only if, for each
+$A\in\mathcal Y$, the function $Q_\theta(A)$ is constant
+$\Pi(x,\cdot)$-almost surely.
+\end{proposition}
+\begin{proof}
+By \eqref{eq:bayesian-predictive-block}, the second moments of $g$
+and $h$ under $Q_\theta$ are finite for $\Pi(x,\cdot)$-almost every
+$\theta$. Cauchy--Schwarz bounds $\mu_g^2$ by $\int g^2\,dQ_\theta$,
+and likewise for $h$. Thus the two conditional means have
+finite second moments. Integrating the product law in
+\eqref{eq:bayesian-predictive-block} gives
+\[
+\mathbb E_{M_k(\cdot\mid x)}[g(Y_i)h(Y_j)]
+=\int_\Theta\mu_g(\theta)\mu_h(\theta)\,\Pi(x,d\theta).
+\]
+The two individual means are the posterior integrals of
+$\mu_g$ and $\mu_h$. Subtraction gives the covariance formula.
+
+For independent coordinates, taking $g=h=\mathbf 1_A$ makes the
+variance of $Q_\theta(A)$ zero. Conversely, if every $Q_\theta(A)$
+is almost surely constant, its constant equals $M_1(A\mid x)$.
+For a rectangle $\prod_{i=1}^k A_i$, all $k$ constants hold off
+the union of the corresponding null sets. Hence
+\[
+M_k\Bigl(\prod_{i=1}^k A_i\mid x\Bigr)=\prod_{i=1}^k M_1(A_i\mid x).
+\]
+Rectangles determine the joint law, so the coordinates are independent.
+\end{proof}
+
+\begin{definition}[Beta--binomial law]
+\label{def:bayesian-beta-binomial}
+\indexnotation{\operatorname{BetaBin}(k,\alpha,\beta)}{Beta--binomial count law.}
+For $k\geq1$ and $\alpha,\beta>0$, let $\operatorname{BetaBin}(k,\alpha,\beta)$
+be the law of the number of successes in $k$ trials obtained by drawing
+a rate $p$ from $\operatorname{Beta}(\alpha,\beta)$ and then drawing
+$k$ independent Bernoulli trials with rate $p$.
+\end{definition}
+
+\begin{theorem}[Predicting a count of successes]
+\label{thm:bayesian-predictive-count}
+Suppose the Bernoulli rate has posterior $\operatorname{Beta}(\alpha,\beta)$
+at $x$. For $k$ further trials, let $T_k=\sum_{i=1}^k Y_i$ and write
+$c=\alpha+\beta$ and $q=\alpha/c$. Then $T_k$ has the
+$\operatorname{BetaBin}(k,\alpha,\beta)$ law under prediction at $x$, with
+\begin{equation}
+M_k(T_k=t\mid x)=\binom kt\frac{B(\alpha+t,\beta+k-t)}{B(\alpha,\beta)}
+\qquad(0\leq t\leq k).
+\label{eq:bayesian-beta-binomial-mass}
+\end{equation}
+Its mean and variance are
+\[
+\mathbb E_{M_k(\cdot\mid x)}T_k=kq,\qquad
+\operatorname{Var}_{M_k(\cdot\mid x)}(T_k)
+=kq(1-q)\frac{c+k}{c+1}.
+\]
+\end{theorem}
+\begin{proof}
+At rate $p$ the mass at $t$ is $\binom kt p^t(1-p)^{k-t}$.
+Integrating it against the posterior density gives
+\eqref{eq:bayesian-beta-binomial-mass}. Each future bit has success
+probability $q$ by the beta mean formula. For distinct bits,
+Proposition~\ref{prop:bayesian-predictive-dependence} makes their
+covariance the posterior variance of $p$. By
+Proposition~\ref{prop:bayesian-beta-moments}, this is
+$q(1-q)/(c+1)$. Summing the $k$ variances and the $k(k-1)$
+off-diagonal covariances gives the claimed variance.
+\end{proof}
+
+\begin{example}[Two future trials after a success]
+\label{ex:bayesian-beta-binomial-two-trials}
+Starting with the uniform prior, one success gives posterior
+$\operatorname{Beta}(2,1)$. The predictive masses at $00,01,10,11$
+are respectively $1/6,1/6,1/6,1/2$. For instance the mass at $11$
+is $\int_0^1 p^2(2p)\,dp=1/2$, and that at $10$ is
+$\int_0^1 p(1-p)(2p)\,dp=1/6$. The count has masses
+$1/6,1/3,1/2$ at $0,1,2$. Both bits have success probability
+$2/3$, and observing the first future success raises the
+probability of the second to $(1/2)/(2/3)=3/4$.
+\end{example}
+
+\begin{example}[Equal success probabilities and different count laws]
+\label{ex:bayesian-beta-binomial-equal-marginals}
+Consider prediction from $\operatorname{Beta}(1,1)$ and from
+$\operatorname{Beta}(2,2)$. Both give marginal success probability
+$1/2$. For three future trials, the first count law is uniform
+on $\{0,1,2,3\}$ by Exercise~\ref{exer:bayesian-beta-uniform-count}.
+For the second, the probability of zero successes is
+$B(2,5)/B(2,2)=1/5$. By symmetry the probability of three is also
+$1/5$, and each middle count has mass $3/10$.
+\end{example}
+
+\begin{example}[Uncertainty about a sign]
+\label{ex:bayesian-predictive-unidentified-sign}
+Let the posterior put mass $1/2$ on each of $-1$ and $1$.
+If $Q_\theta=N(\theta^2,1)$, both parameter values give $N(1,1)$,
+so the predictive law is $N(1,1)^{\otimes k}$. If instead
+$Q_\theta=N(\theta,1)$, a coordinate has mean zero and variance $2$.
+Distinct coordinates have covariance $\operatorname{Var}_{\Pi(x,\cdot)}
+(\theta)=1$ by \eqref{eq:bayesian-predictive-covariance}.
+\end{example}
+
+\begin{example}[An exchangeable pair with negative covariance]
+\label{ex:bayesian-exchangeable-pair-negative-covariance}
+Give $(0,1)$ and $(1,0)$ mass $1/2$ each. The pair is exchangeable.
+The means are both $1/2$, and the product is zero, giving covariance
+$-1/4$. It cannot have the form \eqref{eq:bayesian-predictive-block}
+for any mixture of iid laws, since the covariance formula for
+$g=h$ gives a nonnegative value.
+\end{example}
+
+\begin{exercise}[Marginals of a predictive block]
+\label{exer:bayesian-predictive-block-marginals}
+For $1\leq j\leq k$, show that projecting $M_k(\cdot\mid x)$
+onto any $j$ distinct coordinates gives $M_j(\cdot\mid x)$.
+Verify the equality first on rectangles.
+\end{exercise}
+
+\begin{exercise}[Drawing a fresh rate for each trial]
+\label{exer:bayesian-predictive-fresh-rates}
+Draw $k$ independent rates from a fixed $\operatorname{Beta}(\alpha,\beta)$
+law and draw one bit independently at each of these rates given
+the rates. Prove that the count has a binomial law. Compare its
+mean and variance with those from Theorem~\ref{thm:bayesian-predictive-count}.
+\end{exercise}
+
+\begin{exercise}[Sequential and block prediction after a fixed record]
+\label{exer:bayesian-predictive-sequential-block}
+Start from posterior $\operatorname{Beta}(2,3)$. Compute the
+predictive probabilities of the future strings $1100$ and $0101$
+by successive updates and one-step predictions. Use exchangeability to recover the
+probability of two successes from either string and compare it
+with \eqref{eq:bayesian-beta-binomial-mass}.
+\end{exercise}
+
+\begin{exercise}[Predicting after a future count is revealed]
+\label{exer:bayesian-predictive-after-count}
+Start from $\operatorname{Beta}(\alpha,\beta)$ at $x$.
+Predict a block of $k$ trials followed by a block of $\ell$ trials
+with the same rate. Conditional on the first block having $t$
+successes, find the count law of the second block and its mean.
+\end{exercise}
+
+\begin{exercise}[Covariance of distinct events]
+\label{exer:bayesian-predictive-cross-event}
+For the beta--Bernoulli predictive pair, compute the covariance
+between $\mathbf 1_{\{Y_1=1\}}$ and $\mathbf 1_{\{Y_2=0\}}$.
+Reconcile its sign with Proposition~\ref{prop:bayesian-predictive-dependence}.
+\end{exercise}
+
+\begin{exercise}[The future fraction and the shared rate]
+\label{exer:bayesian-predictive-future-fraction}
+Under the joint law used in Definition~\ref{def:bayesian-beta-binomial},
+compute $\mathbb E[(T_k/k-p)^2]$ by conditioning on $p$.
+Use this identity to find its limit as $k\to\infty$ and compare
+that limit with the limit of $\operatorname{Var}(T_k/k)$.
+\end{exercise}
+
+\begin{exercise}[Recovering the beta shapes from two trials]
+\label{exer:bayesian-predictive-identify-beta}
+Given a predictive pair, let $q$ be its marginal success probability
+and $r$ its probability of two successes. Derive the conditions
+on $(q,r)$ under which it can come from a beta mixture of iid
+Bernoulli trials, assuming exchangeability. In that case recover
+$\alpha$ and $\beta$ uniquely.
+\end{exercise}
+
+\begin{exercise}[Extending an exchangeable pair]
+\label{exer:bayesian-exchangeable-pair-extension}
+Can the pair in Example~\ref{ex:bayesian-exchangeable-pair-negative-covariance}
+be the first two coordinates of an exchangeable triple? Use the
+variance of the sum of the three bits.
+\end{exercise}
+
+\section{Posterior decisions and credible sets}
+\label{sec:bayesian-decisions-and-credible-sets}
+
+\subsection{Posterior medians and quantiles}
+\label{subsec:bayesian-posterior-quantiles}
+
+For a real target $Z=g(U)$, Proposition~\ref{prop:bayes-squared-mean}
+gives the posterior mean as the Bayes action under squared loss.
+We now change the loss.
+
+\begin{definition}[Quantiles]
+\label{def:bayesian-real-quantiles}
+\indexnotation{F(a-),\ q_\tau(F)}{Left limit of the cdf and its lower quantile.}
+Let $\nu$ be a probability law on $\R$ with distribution function
+$F(a)=\nu((-\infty,a])$. Write $F(a-)=\nu((-\infty,a))$.
+For $0<\tau<1$, a \emph{$\tau$-quantile} is any $a\in\R$ with
+\[
+F(a-)\leq \tau\leq F(a).
+\]
+The \emph{lower $\tau$-quantile} is
+$q_\tau(F)=\inf\{a\in\R:F(a)\geq\tau\}$. A $1/2$-quantile
+is a \emph{median}.
+\end{definition}
+
+\begin{definition}[Quantile loss]
+\label{def:bayesian-quantile-loss}
+\indexnotation{\ell_\tau(z,a)}{Quantile loss for target \(z\) and action \(a\).}
+For $0<\tau<1$ and $z,a\in\R$, the \emph{quantile loss} is
+\[
+\ell_\tau(z,a)=\tau(z-a)_+ +(1-\tau)(a-z)_+,
+\qquad t_+=\max\{t,0\}.
+\]
+For $\tau=1/2$ this is half the absolute loss. If the costs per
+unit of underestimation and overestimation are $c_u,c_o>0$,
+respectively, their loss is $(c_u+c_o)\ell_\tau$ with
+$\tau=c_u/(c_u+c_o)$.
+\end{definition}
+
+\begin{proposition}[Optimal actions for a fixed law]
+\label{prop:bayesian-quantile-loss-minimizers}
+Suppose $\nu$ has finite first absolute moment and set
+$R_\tau(a)=\int_{\R}\ell_\tau(z,a)\,\nu(dz)$. For $a<b$,
+\begin{equation}
+R_\tau(b)-R_\tau(a)=\int_a^b (F(t)-\tau)\,dt.
+\label{eq:bayesian-quantile-risk-gap}
+\end{equation}
+The minimizing actions are exactly the $\tau$-quantiles.
+The lower quantile is finite and is the smallest minimizer.
+\end{proposition}
+\begin{proof}
+As a function of the action, $\ell_\tau(z,\cdot)$ is piecewise affine,
+with slopes $-\tau$ to the left of $z$ and $1-\tau$ to its right.
+Thus its increment from $a$ to $b$ is the integral of
+$\mathbf 1_{\{z\leq t\}}-\tau$ over $[a,b]$. The integrand is bounded,
+so Fubini gives \eqref{eq:bayesian-quantile-risk-gap}.
+
+If $F(a-)\leq\tau\leq F(a)$, then $F(t)-\tau\leq0$ for $t<a$
+and $F(t)-\tau\geq0$ for $t\geq a$. The increment formula shows
+that $a$ minimizes the loss. Conversely, the left and right
+derivatives at $a$ are $F(a-)-\tau$ and $F(a)-\tau$ by the
+corresponding one-sided limits of $F$. At a minimum they are
+respectively nonpositive and nonnegative.
+
+The limits of $F$ at infinity give $q=q_\tau(F)\in\R$.
+Right-continuity gives $F(q)\geq\tau$, and $F(t)<\tau$ for
+$t<q$ gives $F(q-)\leq\tau$. Every minimizer has $F(a)\geq\tau$,
+so $q$ is the smallest one.
+\end{proof}
+
+\begin{theorem}[The posterior quantile rule]
+\label{thm:bayesian-posterior-quantile-rule}
+\indexnotation{F_x,\ d_\tau(x)}{Posterior cdf and lower quantile rule.}
+Suppose a posterior kernel $\Pi$ exists and $g:\Theta\to\R$ is
+measurable with $\int |g|\,d\pi<\infty$. Put
+\[
+F_x(t)=\Pi(x,\{\theta:g(\theta)\leq t\}),\qquad
+d_\tau(x)=q_\tau(F_x).
+\]
+For loss $L(\theta,a)=\ell_\tau(g(\theta),a)$ and real actions,
+$d_\tau$ is a measurable Bayes rule with finite Bayes risk.
+A randomized rule is Bayes if and only if it assigns probability
+one to the $\tau$-quantiles of $F_x$ for $M_\pi$-almost every $x$.
+In particular, the same assertions apply to medians for absolute loss.
+\end{theorem}
+\begin{proof}
+For every $t\in\R$, $\{x:d_\tau(x)\leq t\}=\{x:F_x(t)\geq\tau\}$
+by the definition and right-continuity of $F_x$. The latter set
+is measurable by the kernel property. Proposition~\ref{prop:bayesian-posterior-integration}
+gives $\int |g(\theta)|\,\Pi(x,d\theta)<\infty$ almost surely.
+At each such $x$, Proposition~\ref{prop:bayesian-quantile-loss-minimizers}
+identifies the minimizers of the posterior expected loss $C(x,a)$.
+Equation~\eqref{eq:posterior-risk-averaging} gives optimality
+of $d_\tau$. Its risk is finite since $C(x,d_\tau(x))\leq C(x,0)$
+almost surely and $C(x,0)$ is bounded by the posterior absolute moment.
+
+The excess Bayes risk of a rule $K$ is the integral of the
+nonnegative gap $C(x,a)-C(x,d_\tau(x))$ against
+$M_\pi(dx)K(x,da)$ on the same full-measure set. It vanishes
+exactly when the gap vanishes $K(x,\cdot)$-almost surely for
+$M_\pi$-almost every $x$. This proves the characterization.
+\end{proof}
+
+\begin{example}[A flat interval of optimal actions]
+\label{ex:bayesian-quantile-flat-interval}
+Give $0$ and $4$ posterior masses $2/5$ and $3/5$.
+For $\tau=2/5$, every $a\in[0,4]$ is a quantile, and
+$R_{2/5}(a)=24/25$ throughout the interval. Indeed,
+\[
+R_{2/5}(a)=\frac25\frac35 a+\frac35\frac25(4-a)
+\qquad(0\leq a\leq4).
+\]
+The lower $2/5$-quantile is $0$. The unique median is $4$,
+and the posterior mean is $12/5$.
+\end{example}
+
+\begin{example}[A beta posterior]
+\label{ex:bayesian-quantile-beta}
+After one success under a uniform prior, the posterior for the
+Bernoulli rate is $\operatorname{Beta}(2,1)$ by
+Theorem~\ref{thm:bayesian-beta-bernoulli}. Its density is $2p$ on
+$(0,1)$, so $F_x(t)=t^2$ there. Thus the optimal action under
+absolute loss is $1/\sqrt2$. If underestimation costs three
+times as much per unit as overestimation, the action is
+$\sqrt{3}/2$.
+\end{example}
+
+\begin{example}[Estimating a mean and predicting a measurement]
+\label{ex:bayesian-quantile-normal-prediction}
+In Example~\ref{ex:bayesian-normal-mean-and-draw} the mean has
+posterior $N(3/2,1/2)$ and a future measurement has predictive
+law $N(3/2,9/2)$. For either law $N(m,v)$ the lower
+$\tau$-quantile is $m+\sqrt v\,z_\tau$, where $z_\tau$ is the
+standard normal quantile. Indeed its distribution function at
+$a$ is $\Phi((a-m)/\sqrt v)$.
+At $\tau=3/4$ the two actions are
+$3/2+z_{3/4}/\sqrt2$ and $3/2+3z_{3/4}/\sqrt2$.
+At $\tau=1/2$ they both equal $3/2$.
+\end{example}
+
+\begin{example}[An asymmetric decision from a Bernoulli record]
+\label{ex:bayesian-quantile-two-rate-decision}
+In Example~\ref{ex:bayesian-unequal-bernoulli-rates}, use
+$\ell_{3/4}$ to estimate the rate. After success the lower rate
+has posterior mass $1/2$, so the optimal action is $3/5$.
+Its posterior loss is $(1/2)(1/4)(2/5)=1/20$.
+After failure the lower rate has mass $6/7$, so the optimal
+action is $1/5$, with loss $(1/7)(3/4)(2/5)=3/70$.
+The Bayes risk is $(3/10)(1/20)+(7/10)(3/70)=9/200$.
+\end{example}
+
+\begin{exercise}[Quantiles of a general two-point law]
+\label{exer:bayesian-quantile-two-point}
+Give $u<v$ masses $p$ and $1-p$ with $0<p<1$. Determine the
+set of $\tau$-quantiles for $\tau<p$, $\tau=p$, and $\tau>p$.
+Compute the minimum quantile risk in each case.
+\end{exercise}
+
+\begin{exercise}[Quantiles and their levels]
+\label{exer:bayesian-quantile-monotonicity}
+Prove that $\tau\mapsto q_\tau(F)$ is nondecreasing and
+left-continuous on $(0,1)$. For the law with masses $1/2$ at
+$0$ and $1$, find a level where it is discontinuous from the right.
+\end{exercise}
+
+\begin{exercise}[A strictly increasing transformation]
+\label{exer:bayesian-quantile-transformation}
+Let $h:\R\to\R$ be strictly increasing and continuous. If $F$ is
+the distribution function of $Z$ and $G$ that of $h(Z)$,
+prove that $q_\tau(G)=h(q_\tau(F))$. Apply this to $h(z)=e^z$
+and $Z\sim N(m,v)$.
+\end{exercise}
+
+\begin{exercise}[A beta posterior after failure]
+\label{exer:bayesian-quantile-beta-failure}
+Under a uniform prior, observe a single Bernoulli failure.
+Find the distribution function of the posterior and its lower
+$\tau$-quantile. Compare the posterior mean and median.
+\end{exercise}
+
+\begin{exercise}[A first moment without a second]
+\label{exer:bayesian-quantile-heavy-tail}
+Take the law with density $\tfrac32 z^{-5/2}$ for $z\geq1$ and
+zero elsewhere. Verify that it has finite first moment and find
+its optimal action for quantile loss. Show that the expected
+squared loss is infinite for every real action.
+\end{exercise}
+
+\begin{exercise}[Quantiles with moving support]
+\label{exer:bayesian-quantile-moving-support}
+For $0<x<1$ in Example~\ref{ex:bayesian-uniform-endpoint-posterior},
+derive the posterior $\tau$-quantile as a function of $x$.
+Find its limits as $x$ tends to zero and one, with $\tau$ fixed.
+\end{exercise}
+
+\begin{exercise}[The cost of moving away from a quantile]
+\label{exer:bayesian-quantile-uniform-gap}
+For the uniform law on $[0,1]$, show that
+$R_\tau(a)-R_\tau(\tau)=(a-\tau)^2/2$ for $a\in[0,1]$.
+Find the two affine formulas for the gap outside $[0,1]$.
+\end{exercise}
+
+\begin{exercise}[Quantile decisions on a grid]
+\label{exer:bayesian-quantile-grid}
+Assume the fixed law has finite first moment and a unique
+$\tau$-quantile $q$. Let the real actions form a finite grid
+with at least one point on either side of $q$. Suppose $q$ lies
+strictly between two adjacent grid points. Show that any optimal grid action is one
+of the two grid points adjacent to $q$. Express the comparison
+of their risks as an integral involving $F$.
+\end{exercise}
+
+\subsection{Credible sets and pointwise coverage}
+\label{subsec:bayesian-credible-sets}
+
+\begin{definition}[Credible set]
+\label{def:bayesian-credible-set}
+\indexnotation{\operatorname{cred}_C(x)}{Posterior probability of the reported set \(C(x)\).}
+Given a posterior kernel $\Pi$, let $C(x)\subseteq\Theta$ have
+measurable graph $G_C=\{(x,\theta):\theta\in C(x)\}$ as in
+Definition~\ref{def:confidence-set-coverage}. Its
+\emph{posterior credibility} at $x$ is
+\[
+\operatorname{cred}_C(x)=\Pi(x,C(x)).
+\]
+For $0<\alpha<1$, it is a \emph{credible set at level $1-\alpha$} if
+$\operatorname{cred}_C(x)\geq1-\alpha$ for $M_\pi$-almost every $x$.
+The credibility is \emph{exact} at that level if equality holds
+almost everywhere. For a measurable real target $g$, an interval
+$I(x)$ for $g(U)$ corresponds to the set $C(x)=g^{-1}(I(x))$.
+\end{definition}
+
+\begin{proposition}[Credibility and coverage averaged under the prior]
+\label{prop:bayesian-credibility-coverage-average}
+For any such procedure the credibility and coverage functions
+are measurable, and
+\begin{equation}
+\int_{\mathsf X}\operatorname{cred}_C(x)\,M_\pi(dx)
+=\mathbb P\{U\in C(X)\}
+=\int_\Theta\operatorname{cov}_C(\theta)\,\pi(d\theta),
+\label{eq:bayesian-credibility-coverage-average}
+\end{equation}
+where the probability is under the joint law of $(U,X)$.
+In particular, a set with exact posterior credibility $1-\alpha$
+has prior average coverage $1-\alpha$.
+\end{proposition}
+\begin{proof}
+The kernel integral formula in Proposition~\ref{prop:joint-action-law}
+applied to $\mathbf 1_{G_C}(x,\theta)$ gives measurability in
+each conditioning variable. Its integral under $M_\pi\ltimes\Pi$
+is the left side, and its integral with coordinates reversed
+under $\pi\ltimes P$ is the right side. These are the same
+joint probability by the posterior identity.
+\end{proof}
+
+\begin{proposition}[Credible intervals from quantiles]
+\label{prop:bayesian-credible-quantile-interval}
+\indexnotation{I_{u,v}(x)}{Closed interval between two lower posterior quantiles.}
+Let $F_x$ be the posterior distribution function of $g(U)$ and
+fix $0<u<v<1$. Put
+\[
+I_{u,v}(x)=[q_u(F_x),q_v(F_x)].
+\]
+The interval and its inverse image under $g$ have measurable
+graphs. Its posterior probability is at least $v-u$ at every
+record, with equality if $F_x$ is continuous at its two endpoints.
+For $u=\alpha/2$ and $v=1-\alpha/2$ this is the
+\emph{equal-tailed credible interval} at level $1-\alpha$.
+\end{proposition}
+\begin{proof}
+For each level $t$, the lower quantile is measurable in $x$ since
+$\{x:q_t(F_x)\leq a\}=\{x:F_x(a)\geq t\}$ for each $a$.
+The graph of the interval consists of the two measurable
+endpoint inequalities. For the inverse image use the same
+inequalities with $g(\theta)$ in place of the interval coordinate.
+
+For fixed $x$, write $a=q_u(F_x)$ and $b=q_v(F_x)$. The lower
+quantile inequalities give $F_x(a-)\leq u$ and $F_x(b)\geq v$.
+They follow from monotonicity and right-continuity of $F_x$,
+as in Proposition~\ref{prop:bayesian-quantile-loss-minimizers}.
+Thus the two strict tails have probabilities at most $u$ and
+$1-v$, and
+\[
+\Pi(x,\{\theta:a\leq g(\theta)\leq b\})=F_x(b)-F_x(a-)\geq v-u.
+\]
+At points of continuity the quantile inequalities are equalities,
+so the posterior probability of the interval is exactly $v-u$.
+\end{proof}
+
+\begin{example}[Two credible intervals for a Bernoulli rate]
+\label{ex:bayesian-credible-beta}
+After one success from a uniform prior, the posterior is
+$\operatorname{Beta}(2,1)$ and $F_x(t)=t^2$ on $[0,1]$.
+The equal-tailed interval at level $1/2$ is
+$[1/2,\sqrt3/2]$. Its mass is $3/4-1/4=1/2$.
+The interval $[1/\sqrt2,1]$ also has mass $1/2$, since it
+excludes only the lower half of the posterior.
+\end{example}
+
+\begin{example}[Atoms at both endpoints]
+\label{ex:bayesian-credible-two-atoms}
+In Example~\ref{ex:bayesian-unequal-bernoulli-rates}, after a
+success the posterior masses at $1/5$ and $3/5$ are both $1/2$.
+Its lower $1/4$- and $3/4$-quantiles are $1/5$ and $3/5$.
+The resulting equal-tailed interval at level $1/2$
+has posterior mass one. Either singleton consisting of an
+endpoint has posterior mass exactly $1/2$.
+\end{example}
+
+\begin{example}[Coverage of a normal credible interval]
+\label{ex:bayesian-credible-normal-coverage}
+Use the normal model of Theorem~\ref{thm:bayesian-normal-mean-posterior}.
+Put $s=\sigma/\sqrt n$ and $w=v_0/(v_0+s^2)$. The posterior
+mean is $m_n(X)=(1-w)m_0+w\overline X$ and its variance is
+$ws^2$. For $z=z_{1-\alpha/2}$, the equal-tailed interval is
+\[
+C(X)=[m_n(X)-z\sqrt w\,s,\ m_n(X)+z\sqrt w\,s].
+\]
+Its posterior probability is $1-\alpha$ at every record.
+At fixed $\theta$ we have $\overline X=\theta+sZ$ with
+$Z\sim N(0,1)$ under $P_\theta$. The coverage event is
+$|wsZ-(1-w)(\theta-m_0)|\leq z\sqrt w\,s$, so, with
+$b=(1-w)(\theta-m_0)/(ws)$,
+\[
+\operatorname{cov}_C(\theta)
+=\Phi(b+z/\sqrt w)-\Phi(b-z/\sqrt w).
+\]
+At $\theta=m_0$ this is $2\Phi(z/\sqrt w)-1>1-\alpha$.
+It tends to zero as $|\theta-m_0|\to\infty$.
+The confidence interval in Example~\ref{ex:confidence-normal-known-variance}
+has center $\overline X$, half-width $zs$, and coverage $1-\alpha$
+at every $\theta$.
+\end{example}
+
+\begin{example}[Exact coverage with varying credibility]
+\label{ex:bayesian-exact-coverage-varying-credibility}
+Let $\Theta=\mathsf X=\{0,1,2\}$ with prior masses $1/2,1/3,1/6$.
+At each label the record $X$ is uniform on $\mathsf X$, so the
+posterior is the prior at all three records. Report $C(x)=\{x\}$.
+The coverage is $1/3$ at each label, while the posterior
+credibilities at the three records are $1/2,1/3,1/6$.
+Their average under the uniform record law is $1/3$.
+\end{example}
+
+\begin{exercise}[Allocating the posterior tails]
+\label{exer:bayesian-credible-tail-allocation}
+In Example~\ref{ex:bayesian-credible-beta}, fix $0<\alpha<1$.
+For $0<u<\alpha$ compute the interval $I_{u,u+1-\alpha}(x)$
+and the probabilities in its two tails. Find the limiting
+interval as $u\uparrow\alpha$.
+\end{exercise}
+
+\begin{exercise}[Including and excluding atoms]
+\label{exer:bayesian-credible-interval-endpoints}
+A posterior gives $-1,0,2$ masses $1/5,3/10,1/2$.
+Find its lower quantile endpoints at $u=1/5$ and $v=7/10$.
+Compute the posterior mass with both endpoints included,
+both excluded, and each endpoint excluded separately.
+\end{exercise}
+
+\begin{exercise}[Transforming a credible interval]
+\label{exer:bayesian-credible-transform}
+Let $h$ be strictly increasing and continuous on $\R$.
+Show that the equal-tailed interval for $h(g(U))$ is the
+image under $h$ of the interval for $g(U)$ at the same level.
+Compare the two procedures' coverage probabilities for their
+respective targets at every fixed $\theta$.
+\end{exercise}
+
+\begin{exercise}[Exact mass by randomizing a reported set]
+\label{exer:bayesian-credible-randomization}
+At a fixed record, take a posterior with two atoms of masses
+$3/10$ and $7/10$. Show that no subset of the two labels has
+posterior mass $1/2$. Using a randomizer independent of the
+parameter given the record, report a singleton so that the
+posterior probability of containing the parameter, averaged
+over the randomizer, is exactly $1/2$.
+\end{exercise}
+
+\begin{exercise}[Computing both averages in a finite experiment]
+\label{exer:bayesian-credible-finite-averages}
+In Example~\ref{ex:bayesian-unequal-bernoulli-rates}, report
+$C(1)=\{3/5\}$ and $C(0)=\{1/5\}$. Compute the credibility at
+each record and the coverage at each rate. Verify
+\eqref{eq:bayesian-credibility-coverage-average} by summation.
+\end{exercise}
+
+\begin{exercise}[Exact credibility on observation events]
+\label{exer:bayesian-credible-record-events}
+Show that $\operatorname{cred}_C(x)=1-\alpha$ almost everywhere
+if and only if
+\[
+\mathbb P\{U\in C(X),\ X\in A\}=(1-\alpha)M_\pi(A)
+\qquad\text{for every } A\in\mathcal A.
+\]
+\end{exercise}
+
+\begin{exercise}[A diffuse normal prior]
+\label{exer:bayesian-credible-normal-diffuse}
+In Example~\ref{ex:bayesian-credible-normal-coverage}, let
+$v_0\to\infty$ while $m_0$, $n$, and $\sigma^2$ stay fixed.
+Find the limits of the credible interval endpoints at each
+record and the limit of the coverage at each fixed $\theta$.
+Determine whether the convergence of coverage is uniform in $\theta$.
+\end{exercise}
+
+\begin{exercise}[A shortest beta credible interval]
+\label{exer:bayesian-credible-beta-shortest}
+For the posterior $\operatorname{Beta}(2,1)$ and $0<\alpha<1$,
+find the shortest closed subinterval of $[0,1]$ with probability
+at least $1-\alpha$. Show that among intervals of a fixed
+length, the one ending at $1$ has the greatest probability.
+Compare your interval at level $1/2$ with those in
+Example~\ref{ex:bayesian-credible-beta}.
+\end{exercise}
+
+\subsection{Highest posterior density sets}
+\label{subsec:bayesian-highest-posterior-density}
+
+Fix a record and write $\nu$ for its posterior law on
+$(\Theta,\mathcal T)$. Let $\mu$ be a $\sigma$-finite reference measure
+and suppose $\nu(d\theta)=f(\theta)\,\mu(d\theta)$ for a nonnegative
+measurable density $f$, chosen finite everywhere. The size of a set $C$ will mean $\mu(C)$.
+A measurable function $\psi:\Theta\to[0,1]$ is an \emph{inclusion rule}. Its size is $\int\psi\,d\mu$ and its
+posterior mass is $\int\psi\,d\nu$. It can be implemented by drawing
+$V$ uniformly on $[0,1]$ independently of the parameter under the
+posterior and reporting $\{\theta:V<\psi(\theta)\}$. Both integrals
+are then averages over $V$ by Tonelli's theorem. Ordinary sets
+correspond to indicator functions.
+
+\begin{definition}[Highest posterior density set]
+\label{def:bayesian-highest-density-set}
+For $0<r<1$, a \emph{highest posterior density set} of mass $r$
+relative to $\mu$ is a measurable set $C$ with $\nu(C)=r$ for which
+there is a threshold $t>0$ such that, up to $\mu$-null sets,
+\[
+\{f>t\}\subseteq C\subseteq\{f\geq t\}.
+\]
+A rule that includes all points above $t$, excludes all points
+below $t$, and has posterior mass $r$ is its randomized analogue.
+\end{definition}
+
+\begin{theorem}[Minimum size at a given posterior mass]
+\label{thm:bayesian-highest-density-minimum}
+\indexnotation{t_r,\ \gamma_r,\ \psi_r}{Density cutoff, tie probability, and inclusion rule.}
+Let $F$ be the distribution function of $f(\theta)$ under $\nu$.
+For $0<r<1$ define $t_r=q_{1-r}(F)$ and
+\[
+\gamma_r=
+\begin{cases}
+\bigl(r-\nu(\{f>t_r\})\bigr)/\nu(\{f=t_r\}), & \nu(\{f=t_r\})>0,\\
+0, & \nu(\{f=t_r\})=0.
+\end{cases}
+\]
+Then $0<t_r<\infty$ and $0\leq\gamma_r\leq1$. The rule
+\[
+\psi_r=\mathbf 1_{\{f>t_r\}}+\gamma_r\mathbf 1_{\{f=t_r\}}
+\]
+has posterior mass $r$. Among all inclusion rules of posterior mass
+at least $r$, it has smallest size. A rule attains that size exactly
+when it has mass $r$ and agrees with $\psi_r$ off $\{f=t_r\}$ up to
+a $\mu$-null set.
+\end{theorem}
+\begin{proof}
+Because $f$ integrates to one under $\mu$, it is positive and finite
+$\nu$-almost surely. Its lower $(1-r)$-quantile is finite and is
+strictly positive by right-continuity of $F$ at zero and $F(0)=0$.
+The quantile inequalities give
+\[
+\nu(\{f>t_r\})\leq r\leq \nu(\{f\geq t_r\}).
+\]
+Consequently $\gamma_r$ lies in $[0,1]$, and the formula for
+$\psi_r$ gives the desired mass. The rule has finite size
+because $\mu(\{f\geq t_r\})\leq 1/t_r$.
+
+Write $t=t_r$. Every competing rule $\psi$ of infinite size is
+strictly worse. For finite size, subtraction gives
+\begin{align*}
+t\left(\int\psi\,d\mu-\int\psi_r\,d\mu\right)
+&=\int(\psi-\psi_r)(t-f)\,d\mu\\
+&\quad+\left(\int\psi\,d\nu-r\right).
+\end{align*}
+The integrand in the first term is nonnegative. Where $f>t$
+we have $\psi-\psi_r\leq0$, and where $f<t$ we have
+$\psi-\psi_r\geq0$. The second term is nonnegative by the mass
+constraint. Equality requires both terms to vanish. The first
+vanishes exactly when the rules agree $\mu$-almost everywhere
+off the tie set, and the second when the mass is $r$.
+\end{proof}
+
+The subtraction works at any positive cutoff for a rule of mass $r$
+that includes all points above the cutoff and excludes those below.
+Thus every highest posterior density set of mass $r$ has minimum
+size. The sign argument also appears in the proof of the
+Neyman--Pearson lemma (Theorem~\ref{thm:neyman-pearson}).
+
+\begin{proposition}[Choosing a deterministic part of the tie]
+\label{prop:bayesian-highest-density-deterministic}
+A deterministic set attains the minimum size in
+Theorem~\ref{thm:bayesian-highest-density-minimum} if and only if
+the tie set $\{f=t_r\}$ has a measurable subset $B$ satisfying
+\[
+\mu(B)=\frac{r-\nu(\{f>t_r\})}{t_r}.
+\]
+In that case $C=\{f>t_r\}\cup B$ attains the minimum. Such a subset
+always exists for Lebesgue measure on $\R^d$, $d\geq1$.
+\end{proposition}
+\begin{proof}
+The equality condition in the theorem forces every deterministic
+minimizer to contain the strict superlevel set and to use only
+points from there and the tie set, up to null sets. On the tie set,
+$\nu(B)=t_r\mu(B)$, which gives the required size and proves
+sufficiency. For Lebesgue measure, write $D=\{f=t_r\}$. It has
+finite measure. For $0<b<\mu(D)$, the function
+$s\mapsto\mu(D\cap\{\theta:\theta_1\leq s\})$ is continuous since
+each hyperplane $\{\theta:\theta_1=s\}$ has measure zero.
+Its limits at minus and plus infinity are $0$ and $\mu(D)$.
+It therefore takes the value $b$. Use $\varnothing$ and $D$ at
+the two endpoints.
+\end{proof}
+
+When a posterior kernel $\Pi$ has a jointly measurable density
+$f(x,\theta)$ relative to a fixed $\mu$, these formulas give
+measurable inclusion probabilities. For each fixed $s$ the
+function $x\mapsto\Pi(x,\{\theta:f(x,\theta)\leq s\})$ is
+measurable by the kernel integral formula. The lower quantile
+criterion from Theorem~\ref{thm:bayesian-posterior-quantile-rule}
+then gives measurability of $t_r(x)$. The strict and tied
+threshold sets have measurable graphs, so their posterior masses
+and hence $\gamma_r(x)$ are measurable. The reported set has a measurable graph in $(x,V,\theta)$.
+
+\begin{example}[The shortest set for an increasing beta density]
+\label{ex:bayesian-hpd-beta}
+Take the $\operatorname{Beta}(2,1)$ posterior of
+Example~\ref{ex:bayesian-credible-beta}. Relative to Lebesgue measure
+its density is $2p$ on $(0,1)$. The interval
+$[\sqrt{1-r},1]$ has mass $r$, and up to null sets it is a
+strict superlevel set. It has minimum Lebesgue measure among all
+measurable sets of posterior mass at least $r$. At $r=1/2$ its
+length is $1-1/\sqrt2$, less than the equal-tailed length
+$(\sqrt3-1)/2$.
+\end{example}
+
+\begin{example}[A disconnected smallest set]
+\label{ex:bayesian-hpd-disconnected}
+Relative to Lebesgue measure, put density $2/5$ on
+$[0,1]\cup[3,4]$, $1/10$ on $(1,3)$, and zero elsewhere.
+The union $[0,1]\cup[3,4]$ has mass $4/5$. It is a strict
+superlevel set at any cutoff between $1/10$ and $2/5$.
+The sign argument of Theorem~\ref{thm:bayesian-highest-density-minimum}
+gives uniqueness up to null sets, since there are no ties at such
+a cutoff. No interval has the same minimum size.
+\end{example}
+
+\begin{example}[A discrete cutoff requiring randomization]
+\label{ex:bayesian-hpd-discrete}
+On three points $a,b,c$, put posterior masses $1/2,3/10,1/5$
+and take counting measure. For $r=13/20$ the cutoff is $3/10$.
+Include $a$ always and $b$ with probability $1/2$. The
+result has mean size $3/2$ and posterior mass $13/20$ when
+averaged over the randomizer. No singleton is feasible and
+$\{a,b\}$ has mass $4/5$, so the deterministic minimum size
+is two. The set $\{a,c\}$ also attains that deterministic
+minimum with mass $7/10$.
+\end{example}
+
+\begin{example}[Changing the parameter coordinate]
+\label{ex:bayesian-hpd-coordinate}
+If $p\sim\operatorname{Beta}(2,1)$, the coordinate $z=p^3$ has
+distribution function $z^{2/3}$ on $[0,1]$ and density
+$\tfrac23 z^{-1/3}$ on $(0,1)$. The smallest set for Lebesgue
+measure in the $z$ coordinate is $[0,r^{3/2}]$, which has
+inverse image $[0,\sqrt r]$. The smallest set for Lebesgue
+measure in the $p$ coordinate is $[\sqrt{1-r},1]$.
+Both have the same posterior probability $r$ in the original
+coordinate. Their sizes use different reference measures.
+\end{example}
+
+\begin{exercise}[A normal posterior]
+\label{exer:bayesian-hpd-normal}
+For a normal posterior $N(m,v)$ with $v>0$, find the highest
+posterior density set of mass $r$ relative to Lebesgue
+measure. Show that it is unique up to null sets and coincides
+with the equal-tailed credible interval of the same mass.
+\end{exercise}
+
+\begin{exercise}[A flat density]
+\label{exer:bayesian-hpd-flat}
+Use a uniform posterior on $[0,1]$ and Lebesgue measure.
+Find $t_r$ and $\gamma_r$ and characterize all minimizing
+inclusion rules and all minimizing deterministic sets.
+\end{exercise}
+
+\begin{exercise}[Unequal sizes on a finite space]
+\label{exer:bayesian-hpd-finite-weighted}
+For three points take reference masses $(3,2,1)$ and posterior
+masses $(3/5,3/10,1/10)$. For $r=7/25$, find the density
+cutoff and the minimum size with and without randomization.
+Which point belongs to the smallest deterministic set?
+\end{exercise}
+
+\begin{exercise}[Bounding the size of an interval across a gap]
+\label{exer:bayesian-hpd-gap}
+In Example~\ref{ex:bayesian-hpd-disconnected}, find the shortest
+interval of posterior mass at least $4/5$ and compare its
+length with that of the disconnected set. Determine whether
+the shortest interval is unique.
+\end{exercise}
+
+\begin{exercise}[Transporting the reference measure]
+\label{exer:bayesian-hpd-transport-reference}
+Let $h$ be a measurable bijection with measurable inverse.
+Push both $\nu$ and $\mu$ forward by $h$. Show that the new
+density can be taken as $f\circ h^{-1}$ and that $h$ carries
+a highest posterior density set to one of the same mass and
+size for the pushed-forward measures.
+\end{exercise}
+
+\begin{exercise}[Maximizing mass at a given size]
+\label{exer:bayesian-hpd-fixed-size}
+With $\psi_r$ as in Theorem~\ref{thm:bayesian-highest-density-minimum},
+show that every inclusion rule of size at most $\int\psi_r\,d\mu$
+has posterior mass at most $r$. Give the conditions for equality.
+\end{exercise}
+
+\begin{exercise}[Nested inclusion rules]
+\label{exer:bayesian-hpd-nesting}
+Show that $r\mapsto t_r$ is nonincreasing and that
+$\psi_{r_1}(\theta)\leq\psi_{r_2}(\theta)$ for $0<r_1<r_2<1$.
+Deduce that the reported sets are nested when a single
+uniform randomizer is used for all levels.
+\end{exercise}
+
+\begin{exercise}[An exponential posterior]
+\label{exer:bayesian-hpd-exponential}
+For the density $\lambda e^{-\lambda\theta}$ on $[0,\infty)$,
+with $\lambda>0$, find the highest posterior density set of
+mass $r$ relative to Lebesgue measure. Compute the equal-tailed
+credible interval and compare their lengths.
+\end{exercise}
+
+\section{Prior sensitivity and improper-prior pitfalls}
+\label{sec:bayesian-prior-sensitivity}
+
+\subsection{Sensitivity to the prior}
+\label{subsec:bayesian-prior-sensitivity-tv}
+
+\begin{definition}[Likelihood reweighting]
+\label{def:bayesian-likelihood-reweighting}
+\indexnotation{m_\pi(x),\ B_\ell\pi}{Marginal likelihood and prior reweighted by \(\ell\).}
+For a prior $\pi$ and a nonnegative measurable function $\ell$
+with $0<\int\ell\,d\pi<\infty$, define the probability law
+\[
+(B_\ell\pi)(A)=\frac{\int_A\ell\,d\pi}{\int_\Theta\ell\,d\pi}
+\qquad(A\in\mathcal T).
+\]
+For a fixed record $x$ in a dominated experiment, take
+$\ell(\theta)=f(\theta,x)$ and write $m_\pi(x)=\int\ell\,d\pi$.
+This value of the prior predictive density is the
+\emph{marginal likelihood} of the record. By
+Proposition~\ref{prop:posterior-from-densities}, the law
+$B_\ell\pi$ is a posterior at records where the formula applies.
+\end{definition}
+
+\begin{theorem}[Stability at a fixed record]
+\label{thm:bayesian-prior-sensitivity-fixed}
+Let $\pi,\rho$ be priors and $0\leq\ell\leq K<\infty$.
+Suppose $a=\int\ell\,d\pi>0$ and $b=\int\ell\,d\rho>0$.
+Then
+\begin{equation}
+d_{\mathrm{TV}}(B_\ell\pi,B_\ell\rho)
+\leq \frac{K}{\max\{a,b\}}\,d_{\mathrm{TV}}(\pi,\rho).
+\label{eq:bayesian-prior-sensitivity-fixed}
+\end{equation}
+Also $|a-b|\leq Kd_{\mathrm{TV}}(\pi,\rho)$.
+\end{theorem}
+\begin{proof}
+By Theorem~\ref{thm:test-total-variation-gap}, the difference of
+the integrals of a measurable function taking values in an
+interval of length $K$ is bounded in absolute value by
+$K d_{\mathrm{TV}}(\pi,\rho)$. Translate and scale the
+function to $[0,1]$ to apply that theorem. Applied to $\ell$,
+this gives the bound on $|a-b|$.
+
+By symmetry assume $a\geq b$. For an event $A\in\mathcal T$ put
+$q=(B_\ell\rho)(A)$. Then
+\[
+a\bigl((B_\ell\pi)(A)-(B_\ell\rho)(A)\bigr)
+=\int_\Theta \ell(\mathbf 1_A-q)\,d(\pi-\rho),
+\]
+since $\int\ell(\mathbf 1_A-q)\,d\rho=0$. The integrand lies
+between $-Kq$ and $K(1-q)$. Apply the same bound and take the
+supremum over $A$.
+\end{proof}
+
+\begin{theorem}[Stability averaged over records]
+\label{thm:bayesian-prior-sensitivity-average}
+Suppose an experiment admits jointly measurable densities
+$f(\theta,x)$ relative to a $\sigma$-finite measure $\mu$.
+Let $\Pi_\pi,\Pi_\rho$ be the posterior kernels from
+Proposition~\ref{prop:posterior-from-densities}, using the prior
+when the reweighting formula is undefined. Write
+$\Delta(x)=d_{\mathrm{TV}}(\Pi_\pi(x,\cdot),\Pi_\rho(x,\cdot))$.
+Then $\Delta$ is measurable and
+\begin{equation}
+\begin{aligned}
+&\int_{\mathsf X}\Delta(x)\max\{m_\pi(x),m_\rho(x)\}\,\mu(dx)\\
+&\qquad\leq d_{\mathrm{TV}}(\pi,\rho)+d_{\mathrm{TV}}(M_\pi,M_\rho)
+\leq 2\,d_{\mathrm{TV}}(\pi,\rho).
+\end{aligned}
+\label{eq:bayesian-prior-sensitivity-average}
+\end{equation}
+Set the integrand to zero on the $\mu$-null set where either
+predictive density is infinite.
+\end{theorem}
+\begin{proof}
+Take the prior densities $u=d\pi/d\lambda$ and $v=d\rho/d\lambda$
+relative to $\lambda=\pi+\rho$. The posterior densities relative
+to $\lambda$ are jointly measurable by the update formula and
+the specified fallback. The density formula for total variation
+in Proposition~\ref{prop:total-variation-density} then gives
+measurability of $\Delta$.
+
+At a record with $a=m_\pi(x)\geq b=m_\rho(x)>0$, that formula
+and the triangle inequality give
+\[
+2a\Delta(x)
+=\int_\Theta f(\theta,x)|u-(a/b)v|\,d\lambda
+\leq\int_\Theta f(\theta,x)|u-v|\,d\lambda +a-b.
+\]
+Here the contribution of the change of normalization is
+$(a/b-1)\int f(\theta,x)v\,d\lambda=a-b$.
+Exchanging the priors gives the corresponding bound for $b>a$.
+If just one normalizer is zero, the right side with $|a-b|$
+equals $2\max\{a,b\}$, so the bound holds since $\Delta(x)\leq1$.
+When both are zero the bound holds as well.
+
+Integrate with respect to $\mu$. Tonelli and
+$\int f(\theta,x)\,\mu(dx)=1$ identify the integral of the
+first term on the right as $2d_{\mathrm{TV}}(\pi,\rho)$.
+The integral of $|a-b|$ is $2d_{\mathrm{TV}}(M_\pi,M_\rho)$.
+For its bound, the function $\theta\mapsto P_\theta(A)$ lies
+in $[0,1]$ for each observation event $A$, so
+$|M_\pi(A)-M_\rho(A)|\leq d_{\mathrm{TV}}(\pi,\rho)$ by
+Theorem~\ref{thm:test-total-variation-gap}. Taking the
+supremum gives the last inequality.
+\end{proof}
+
+\begin{example}[A small prior change at an unlikely record]
+\label{ex:bayesian-sensitivity-rare-record}
+On $\Theta=\{0,1\}$ take $\pi=\delta_0$ and
+$\rho=(1-\varepsilon)\delta_0+\varepsilon\delta_1$ with
+$0<\varepsilon<1$. Observe a Bernoulli bit with success
+probability $\eta$ at label $0$ and $1$ at label $1$, where
+$0<\eta<1$. The prior distance is $\varepsilon$.
+After a success, the posterior under $\pi$ is still
+$\delta_0$. The posterior distance is the mass that the
+posterior under $\rho$ gives label $1$, namely
+\[
+\frac{\varepsilon}{(1-\varepsilon)\eta+\varepsilon}.
+\]
+This attains \eqref{eq:bayesian-prior-sensitivity-fixed} with
+$K=1$. Taking $\eta=\varepsilon^2$ makes this distance tend to
+one as the prior distance tends to zero.
+\end{example}
+
+\begin{example}[Two beta priors after one success]
+\label{ex:bayesian-sensitivity-beta-priors}
+The densities of $\operatorname{Beta}(1,1)$ and
+$\operatorname{Beta}(2,1)$ cross at $1/2$, giving prior
+distance $\int_0^{1/2}(1-2p)\,dp=1/4$.
+One success updates them to $\operatorname{Beta}(2,1)$
+and $\operatorname{Beta}(3,1)$. Their densities cross in
+$(0,1)$ at $2/3$, giving posterior distance
+\[
+\int_0^{2/3}(2p-3p^2)\,dp=\frac{4}{27}.
+\]
+The predictive success probabilities are $2/3$ and $3/4$,
+whose difference is $1/12$.
+\end{example}
+
+\begin{example}[A point mass added to a continuous prior]
+\label{ex:bayesian-sensitivity-bernoulli-contamination}
+Take the uniform prior $\pi$ on $[0,1]$ for a Bernoulli rate
+and add a point mass at $1$, giving
+$\rho=(1-\varepsilon)\pi+\varepsilon\delta_1$ with
+$0<\varepsilon<1$. The prior distance is $\varepsilon$.
+For $n$ iid trials, the likelihood of all successes is $p^n$.
+Its integral is
+$1/(n+1)$ under $\pi$ and $1$ under $\delta_1$, so the new
+posterior puts mass
+$\varepsilon/(\varepsilon+(1-\varepsilon)/(n+1))$ at $1$.
+The remaining mass has the same beta law as the posterior
+under $\pi$. The posterior distance equals the mass at $1$
+and tends to one as $n\to\infty$.
+\end{example}
+
+\begin{example}[Averaging a change in a uniform endpoint model]
+\label{ex:bayesian-sensitivity-endpoint-average}
+At endpoint $\theta>0$, observe $X$ uniform on $(0,\theta)$.
+Take $\pi=\delta_1$ and $\rho=(1-\varepsilon)\delta_1+
+\varepsilon\delta_{1/2}$ with $0<\varepsilon<1$.
+On $(0,1/2)$ the predictive densities are $1$ and
+$1+\varepsilon$. There the second posterior puts mass
+$2\varepsilon/(1+\varepsilon)$ at $1/2$, and the first puts
+none there. On $(1/2,1)$ both posteriors are $\delta_1$.
+Thus the integral in \eqref{eq:bayesian-prior-sensitivity-average}
+is $(1/2)(1+\varepsilon)2\varepsilon/(1+\varepsilon)=\varepsilon$.
+Both prior predictive densities vanish off $[0,1]$.
+\end{example}
+
+\begin{exercise}[After a failure]
+\label{exer:bayesian-sensitivity-rare-failure}
+In Example~\ref{ex:bayesian-sensitivity-rare-record}, find both
+posteriors after a failure. Compute the integral on the left of
+\eqref{eq:bayesian-prior-sensitivity-average} by summing over the
+two records.
+\end{exercise}
+
+\begin{exercise}[Scaling a likelihood]
+\label{exer:bayesian-sensitivity-scale}
+Show that replacing $\ell$ by $c\ell$ for $c>0$ leaves both the
+reweighted law and the bound \eqref{eq:bayesian-prior-sensitivity-fixed}
+unchanged, with the bound on $\ell$ scaled by $c$.
+Find $B_\ell\pi$ when $\ell$ is a positive constant.
+\end{exercise}
+
+\begin{exercise}[A uniform bound across two priors]
+\label{exer:bayesian-sensitivity-likelihood-bounds}
+Suppose $0<L\leq\ell\leq K<\infty$. Deduce from
+\eqref{eq:bayesian-prior-sensitivity-fixed} a bound on posterior
+distance using $K/L$ and prior distance. Show that $K/L$ is the
+smallest constant that works for all such likelihood functions
+and priors by using two labels and letting $\varepsilon\downarrow0$.
+\end{exercise}
+
+\begin{exercise}[An unbounded weight at a fixed record]
+\label{exer:bayesian-sensitivity-unbounded-weight}
+On $\Theta=\{0,1,2,\ldots\}$ let $\ell(0)=1$ and $\ell(j)=j^2$
+for $j\geq1$. Take $\pi=\delta_0$ and
+$\rho_j=(1-1/j)\delta_0+(1/j)\delta_j$ for $j\geq2$.
+Compute the prior and reweighted distances. Compare their limits.
+\end{exercise}
+
+\begin{exercise}[Sensitivity of a bounded posterior mean]
+\label{exer:bayesian-sensitivity-bounded-target}
+If a measurable target $g$ lies in $[s,t]$, bound the absolute
+difference of its two posterior means using posterior total
+variation. Combine this with the fixed-record bound.
+Can equality hold in the first bound for a two-point target?
+\end{exercise}
+
+\begin{exercise}[Sensitivity of a predictive law]
+\label{exer:bayesian-sensitivity-predictive}
+Let $Q$ be a common sampling kernel for a future observation.
+Prove that mixing $Q$ against two posterior laws gives
+predictive laws at total variation distance at most that
+between the posteriors. Extend the bound to a block with kernel
+$Q_\theta^{\otimes k}$.
+\end{exercise}
+
+\begin{exercise}[The probability of a large posterior change]
+\label{exer:bayesian-sensitivity-probability-large}
+Under Theorem~\ref{thm:bayesian-prior-sensitivity-average}, let
+$X\sim M_\pi$. For $t>0$, bound $M_\pi\{x:\Delta(x)>t\}$ in terms
+of $t$ and $d_{\mathrm{TV}}(\pi,\rho)$. Obtain the corresponding
+bound under $M_\rho$.
+\end{exercise}
+
+\begin{exercise}[Updating a mixture of two priors]
+\label{exer:bayesian-sensitivity-mixture-odds}
+Let $\pi$ and $\rho$ have positive finite normalizers $a$ and
+$b$ under $\ell$, and let $0<\varepsilon<1$.
+Show that $B_\ell((1-\varepsilon)\pi+\varepsilon\rho)$ is a
+mixture of $B_\ell\pi$ and $B_\ell\rho$. Find the updated
+weight of $B_\ell\rho$, then express the ratio of the two
+updated weights in terms of the original weights and $b/a$.
+\end{exercise}
+
+\subsection{Improper priors and posterior propriety}
+\label{subsec:bayesian-improper-priors}
+
+\begin{definition}[Improper prior and proper posterior]
+\label{def:bayesian-improper-prior}
+\indexnotation{Z_\nu(x),\ \Pi_\nu(x,\cdot)}{Normalizer and posterior from a prior measure \(\nu\).}
+An \emph{improper prior} is a nonzero $\sigma$-finite measure
+$\nu$ on the parameter space with $\nu(\Theta)=\infty$.
+For a dominated experiment with a jointly measurable density
+$f(\theta,x)$ relative to a $\sigma$-finite measure $\mu$,
+put
+\[
+Z_\nu(x)=\int_\Theta f(\theta,x)\,\nu(d\theta).
+\]
+At records with $0<Z_\nu(x)<\infty$, the \emph{generalized
+posterior} is the probability law
+\begin{equation}
+\Pi_\nu(x,A)=\frac{\int_A f(\theta,x)\,\nu(d\theta)}{Z_\nu(x)}
+\qquad(A\in\mathcal T).
+\label{eq:bayesian-improper-posterior}
+\end{equation}
+The posterior is called \emph{proper} at such records.
+\end{definition}
+
+\begin{proposition}[Normalization and the observation marginal]
+\label{prop:bayesian-improper-normalization}
+A positive scalar multiple of $f(\theta,x)\,\nu(d\theta)$ is a
+probability law exactly when $0<Z_\nu(x)<\infty$. The set $D$
+of such records is measurable and \eqref{eq:bayesian-improper-posterior}
+defines a probability kernel on $D$ with its trace sigma algebra.
+Multiplying $\nu$ by a finite positive constant leaves this
+kernel unchanged.
+
+The joint measure $J_\nu$ with density $f(\theta,x)$ relative
+to $\nu\otimes\mu$ is $\sigma$-finite. Its observation marginal is
+\[
+M_\nu(B)=\int_B Z_\nu(x)\,\mu(dx)\qquad(B\in\mathcal A).
+\]
+This marginal is $\sigma$-finite exactly when $Z_\nu$ is finite
+$\mu$-almost everywhere. For $A\in\mathcal T$ and measurable $B\subseteq D$,
+\begin{equation}
+J_\nu(A\times B)=\int_B \Pi_\nu(x,A)\,M_\nu(dx).
+\label{eq:bayesian-improper-disintegration}
+\end{equation}
+If $M_\nu$ is $\sigma$-finite, this identity holds for all $B\in\mathcal A$
+after extending the kernel by a fixed probability law on $D^{\mathrm c}$.
+\end{proposition}
+\begin{proof}
+The total mass of $f(\theta,x)\,\nu(d\theta)$ is $Z_\nu(x)$,
+so its reciprocal is the only possible normalizing factor
+when the mass is positive and finite. Tonelli gives
+measurability of the numerator and denominator as functions
+of $x$. The kernel property follows by normalization, and
+scaling the prior multiplies both integrals by the same constant.
+
+For a parameter set $A$ with $\nu(A)<\infty$, Tonelli gives
+$J_\nu(A\times\mathsf X)=\nu(A)$ since
+$\int f(\theta,x)\,\mu(dx)=1$ for each $\theta$. A countable
+cover by such sets gives $\sigma$-finiteness. Integrating first
+over $\theta$ gives the formula for $M_\nu$. If $Z_\nu$ is finite
+almost everywhere, intersect sets of finite $\mu$-measure in
+a countable cover with $\{Z_\nu\leq j\}$ for positive integers
+$j$. The resulting sets have finite $M_\nu$-measure and cover
+the space up to a single $M_\nu$-null set. Conversely, every
+set of finite $M_\nu$-measure meets $\{Z_\nu=\infty\}$ in a
+$\mu$-null set. Such sets cannot cover $\{Z_\nu=\infty\}$ if
+it has positive $\mu$-measure. Finally,
+\eqref{eq:bayesian-improper-disintegration} follows by cancelling
+$Z_\nu(x)$ on $B\subseteq D$. In the $\sigma$-finite case, $D^{\mathrm c}$
+has zero $M_\nu$-measure, and its inverse image under the observation
+projection has zero $J_\nu$-measure.
+\end{proof}
+
+For an improper prior the total masses of $J_\nu$ and $M_\nu$
+are infinite. The kernel can still be proper at every record.
+Its normalizers scale with $\nu$, which matters whenever a
+comparison uses the normalizers themselves.
+
+\begin{proposition}[Exhaustion by proper priors]
+\label{prop:bayesian-improper-prior-exhaustion}
+Let $E_j\uparrow\Theta$ be measurable sets with
+$0<\nu(E_j)<\infty$, and use the proper priors
+$\pi_j=\nu(\cdot\cap E_j)/\nu(E_j)$. Fix $x$ with
+$0<Z_\nu(x)<\infty$. For all large $j$ the density update
+under $\pi_j$ is defined at $x$, and its distance from the
+generalized posterior is
+\begin{equation}
+d_{\mathrm{TV}}\bigl(\Pi_{\pi_j}(x,\cdot),\Pi_\nu(x,\cdot)\bigr)
+=1-\Pi_\nu(x,E_j)\longrightarrow 0.
+\label{eq:bayesian-improper-truncation-tv}
+\end{equation}
+\end{proposition}
+\begin{proof}
+By monotone convergence, $\int_{E_j} f(\theta,x)\,\nu(d\theta)$
+increases to $Z_\nu(x)>0$, so it is positive eventually.
+Applying Proposition~\ref{prop:posterior-from-densities} to
+$\pi_j$ cancels the factor $1/\nu(E_j)$ and gives
+$\Pi_\nu(x,\cdot\cap E_j)/\Pi_\nu(x,E_j)$. Relative to
+$\Pi_\nu(x,\cdot)$ its density is $\mathbf 1_{E_j}/q_j$,
+where $q_j=\Pi_\nu(x,E_j)$. The integral of the absolute
+difference of this density from one is $(1-q_j)+(1-q_j)$.
+The total variation formula in Proposition~\ref{prop:total-variation-density}
+gives \eqref{eq:bayesian-improper-truncation-tv}.
+\end{proof}
+
+\begin{example}[A flat prior for a normal mean]
+\label{ex:bayesian-improper-flat-normal}
+Use Lebesgue measure $d\theta$ on $\R$ and let $n\geq1$ observations
+be iid $N(\theta,\sigma^2)$ at label $\theta$, with known $\sigma^2>0$.
+For each record $x$, the identity
+\[
+\sum_{i=1}^n(x_i-\theta)^2
+=\sum_{i=1}^n(x_i-\bar x)^2+n(\theta-\bar x)^2
+\]
+makes the likelihood a positive finite multiple of the
+$N(\bar x,\sigma^2/n)$ density as a function of $\theta$.
+Thus the generalized posterior is $N(\bar x,\sigma^2/n)$.
+In the one-observation case the likelihood already integrates
+to one over $\theta$ for each $x$. The observation marginal
+is Lebesgue measure on $\R$.
+\end{example}
+
+\begin{example}[Propriety can depend on the observed count]
+\label{ex:bayesian-improper-bernoulli-two-ends}
+For a Bernoulli rate $p\in(0,1)$ use
+$\nu(dp)=dp/[p(1-p)]$. For an iid record of length $n\geq1$
+with $s$ successes, the unnormalized posterior density is
+$p^{s-1}(1-p)^{n-s-1}$. If $0<s<n$, its integral is
+$B(s,n-s)$ and the posterior is $\operatorname{Beta}(s,n-s)$.
+If $s=0$, the integral diverges near zero because the integrand
+is bounded below there by a positive multiple of $1/p$.
+If $s=n$, it diverges near one by the same argument with
+$1-p$ in place of $p$. The extreme counts have positive
+probability at every $p\in(0,1)$.
+\end{example}
+
+\begin{example}[The scale of the prior changes a marginal comparison]
+\label{ex:bayesian-improper-scale-comparison}
+Compare one observation under a fixed $N(0,1)$ law and under
+the $N(\theta,1)$ family. Write $\varphi$ for the standard
+normal density. The first model gives observation density
+$\varphi(x)$. In the second model the prior measure $c\,d\theta$
+with $c>0$ gives $Z_\nu(x)=c$ and generalized posterior
+$N(x,1)$ by Example~\ref{ex:bayesian-improper-flat-normal}.
+The ratio of the integrated likelihoods is $c/\varphi(x)$.
+Thus this ratio depends on the arbitrary scale even though
+all choices of $c$ give the same posterior within the second model.
+\end{example}
+
+\begin{example}[Truncations that spread out without a limit]
+\label{ex:bayesian-improper-uninformative-truncations}
+Take $\Theta=\R$, $\nu(d\theta)=d\theta$, and an observation
+identically zero at every parameter. At zero the likelihood
+relative to counting measure is constant one, so $Z_\nu(0)=\infty$.
+Uniform priors on $[-j,j]$ give uniform posteriors on those
+same intervals. These posteriors have no weak probability
+limit. Indeed, their integrals of the bounded continuous
+function $h(\theta)=e^{-\theta^2}$ tend to zero, as they are
+bounded by $\int_\R h(\theta)\,d\theta/(2j)$. Every probability
+law on $\R$ gives the strictly positive $h$ a positive integral.
+\end{example}
+
+\begin{exercise}[A flat normal prior with a finite truncation]
+\label{exer:bayesian-improper-normal-truncation}
+In Example~\ref{ex:bayesian-improper-flat-normal} use the prior
+uniform on $[-T,T]$ with $T>0$. Express the distance of its
+posterior from $N(\bar x,\sigma^2/n)$ using the two normal tail
+probabilities, and check its limit as $T\to\infty$.
+\end{exercise}
+
+\begin{exercise}[An improper prior at one endpoint]
+\label{exer:bayesian-improper-bernoulli-one-end}
+Replace the prior measure in
+Example~\ref{ex:bayesian-improper-bernoulli-two-ends} by
+$dp/p$ on $(0,1)$. For each possible $s$, determine whether
+the posterior is proper and identify its law when it is.
+\end{exercise}
+
+\begin{exercise}[A Poisson count]
+\label{exer:bayesian-improper-poisson-count}
+At rate $\lambda>0$, observe one Poisson count and use prior
+measure $d\lambda/\lambda$. Show that the normalizer is infinite
+at count zero and equals $1/k$ at count $k\geq1$. For positive
+counts identify the normalized density, and decide whether
+the observation marginal measure is $\sigma$-finite.
+\end{exercise}
+
+\begin{exercise}[A record with zero normalizer]
+\label{exer:bayesian-improper-zero-normalizer}
+Take $\Theta=(0,\infty)$ with Lebesgue prior measure. Observe
+a bit whose probability of success is
+$\mathbf 1_{\{\theta\leq1\}}e^{-\theta}$. Use counting measure on the observation space, which also
+contains a third record with probability zero at all labels. Find the normalizer at each of the three
+records, and specify the records where a proper posterior results.
+\end{exercise}
+
+\begin{exercise}[Two density versions at a null record]
+\label{exer:bayesian-improper-density-version}
+In the one-observation case of
+Example~\ref{ex:bayesian-improper-flat-normal}, modify the normal
+density by setting $f(\theta,0)=1$ for all $\theta$. Show that it
+remains a jointly measurable density for the same experiment.
+Compare the two normalizers at $x=0$ and away from zero.
+\end{exercise}
+
+\begin{exercise}[An uninformative first observation]
+\label{exer:bayesian-improper-delayed-propriety}
+Take Lebesgue prior measure on $\R$. An initial observation
+is identically zero, and a subsequent observation has law
+$N(\theta,1)$ at label $\theta$. Compute the normalizing
+constants after the first record and after both records.
+When does a proper posterior first exist?
+\end{exercise}
+
+\begin{exercise}[Updating again after propriety]
+\label{exer:bayesian-improper-sequential-update}
+For nonnegative measurable likelihoods $\ell_1,\ell_2$,
+suppose both $\int\ell_1\,d\nu$ and $\int\ell_1\ell_2\,d\nu$
+are positive and finite. Prove that normalizing
+$\ell_1\,d\nu$ and then updating with $\ell_2$ gives the same
+law as normalizing $\ell_1\ell_2\,d\nu$ directly.
+\end{exercise}
+
+\begin{exercise}[Diffuse priors in a marginal comparison]
+\label{exer:bayesian-improper-diffuse-model-comparison}
+In Example~\ref{ex:bayesian-improper-scale-comparison}, use a
+proper prior uniform on $[-T,T]$ in the second model. For
+fixed $x$, compute the limit of its marginal density as
+$T\to\infty$ and the limit of its posterior in total variation.
+Compare these limits with those obtained using $d\theta$.
+\end{exercise}
+
+\chapter{Consistency and asymptotic inference}
+\label{chap:asymptotic-inference}
+\notationgroup{Asymptotic inference}
+
+\section{Consistency, transformations, and the delta method}
+\label{sec:asymptotic-consistency-transformations}
+
+\subsection{Pointwise and uniform consistency}
+\label{subsec:asymptotic-pointwise-uniform-consistency}
+
+For each $n\geq1$ let $(\mathsf X_n,\mathcal A_n,(P_{n,\theta})_{\theta\in\Theta})$
+be an experiment with the same parameter set $\Theta$ and record $X^{(n)}$.
+For a fixed target $g:\Theta\to\R$, let $\widehat g_n:\mathsf X_n\to\R$
+be a point estimator. Inside a probability or expectation at stage $n$,
+we abbreviate $\widehat g_n(X^{(n)})$ by $\widehat g_n$.
+In the iid case $P_{n,\theta}=P_\theta^{\otimes n}$ and
+$X^{(n)}=(X_1,\dots,X_n)$. The definitions below compare
+probabilities at each $n$ and require no joint law of the records
+across different $n$.
+
+\begin{definition}[Pointwise and uniform consistency]
+\label{def:asymptotic-consistency}
+\indexnotation{e_n(\theta,\varepsilon)}{Probability of estimation error exceeding \(\varepsilon\).}
+For $\varepsilon>0$ put
+\[
+e_n(\theta,\varepsilon)=P_{n,\theta}\{|\widehat g_n-g(\theta)|>\varepsilon\}.
+\]
+The estimator sequence is \emph{consistent at $\theta$} if
+$e_n(\theta,\varepsilon)\to0$ for every $\varepsilon>0$.
+It is \emph{pointwise consistent} on $S\subseteq\Theta$ if it
+is consistent at every $\theta\in S$. It is \emph{uniformly
+consistent} on a nonempty $S$ if
+\[
+\sup_{\theta\in S} e_n(\theta,\varepsilon)\longrightarrow0
+\qquad\text{for every }\varepsilon>0.
+\]
+Without qualification, consistency means pointwise consistency on $\Theta$.
+\end{definition}
+
+\begin{proposition}[A squared risk criterion]
+\label{prop:asymptotic-consistency-mse}
+Write $\operatorname{MSE}_{n,\theta}(\widehat g_n)$ for the
+mean squared error under $P_{n,\theta}$. For every $\varepsilon>0$,
+\[
+e_n(\theta,\varepsilon)
+\leq \frac{\operatorname{MSE}_{n,\theta}(\widehat g_n)}{\varepsilon^2}.
+\]
+Thus convergence of mean squared error to zero at $\theta$
+implies consistency there. If the supremum of the mean
+squared errors on $S$ tends to zero, the sequence is uniformly
+consistent on $S$.
+\end{proposition}
+\begin{proof}
+Apply Markov's inequality to $(\widehat g_n-g(\theta))^2$.
+The uniform assertion follows by taking the supremum over $S$.
+\end{proof}
+
+\begin{proposition}[Consistency requires separation of sampling laws]
+\label{prop:asymptotic-consistency-separation}
+If $|g(\theta)-g(\vartheta)|>2\varepsilon$, then for each $n$,
+\begin{equation}
+e_n(\theta,\varepsilon)+e_n(\vartheta,\varepsilon)
+\geq 1-d_{\mathrm{TV}}(P_{n,\theta},P_{n,\vartheta}).
+\label{eq:asymptotic-consistency-two-point}
+\end{equation}
+Pointwise consistency therefore requires
+$d_{\mathrm{TV}}(P_{n,\theta},P_{n,\vartheta})\to1$ for every fixed
+pair with distinct target values. In an iid experiment it
+requires identifiability of $g$ in the single observation model.
+Uniform consistency on $S$ requires the same convergence of the
+distances for any sequences $\theta_n,\vartheta_n\in S$ whose
+target values stay separated by a positive constant.
+\end{proposition}
+\begin{proof}
+Let $A_n=\{|\widehat g_n-g(\theta)|\leq\varepsilon\}$. The target
+separation implies that every record in $A_n$ has error greater
+than $\varepsilon$ at $\vartheta$. The sum of the error probabilities
+is at least
+\[
+1-P_{n,\theta}(A_n)+P_{n,\vartheta}(A_n).
+\]
+The definition of total variation bounds the difference of the
+two probabilities. This proves \eqref{eq:asymptotic-consistency-two-point}.
+For fixed targets with distinct values, choose
+$\varepsilon<|g(\theta)-g(\vartheta)|/2$ and use consistency.
+If $P_\theta=P_\vartheta$ in the iid case, all product laws
+agree, so the target values must agree by the same bound. This is
+identifiability in Definition~\ref{def:identifiability}.
+For varying pairs, each error probability is bounded by the
+supremum on $S$.
+\end{proof}
+
+\begin{example}[Uniform consistency of the Bernoulli frequency]
+\label{ex:asymptotic-consistency-bernoulli}
+For iid Bernoulli trials with parameter $p\in[0,1]$,
+$\bar X_n=n^{-1}\sum_{i=1}^nX_i$ has mean $p$ and
+variance $p(1-p)/n$. Hence
+\[
+\sup_{p\in[0,1]}P_{n,p}(|\bar X_n-p|>\varepsilon)
+\leq \frac{1}{4n\varepsilon^2}.
+\]
+Thus the frequency is uniformly consistent, including at
+$p=0$ and $p=1$.
+\end{example}
+
+\begin{example}[An endpoint estimator on bounded and unbounded sets]
+\label{ex:asymptotic-consistency-uniform-endpoint}
+For iid observations uniform on $[0,\theta]$, $\theta>0$,
+take $M_n=\max_{i\leq n}X_i$. If $\theta\leq\varepsilon$ then
+$P_{n,\theta}(|M_n-\theta|>\varepsilon)=0$. If
+$\theta>\varepsilon$, independence gives
+\[
+P_{n,\theta}(|M_n-\theta|>\varepsilon)
+=P_{n,\theta}(M_n<\theta-\varepsilon)
+=(1-\varepsilon/\theta)^n .
+\]
+This tends to zero at each fixed $\theta$. On $0<\theta\leq b$
+with $b>\varepsilon$, the supremum is $(1-\varepsilon/b)^n$,
+so consistency is uniform on each such bounded set of endpoints.
+Over all $\theta>0$ the supremum is one for every $n$ because the
+probability tends to one as $\theta\to\infty$ with $n$ fixed.
+\end{example}
+
+\begin{example}[Consistency with mean squared error bounded away from zero]
+\label{ex:asymptotic-consistency-rare-spike}
+For iid $N(\theta,1)$ observations and $n\geq2$, let
+$D=(X_1-X_2)/\sqrt 2$ and $A_n=\{\Phi(D)\leq 1/n\}$, where
+$\Phi$ is the standard normal distribution function.
+The variable $D$ is standard normal under each label, so
+$P_{n,\theta}(A_n)=1/n$. Set
+$\widehat g_n=\bar X_n+\sqrt n\,\mathbf 1_{A_n}$ for $n\geq2$
+and $\widehat g_1=X_1$.
+Outside $A_n$ this equals $\bar X_n$, giving
+\[
+P_{n,\theta}(|\widehat g_n-\theta|>\varepsilon)
+\leq \frac{1}{n\varepsilon^2}+\frac1n .
+\]
+Thus the estimator is uniformly consistent. The vector
+$(\bar X_n,D)$ is jointly Gaussian, and its covariance is
+$(1-1)/(n\sqrt2)=0$ by independence of the observations.
+Thus $\bar X_n$ and $D$ are independent. The cross term in the
+mean squared error vanishes because $\bar X_n-\theta$ has mean zero.
+Consequently the mean squared error is $1/n+nP_{n,\theta}(A_n)=1/n+1$.
+\end{example}
+
+\begin{example}[A target with no uniformly consistent estimator]
+\label{ex:asymptotic-consistency-bernoulli-jump}
+For Bernoulli trials consider $g(p)=\mathbf 1_{\{p>0\}}$ on
+$[0,1]$. Reporting one if any success occurs is pointwise
+consistent: it is exact at zero and has error probability
+$(1-p)^n$ at each $p>0$. To test uniform consistency, compare
+$p=0$ with $p_n=1/n^2$ for $n\geq2$. The first sampling law
+is concentrated on the all-zero record. For the second law,
+the probability of any success is
+\[
+d_{\mathrm{TV}}(P_{n,0},P_{n,p_n})
+=1-(1-p_n)^n\leq np_n=1/n .
+\]
+The equality follows since the total variation distance from a
+point mass equals the mass outside that point under the other
+law. At tolerance $\varepsilon=1/3$, the target values are
+separated by more than $2\varepsilon$. Bound
+\eqref{eq:asymptotic-consistency-two-point} makes the supremum of the
+error probabilities at least $(1-1/n)/2$ for every estimator.
+\end{example}
+
+\begin{exercise}[Uniformity on a finite parameter set]
+\label{exer:asymptotic-consistency-finite-uniform}
+Prove that pointwise consistency on a nonempty finite set $S$
+implies uniform consistency there. Can the same argument be
+applied to the countably infinite set $\{1,2,\dots\}$ in
+Example~\ref{ex:asymptotic-consistency-uniform-endpoint}?
+\end{exercise}
+
+\begin{exercise}[A fixed amount of smoothing]
+\label{exer:asymptotic-consistency-bernoulli-smoothing}
+For iid Bernoulli trials let $S_n=\sum_i X_i$ and
+$\widehat p_n=(S_n+a)/(n+a+b)$ with fixed $a,b>0$.
+Compute its bias and variance. Show that its mean squared error
+tends to zero uniformly on $[0,1]$.
+\end{exercise}
+
+\begin{exercise}[An unbiased estimator using one observation]
+\label{exer:asymptotic-consistency-unbiased-one}
+For iid $N(\theta,1)$ observations take $\widehat g_n=X_1$
+at every $n$. Verify unbiasedness and determine the error
+probability at any $\varepsilon>0$. Compare it with the error
+probability of $\bar X_n$ in the same model.
+\end{exercise}
+
+\begin{exercise}[Relative error for an endpoint]
+\label{exer:asymptotic-consistency-endpoint-relative}
+For $M_n$ in Example~\ref{ex:asymptotic-consistency-uniform-endpoint},
+compute
+\[
+\sup_{\theta>0}P_{n,\theta}(|M_n/\theta-1|>\varepsilon)
+\]
+for every $\varepsilon>0$. Explain how relative and absolute
+error give different uniform conclusions.
+\end{exercise}
+
+\begin{exercise}[A characterization by varying labels]
+\label{exer:asymptotic-consistency-varying-labels}
+Prove that uniform consistency on a nonempty $S$ is equivalent
+to $e_n(\theta_n,\varepsilon)\to0$ for every sequence
+$\theta_n\in S$ and every $\varepsilon>0$. When constructing a
+sequence, the supremum need not be attained. For the endpoint
+example, compute the limiting error probability along $\theta_n=n$
+at a fixed tolerance $\varepsilon>0$.
+\end{exercise}
+
+\begin{exercise}[Consistent estimation on two labels]
+\label{exer:asymptotic-consistency-two-labels}
+Let $\Theta=\{\theta_0,\theta_1\}$ with $g(\theta_0)\ne g(\theta_1)$.
+Show that a consistent estimator sequence exists if and only if
+$d_{\mathrm{TV}}(P_{n,\theta_0},P_{n,\theta_1})\to1$. For the
+converse, use the sets attaining total variation in
+Proposition~\ref{prop:total-variation-density} to choose which
+of the two values to report.
+\end{exercise}
+
+\begin{exercise}[A redundant Bernoulli label]
+\label{exer:asymptotic-consistency-redundant-bernoulli}
+Use the parametrization with success probability $q^2$ for
+$q\in[-1,1]$ in Example~\ref{ex:redundant-labels}.
+Show that $q$ has no pointwise consistent estimator on $[-1,1]$.
+Construct a uniformly consistent estimator of $|q|$ using the
+empirical frequency and $|\sqrt u-\sqrt v|\leq\sqrt{|u-v|}$
+for $u,v\geq0$.
+\end{exercise}
+
+\begin{exercise}[Moving away from the Bernoulli boundary]
+\label{exer:asymptotic-consistency-bernoulli-away-from-zero}
+In Example~\ref{ex:asymptotic-consistency-bernoulli-jump}, restrict
+the labels to $\{0\}\cup[\delta,1]$ for fixed $0<\delta<1$.
+Show that the same rule is uniformly consistent there. More
+generally, for deterministic $0<\delta_n<1$, find a necessary
+and sufficient condition on $(\delta_n)$ for the supremum of the
+error probability at tolerance $1/3$ on $\{0\}\cup[\delta_n,1]$
+to tend to zero.
+\end{exercise}
+
+\subsection{Continuous transformations of estimators}
+\label{subsec:asymptotic-continuous-transformations}
+
+Let $(E,d_E)$ and $(F,d_F)$ be metric spaces with their Borel
+sigma algebras. Let $g:\Theta\to E$ be a target and $T_n$ an
+$E$-valued measurable estimator in the experiment at stage $n$.
+Use Definition~\ref{def:asymptotic-consistency} with $d_E(T_n,g(\theta))$
+in place of the absolute error. For a Borel map $h:E\to F$,
+the estimator $h(T_n)$ of $h(g(\theta))$ is called a
+\emph{plug-in estimator}.
+
+\begin{theorem}[Continuity preserves consistency at a fixed label]
+\label{thm:asymptotic-consistency-continuous-map}
+If $T_n$ is consistent at $\theta$ and $h$ is continuous at
+$g(\theta)$, then $h(T_n)$ is consistent at $\theta$ for the
+target $h\circ g$.
+\end{theorem}
+\begin{proof}
+Put $t=g(\theta)$. For every $\varepsilon>0$, continuity gives
+$\delta>0$ such that $d_E(u,t)\leq\delta$ implies
+$d_F(h(u),h(t))\leq\varepsilon$. Thus
+\[
+P_{n,\theta}\{d_F(h(T_n),h(g(\theta)))>\varepsilon\}
+\leq P_{n,\theta}\{d_E(T_n,g(\theta))>\delta\},
+\]
+and the right side tends to zero.
+\end{proof}
+
+\begin{definition}[Modulus for comparison with the target range]
+\label{def:asymptotic-transform-modulus}
+\indexnotation{\omega_{h,K}(r)}{Modulus of \(h\) for comparisons with points in \(K\).}
+For a nonempty $K\subseteq E$ and $r>0$ define
+\[
+\omega_{h,K}(r)
+=\sup_{\substack{t\in K,\ u\in E\\ d_E(u,t)\leq r}}
+d_F(h(u),h(t)).
+\]
+It may be infinite. Only the target point $t$ needs to be in $K$.
+\end{definition}
+
+\begin{proposition}[Uniform consistency after transformation]
+\label{prop:asymptotic-consistency-uniform-map}
+Let $S\subseteq\Theta$ be nonempty and set $K=g(S)$.
+For any $\varepsilon,\delta>0$ with
+$\omega_{h,K}(\delta)\leq\varepsilon$,
+\begin{equation}
+\begin{split}
+&\sup_{\theta\in S}P_{n,\theta}\{d_F(h(T_n),h(g(\theta)))>\varepsilon\}\\
+&\qquad\leq \sup_{\theta\in S}P_{n,\theta}\{d_E(T_n,g(\theta))>\delta\}.
+\end{split}
+\label{eq:asymptotic-consistency-uniform-map}
+\end{equation}
+In particular, if $T_n$ is uniformly consistent on $S$ and
+$\omega_{h,K}(r)\to0$ as $r\downarrow0$, then $h(T_n)$ is
+uniformly consistent on $S$. The modulus condition holds
+if $h$ is uniformly continuous on $E$, or if $K$ is compact
+and $h$ is continuous at each point of $K$ as a map on $E$.
+\end{proposition}
+\begin{proof}
+The same event inclusion as in
+Theorem~\ref{thm:asymptotic-consistency-continuous-map} holds
+with this $\delta$ for every $\theta\in S$. Taking the
+supremum gives \eqref{eq:asymptotic-consistency-uniform-map}.
+Uniform continuity on $E$ gives the modulus condition
+directly. For the compact case, if the condition fails, there
+are $t_j\in K$ and $u_j\in E$ with $d_E(u_j,t_j)\leq1/j$ and
+$d_F(h(u_j),h(t_j))$ bounded below by a positive constant.
+Along a subsequence $t_j$ converges to some $t\in K$, so
+$u_j$ converges to $t$ as well. Continuity at $t$ forces the
+image distances to tend to zero, a contradiction.
+\end{proof}
+
+If $h$ is a Borel map defined only on a Borel subset $D\subseteq E$,
+one may assign a fixed value in $F$ outside $D$. If $g(\theta)$ lies
+in the interior of $D$ and $h$ is continuous there, the extension
+is continuous at $g(\theta)$. For any $g(\theta)\in D$, two Borel
+extensions agree when $T_n\in D$, so their error probabilities
+differ by at most $P_{n,\theta}(T_n\notin D)$.
+
+\begin{example}[Estimating a Bernoulli variance]
+\label{ex:asymptotic-transform-bernoulli-variance}
+Let $\bar X_n$ be the empirical frequency for Bernoulli trials.
+For $u,v\in[0,1]$,
+\[
+|u(1-u)-v(1-v)|=|u-v||1-u-v|\leq |u-v|.
+\]
+Thus the probability that $\bar X_n(1-\bar X_n)$ differs from
+$p(1-p)$ by more than $\varepsilon$ is bounded above by that
+for the frequency at the same tolerance. The bound is
+$1/(4n\varepsilon^2)$ uniformly on $[0,1]$ by
+Example~\ref{ex:asymptotic-consistency-bernoulli}.
+\end{example}
+
+\begin{example}[Log odds from a smoothed frequency]
+\label{ex:asymptotic-transform-bernoulli-log-odds}
+Put $S_n=\sum_{i=1}^n X_i$ and $T_n=(S_n+1)/(n+2)$ for
+Bernoulli trials. Since $|T_n-\bar X_n|\leq1/(n+2)$, this
+estimator is uniformly consistent for $p$. It lies in $(0,1)$,
+so $h(T_n)$ is defined for $h(p)=\log(p/(1-p))$.
+Continuity gives pointwise consistency on $(0,1)$, and
+compactness gives uniform consistency on $[a,1-a]$ for
+$0<a<1/2$. Over the full interior, take $p_n=1/n^2$ for
+$n\geq2$. On the all-failure record,
+\[
+h(T_n)=-\log(n+1),\qquad h(p_n)=-\log(n^2-1).
+\]
+Their difference is $\log(n-1)$, and the record has
+probability $(1-1/n^2)^n\geq1-1/n$. For any fixed positive
+tolerance, the error probability at $p_n$ tends to one.
+\end{example}
+
+\begin{example}[Variance from two sample moments]
+\label{ex:asymptotic-transform-sample-variance}
+For an iid real sample from a law $P$ with finite second
+moment, the weak law of large numbers gives
+\[
+\bar X_n\longrightarrow\mathbb E_P X,\qquad
+\frac1n\sum_{i=1}^n X_i^2\longrightarrow\mathbb E_P X^2
+\]
+in probability. The vector of these moments converges in
+probability to the vector of limits, since the event that its
+maximum coordinate error exceeds $\varepsilon$ is the union
+of the two coordinate error events. Apply $(u,v)\mapsto v-u^2$
+to obtain consistency of $n^{-1}\sum_i(X_i-\bar X_n)^2$
+for $\operatorname{Var}_P(X)$. Taking the square root also
+gives consistency for the standard deviation, including at
+variance zero.
+\end{example}
+
+\begin{example}[Squaring a uniformly consistent mean]
+\label{ex:asymptotic-transform-square-not-uniform}
+For iid $N(\theta,1)$ observations with $\theta\in\R$, the
+distribution of $\bar X_n-\theta$ is $N(0,1/n)$ at every
+label, so $\bar X_n$ is uniformly consistent. The estimator
+$\bar X_n^2$ is consistent for $\theta^2$ at each fixed label.
+At $\theta_n=\sqrt n$, its error has the law of $2Z+Z^2/n$
+for $Z\sim N(0,1)$, by writing $\bar X_n=\sqrt n+Z/\sqrt n$
+in distribution. For any $\varepsilon>0$, the probability
+that the absolute error exceeds $\varepsilon$ is at least
+$\mathbb P(Z>\varepsilon/2)>0$. This excludes uniform
+consistency over $\R$.
+\end{example}
+
+\begin{exercise}[Combining coordinate estimates]
+\label{exer:asymptotic-transform-vector-assembly}
+Suppose $T_{n,j}$ is uniformly consistent for $g_j$ on $S$
+for each $j=1,\ldots,k$, with fixed $k$. Show that the vector
+is uniformly consistent under the maximum norm and under
+the Euclidean norm. Give the argument for pointwise consistency
+as well.
+\end{exercise}
+
+\begin{exercise}[A square root at zero]
+\label{exer:asymptotic-transform-square-root}
+For $u,v\geq0$ prove $|\sqrt u-\sqrt v|\leq\sqrt{|u-v|}$.
+Deduce a bound on the error probability for $\sqrt{T_n}$ at
+tolerance $\varepsilon$ in terms of the error probability
+for a nonnegative $T_n$ at tolerance $\varepsilon^2$.
+\end{exercise}
+
+\begin{exercise}[Estimating a ratio]
+\label{exer:asymptotic-transform-ratio}
+Suppose $A_n$ and $B_n$ consistently estimate $a(\theta)$
+and $b(\theta)$, respectively, with $b(\theta)\ne0$.
+Use $A_n/B_n$ on $\{B_n\ne0\}$ and zero elsewhere.
+Prove pointwise consistency for $a/b$. If both original
+estimators are uniformly consistent on $S$, $\sup_S|a|<\infty$,
+and $\inf_S|b|>0$, prove uniform consistency of the ratio on $S$.
+\end{exercise}
+
+\begin{exercise}[Absolute and relative error after exponentiation]
+\label{exer:asymptotic-transform-exponential}
+In the normal location model of
+Example~\ref{ex:asymptotic-transform-square-not-uniform},
+estimate $e^\theta$ by $e^{\bar X_n}$. Prove uniform consistency
+in absolute error on each bounded parameter interval. Find a
+sequence of labels on which uniform consistency in absolute
+error over $\R$ fails. Prove uniform consistency in relative
+error over $\R$ by considering $e^{\bar X_n-\theta}$.
+\end{exercise}
+
+\begin{exercise}[A discontinuous threshold]
+\label{exer:asymptotic-transform-normal-threshold}
+For iid $N(\theta,1)$ observations let
+$T_n=\mathbf 1_{\{\bar X_n>0\}}$. Find its error probability
+at $\theta=0$ for the target $\mathbf 1_{\{\theta>0\}}$.
+Show consistency at each $\theta\ne0$ and identify the
+hypothesis of the transformation theorem that fails at zero.
+\end{exercise}
+
+\begin{exercise}[Uniform consistency of the sample variance]
+\label{exer:asymptotic-transform-variance-uniform}
+Let $X_1,\ldots,X_n$ be iid from a class of laws with
+$\sup_P\mathbb E_P[X^4]<\infty$. Use Chebyshev's inequality
+for both raw sample moments and bound the set of their
+population values. Show that the plug-in variance estimator
+in Example~\ref{ex:asymptotic-transform-sample-variance}
+is uniformly consistent on the class.
+\end{exercise}
+
+\begin{exercise}[Agreement on an event]
+\label{exer:asymptotic-transform-agreement}
+Fix $0<a<1/2$ and consider $p\in[a,1-a]$ in the Bernoulli
+model. From $\bar X_n$ construct one estimator that reports
+its log odds when $0<\bar X_n<1$ and reports zero otherwise.
+Construct a second estimator that clips $\bar X_n$ to
+$[a/2,1-a/2]$ before taking log odds. Show that the two estimators
+agree with probability tending to one uniformly in $p$,
+and use this to prove uniform consistency of both.
+\end{exercise}
+
+\begin{exercise}[A transformation that varies with the sample size]
+\label{exer:asymptotic-transform-varying-map}
+Let $h_n:E\to F$ be Borel functions with
+$\sup_{u\in E}d_F(h_n(u),h(u))\to0$. Show that consistency of
+$h(T_n)$ for $h\circ g$ implies the corresponding consistency
+of $h_n(T_n)$, both pointwise and uniformly.
+\end{exercise}
+
 % BEGIN NOTATION INDEX
 \chapter*{Notation index}
 \label{chap:notation-index}
