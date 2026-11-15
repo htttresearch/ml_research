@@ -11894,6 +11894,231 @@ Compare your interval at level $1/2$ with those in
 Example~\ref{ex:bayesian-credible-beta}.
 \end{exercise}
 
+\subsection{Highest posterior density sets}
+\label{subsec:bayesian-highest-posterior-density}
+
+Fix a record and write $\nu$ for its posterior law on
+$(\Theta,\mathcal T)$. Let $\mu$ be a $\sigma$-finite reference measure
+and suppose $\nu(d\theta)=f(\theta)\,\mu(d\theta)$ for a nonnegative
+measurable density $f$, chosen finite everywhere. The size of a set $C$ will mean $\mu(C)$.
+A measurable function $\psi:\Theta\to[0,1]$ is an \emph{inclusion rule}. Its size is $\int\psi\,d\mu$ and its
+posterior mass is $\int\psi\,d\nu$. It can be implemented by drawing
+$V$ uniformly on $[0,1]$ independently of the parameter under the
+posterior and reporting $\{\theta:V<\psi(\theta)\}$. Both integrals
+are then averages over $V$ by Tonelli's theorem. Ordinary sets
+correspond to indicator functions.
+
+\begin{definition}[Highest posterior density set]
+\label{def:bayesian-highest-density-set}
+For $0<r<1$, a \emph{highest posterior density set} of mass $r$
+relative to $\mu$ is a measurable set $C$ with $\nu(C)=r$ for which
+there is a threshold $t>0$ such that, up to $\mu$-null sets,
+\[
+\{f>t\}\subseteq C\subseteq\{f\geq t\}.
+\]
+A rule that includes all points above $t$, excludes all points
+below $t$, and has posterior mass $r$ is its randomized analogue.
+\end{definition}
+
+\begin{theorem}[Minimum size at a given posterior mass]
+\label{thm:bayesian-highest-density-minimum}
+\indexnotation{t_r,\ \gamma_r,\ \psi_r}{Density cutoff, tie probability, and inclusion rule.}
+Let $F$ be the distribution function of $f(\theta)$ under $\nu$.
+For $0<r<1$ define $t_r=q_{1-r}(F)$ and
+\[
+\gamma_r=
+\begin{cases}
+\bigl(r-\nu(\{f>t_r\})\bigr)/\nu(\{f=t_r\}), & \nu(\{f=t_r\})>0,\\
+0, & \nu(\{f=t_r\})=0.
+\end{cases}
+\]
+Then $0<t_r<\infty$ and $0\leq\gamma_r\leq1$. The rule
+\[
+\psi_r=\mathbf 1_{\{f>t_r\}}+\gamma_r\mathbf 1_{\{f=t_r\}}
+\]
+has posterior mass $r$. Among all inclusion rules of posterior mass
+at least $r$, it has smallest size. A rule attains that size exactly
+when it has mass $r$ and agrees with $\psi_r$ off $\{f=t_r\}$ up to
+a $\mu$-null set.
+\end{theorem}
+\begin{proof}
+Because $f$ integrates to one under $\mu$, it is positive and finite
+$\nu$-almost surely. Its lower $(1-r)$-quantile is finite and is
+strictly positive by right-continuity of $F$ at zero and $F(0)=0$.
+The quantile inequalities give
+\[
+\nu(\{f>t_r\})\leq r\leq \nu(\{f\geq t_r\}).
+\]
+Consequently $\gamma_r$ lies in $[0,1]$, and the formula for
+$\psi_r$ gives the desired mass. The rule has finite size
+because $\mu(\{f\geq t_r\})\leq 1/t_r$.
+
+Write $t=t_r$. Every competing rule $\psi$ of infinite size is
+strictly worse. For finite size, subtraction gives
+\begin{align*}
+t\left(\int\psi\,d\mu-\int\psi_r\,d\mu\right)
+&=\int(\psi-\psi_r)(t-f)\,d\mu\\
+&\quad+\left(\int\psi\,d\nu-r\right).
+\end{align*}
+The integrand in the first term is nonnegative. Where $f>t$
+we have $\psi-\psi_r\leq0$, and where $f<t$ we have
+$\psi-\psi_r\geq0$. The second term is nonnegative by the mass
+constraint. Equality requires both terms to vanish. The first
+vanishes exactly when the rules agree $\mu$-almost everywhere
+off the tie set, and the second when the mass is $r$.
+\end{proof}
+
+The subtraction works at any positive cutoff for a rule of mass $r$
+that includes all points above the cutoff and excludes those below.
+Thus every highest posterior density set of mass $r$ has minimum
+size. The sign argument also appears in the proof of the
+Neyman--Pearson lemma (Theorem~\ref{thm:neyman-pearson}).
+
+\begin{proposition}[Choosing a deterministic part of the tie]
+\label{prop:bayesian-highest-density-deterministic}
+A deterministic set attains the minimum size in
+Theorem~\ref{thm:bayesian-highest-density-minimum} if and only if
+the tie set $\{f=t_r\}$ has a measurable subset $B$ satisfying
+\[
+\mu(B)=\frac{r-\nu(\{f>t_r\})}{t_r}.
+\]
+In that case $C=\{f>t_r\}\cup B$ attains the minimum. Such a subset
+always exists for Lebesgue measure on $\R^d$, $d\geq1$.
+\end{proposition}
+\begin{proof}
+The equality condition in the theorem forces every deterministic
+minimizer to contain the strict superlevel set and to use only
+points from there and the tie set, up to null sets. On the tie set,
+$\nu(B)=t_r\mu(B)$, which gives the required size and proves
+sufficiency. For Lebesgue measure, write $D=\{f=t_r\}$. It has
+finite measure. For $0<b<\mu(D)$, the function
+$s\mapsto\mu(D\cap\{\theta:\theta_1\leq s\})$ is continuous since
+each hyperplane $\{\theta:\theta_1=s\}$ has measure zero.
+Its limits at minus and plus infinity are $0$ and $\mu(D)$.
+It therefore takes the value $b$. Use $\varnothing$ and $D$ at
+the two endpoints.
+\end{proof}
+
+When a posterior kernel $\Pi$ has a jointly measurable density
+$f(x,\theta)$ relative to a fixed $\mu$, these formulas give
+measurable inclusion probabilities. For each fixed $s$ the
+function $x\mapsto\Pi(x,\{\theta:f(x,\theta)\leq s\})$ is
+measurable by the kernel integral formula. The lower quantile
+criterion from Theorem~\ref{thm:bayesian-posterior-quantile-rule}
+then gives measurability of $t_r(x)$. The strict and tied
+threshold sets have measurable graphs, so their posterior masses
+and hence $\gamma_r(x)$ are measurable. The reported set has a measurable graph in $(x,V,\theta)$.
+
+\begin{example}[The shortest set for an increasing beta density]
+\label{ex:bayesian-hpd-beta}
+Take the $\operatorname{Beta}(2,1)$ posterior of
+Example~\ref{ex:bayesian-credible-beta}. Relative to Lebesgue measure
+its density is $2p$ on $(0,1)$. The interval
+$[\sqrt{1-r},1]$ has mass $r$, and up to null sets it is a
+strict superlevel set. It has minimum Lebesgue measure among all
+measurable sets of posterior mass at least $r$. At $r=1/2$ its
+length is $1-1/\sqrt2$, less than the equal-tailed length
+$(\sqrt3-1)/2$.
+\end{example}
+
+\begin{example}[A disconnected smallest set]
+\label{ex:bayesian-hpd-disconnected}
+Relative to Lebesgue measure, put density $2/5$ on
+$[0,1]\cup[3,4]$, $1/10$ on $(1,3)$, and zero elsewhere.
+The union $[0,1]\cup[3,4]$ has mass $4/5$. It is a strict
+superlevel set at any cutoff between $1/10$ and $2/5$.
+The sign argument of Theorem~\ref{thm:bayesian-highest-density-minimum}
+gives uniqueness up to null sets, since there are no ties at such
+a cutoff. No interval has the same minimum size.
+\end{example}
+
+\begin{example}[A discrete cutoff requiring randomization]
+\label{ex:bayesian-hpd-discrete}
+On three points $a,b,c$, put posterior masses $1/2,3/10,1/5$
+and take counting measure. For $r=13/20$ the cutoff is $3/10$.
+Include $a$ always and $b$ with probability $1/2$. The
+result has mean size $3/2$ and posterior mass $13/20$ when
+averaged over the randomizer. No singleton is feasible and
+$\{a,b\}$ has mass $4/5$, so the deterministic minimum size
+is two. The set $\{a,c\}$ also attains that deterministic
+minimum with mass $7/10$.
+\end{example}
+
+\begin{example}[Changing the parameter coordinate]
+\label{ex:bayesian-hpd-coordinate}
+If $p\sim\operatorname{Beta}(2,1)$, the coordinate $z=p^3$ has
+distribution function $z^{2/3}$ on $[0,1]$ and density
+$\tfrac23 z^{-1/3}$ on $(0,1)$. The smallest set for Lebesgue
+measure in the $z$ coordinate is $[0,r^{3/2}]$, which has
+inverse image $[0,\sqrt r]$. The smallest set for Lebesgue
+measure in the $p$ coordinate is $[\sqrt{1-r},1]$.
+Both have the same posterior probability $r$ in the original
+coordinate. Their sizes use different reference measures.
+\end{example}
+
+\begin{exercise}[A normal posterior]
+\label{exer:bayesian-hpd-normal}
+For a normal posterior $N(m,v)$ with $v>0$, find the highest
+posterior density set of mass $r$ relative to Lebesgue
+measure. Show that it is unique up to null sets and coincides
+with the equal-tailed credible interval of the same mass.
+\end{exercise}
+
+\begin{exercise}[A flat density]
+\label{exer:bayesian-hpd-flat}
+Use a uniform posterior on $[0,1]$ and Lebesgue measure.
+Find $t_r$ and $\gamma_r$ and characterize all minimizing
+inclusion rules and all minimizing deterministic sets.
+\end{exercise}
+
+\begin{exercise}[Unequal sizes on a finite space]
+\label{exer:bayesian-hpd-finite-weighted}
+For three points take reference masses $(3,2,1)$ and posterior
+masses $(3/5,3/10,1/10)$. For $r=7/25$, find the density
+cutoff and the minimum size with and without randomization.
+Which point belongs to the smallest deterministic set?
+\end{exercise}
+
+\begin{exercise}[Bounding the size of an interval across a gap]
+\label{exer:bayesian-hpd-gap}
+In Example~\ref{ex:bayesian-hpd-disconnected}, find the shortest
+interval of posterior mass at least $4/5$ and compare its
+length with that of the disconnected set. Determine whether
+the shortest interval is unique.
+\end{exercise}
+
+\begin{exercise}[Transporting the reference measure]
+\label{exer:bayesian-hpd-transport-reference}
+Let $h$ be a measurable bijection with measurable inverse.
+Push both $\nu$ and $\mu$ forward by $h$. Show that the new
+density can be taken as $f\circ h^{-1}$ and that $h$ carries
+a highest posterior density set to one of the same mass and
+size for the pushed-forward measures.
+\end{exercise}
+
+\begin{exercise}[Maximizing mass at a given size]
+\label{exer:bayesian-hpd-fixed-size}
+With $\psi_r$ as in Theorem~\ref{thm:bayesian-highest-density-minimum},
+show that every inclusion rule of size at most $\int\psi_r\,d\mu$
+has posterior mass at most $r$. Give the conditions for equality.
+\end{exercise}
+
+\begin{exercise}[Nested inclusion rules]
+\label{exer:bayesian-hpd-nesting}
+Show that $r\mapsto t_r$ is nonincreasing and that
+$\psi_{r_1}(\theta)\leq\psi_{r_2}(\theta)$ for $0<r_1<r_2<1$.
+Deduce that the reported sets are nested when a single
+uniform randomizer is used for all levels.
+\end{exercise}
+
+\begin{exercise}[An exponential posterior]
+\label{exer:bayesian-hpd-exponential}
+For the density $\lambda e^{-\lambda\theta}$ on $[0,\infty)$,
+with $\lambda>0$, find the highest posterior density set of
+mass $r$ relative to Lebesgue measure. Compute the equal-tailed
+credible interval and compare their lengths.
+\end{exercise}
+
 % BEGIN NOTATION INDEX
 \chapter*{Notation index}
 \label{chap:notation-index}
