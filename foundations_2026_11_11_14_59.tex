@@ -12119,6 +12119,244 @@ mass $r$ relative to Lebesgue measure. Compute the equal-tailed
 credible interval and compare their lengths.
 \end{exercise}
 
+\section{Prior sensitivity and improper-prior pitfalls}
+\label{sec:bayesian-prior-sensitivity}
+
+\subsection{Sensitivity to the prior}
+\label{subsec:bayesian-prior-sensitivity-tv}
+
+\begin{definition}[Likelihood reweighting]
+\label{def:bayesian-likelihood-reweighting}
+\indexnotation{m_\pi(x),\ B_\ell\pi}{Marginal likelihood and prior reweighted by \(\ell\).}
+For a prior $\pi$ and a nonnegative measurable function $\ell$
+with $0<\int\ell\,d\pi<\infty$, define the probability law
+\[
+(B_\ell\pi)(A)=\frac{\int_A\ell\,d\pi}{\int_\Theta\ell\,d\pi}
+\qquad(A\in\mathcal T).
+\]
+For a fixed record $x$ in a dominated experiment, take
+$\ell(\theta)=f(\theta,x)$ and write $m_\pi(x)=\int\ell\,d\pi$.
+This value of the prior predictive density is the
+\emph{marginal likelihood} of the record. By
+Proposition~\ref{prop:posterior-from-densities}, the law
+$B_\ell\pi$ is a posterior at records where the formula applies.
+\end{definition}
+
+\begin{theorem}[Stability at a fixed record]
+\label{thm:bayesian-prior-sensitivity-fixed}
+Let $\pi,\rho$ be priors and $0\leq\ell\leq K<\infty$.
+Suppose $a=\int\ell\,d\pi>0$ and $b=\int\ell\,d\rho>0$.
+Then
+\begin{equation}
+d_{\mathrm{TV}}(B_\ell\pi,B_\ell\rho)
+\leq \frac{K}{\max\{a,b\}}\,d_{\mathrm{TV}}(\pi,\rho).
+\label{eq:bayesian-prior-sensitivity-fixed}
+\end{equation}
+Also $|a-b|\leq Kd_{\mathrm{TV}}(\pi,\rho)$.
+\end{theorem}
+\begin{proof}
+By Theorem~\ref{thm:test-total-variation-gap}, the difference of
+the integrals of a measurable function taking values in an
+interval of length $K$ is bounded in absolute value by
+$K d_{\mathrm{TV}}(\pi,\rho)$. Translate and scale the
+function to $[0,1]$ to apply that theorem. Applied to $\ell$,
+this gives the bound on $|a-b|$.
+
+By symmetry assume $a\geq b$. For an event $A\in\mathcal T$ put
+$q=(B_\ell\rho)(A)$. Then
+\[
+a\bigl((B_\ell\pi)(A)-(B_\ell\rho)(A)\bigr)
+=\int_\Theta \ell(\mathbf 1_A-q)\,d(\pi-\rho),
+\]
+since $\int\ell(\mathbf 1_A-q)\,d\rho=0$. The integrand lies
+between $-Kq$ and $K(1-q)$. Apply the same bound and take the
+supremum over $A$.
+\end{proof}
+
+\begin{theorem}[Stability averaged over records]
+\label{thm:bayesian-prior-sensitivity-average}
+Suppose an experiment admits jointly measurable densities
+$f(\theta,x)$ relative to a $\sigma$-finite measure $\mu$.
+Let $\Pi_\pi,\Pi_\rho$ be the posterior kernels from
+Proposition~\ref{prop:posterior-from-densities}, using the prior
+when the reweighting formula is undefined. Write
+$\Delta(x)=d_{\mathrm{TV}}(\Pi_\pi(x,\cdot),\Pi_\rho(x,\cdot))$.
+Then $\Delta$ is measurable and
+\begin{equation}
+\begin{aligned}
+&\int_{\mathsf X}\Delta(x)\max\{m_\pi(x),m_\rho(x)\}\,\mu(dx)\\
+&\qquad\leq d_{\mathrm{TV}}(\pi,\rho)+d_{\mathrm{TV}}(M_\pi,M_\rho)
+\leq 2\,d_{\mathrm{TV}}(\pi,\rho).
+\end{aligned}
+\label{eq:bayesian-prior-sensitivity-average}
+\end{equation}
+Set the integrand to zero on the $\mu$-null set where either
+predictive density is infinite.
+\end{theorem}
+\begin{proof}
+Take the prior densities $u=d\pi/d\lambda$ and $v=d\rho/d\lambda$
+relative to $\lambda=\pi+\rho$. The posterior densities relative
+to $\lambda$ are jointly measurable by the update formula and
+the specified fallback. The density formula for total variation
+in Proposition~\ref{prop:total-variation-density} then gives
+measurability of $\Delta$.
+
+At a record with $a=m_\pi(x)\geq b=m_\rho(x)>0$, that formula
+and the triangle inequality give
+\[
+2a\Delta(x)
+=\int_\Theta f(\theta,x)|u-(a/b)v|\,d\lambda
+\leq\int_\Theta f(\theta,x)|u-v|\,d\lambda +a-b.
+\]
+Here the contribution of the change of normalization is
+$(a/b-1)\int f(\theta,x)v\,d\lambda=a-b$.
+Exchanging the priors gives the corresponding bound for $b>a$.
+If just one normalizer is zero, the right side with $|a-b|$
+equals $2\max\{a,b\}$, so the bound holds since $\Delta(x)\leq1$.
+When both are zero the bound holds as well.
+
+Integrate with respect to $\mu$. Tonelli and
+$\int f(\theta,x)\,\mu(dx)=1$ identify the integral of the
+first term on the right as $2d_{\mathrm{TV}}(\pi,\rho)$.
+The integral of $|a-b|$ is $2d_{\mathrm{TV}}(M_\pi,M_\rho)$.
+For its bound, the function $\theta\mapsto P_\theta(A)$ lies
+in $[0,1]$ for each observation event $A$, so
+$|M_\pi(A)-M_\rho(A)|\leq d_{\mathrm{TV}}(\pi,\rho)$ by
+Theorem~\ref{thm:test-total-variation-gap}. Taking the
+supremum gives the last inequality.
+\end{proof}
+
+\begin{example}[A small prior change at an unlikely record]
+\label{ex:bayesian-sensitivity-rare-record}
+On $\Theta=\{0,1\}$ take $\pi=\delta_0$ and
+$\rho=(1-\varepsilon)\delta_0+\varepsilon\delta_1$ with
+$0<\varepsilon<1$. Observe a Bernoulli bit with success
+probability $\eta$ at label $0$ and $1$ at label $1$, where
+$0<\eta<1$. The prior distance is $\varepsilon$.
+After a success, the posterior under $\pi$ is still
+$\delta_0$. The posterior distance is the mass that the
+posterior under $\rho$ gives label $1$, namely
+\[
+\frac{\varepsilon}{(1-\varepsilon)\eta+\varepsilon}.
+\]
+This attains \eqref{eq:bayesian-prior-sensitivity-fixed} with
+$K=1$. Taking $\eta=\varepsilon^2$ makes this distance tend to
+one as the prior distance tends to zero.
+\end{example}
+
+\begin{example}[Two beta priors after one success]
+\label{ex:bayesian-sensitivity-beta-priors}
+The densities of $\operatorname{Beta}(1,1)$ and
+$\operatorname{Beta}(2,1)$ cross at $1/2$, giving prior
+distance $\int_0^{1/2}(1-2p)\,dp=1/4$.
+One success updates them to $\operatorname{Beta}(2,1)$
+and $\operatorname{Beta}(3,1)$. Their densities cross in
+$(0,1)$ at $2/3$, giving posterior distance
+\[
+\int_0^{2/3}(2p-3p^2)\,dp=\frac{4}{27}.
+\]
+The predictive success probabilities are $2/3$ and $3/4$,
+whose difference is $1/12$.
+\end{example}
+
+\begin{example}[A point mass added to a continuous prior]
+\label{ex:bayesian-sensitivity-bernoulli-contamination}
+Take the uniform prior $\pi$ on $[0,1]$ for a Bernoulli rate
+and add a point mass at $1$, giving
+$\rho=(1-\varepsilon)\pi+\varepsilon\delta_1$ with
+$0<\varepsilon<1$. The prior distance is $\varepsilon$.
+For $n$ iid trials, the likelihood of all successes is $p^n$.
+Its integral is
+$1/(n+1)$ under $\pi$ and $1$ under $\delta_1$, so the new
+posterior puts mass
+$\varepsilon/(\varepsilon+(1-\varepsilon)/(n+1))$ at $1$.
+The remaining mass has the same beta law as the posterior
+under $\pi$. The posterior distance equals the mass at $1$
+and tends to one as $n\to\infty$.
+\end{example}
+
+\begin{example}[Averaging a change in a uniform endpoint model]
+\label{ex:bayesian-sensitivity-endpoint-average}
+At endpoint $\theta>0$, observe $X$ uniform on $(0,\theta)$.
+Take $\pi=\delta_1$ and $\rho=(1-\varepsilon)\delta_1+
+\varepsilon\delta_{1/2}$ with $0<\varepsilon<1$.
+On $(0,1/2)$ the predictive densities are $1$ and
+$1+\varepsilon$. There the second posterior puts mass
+$2\varepsilon/(1+\varepsilon)$ at $1/2$, and the first puts
+none there. On $(1/2,1)$ both posteriors are $\delta_1$.
+Thus the integral in \eqref{eq:bayesian-prior-sensitivity-average}
+is $(1/2)(1+\varepsilon)2\varepsilon/(1+\varepsilon)=\varepsilon$.
+Both prior predictive densities vanish off $[0,1]$.
+\end{example}
+
+\begin{exercise}[After a failure]
+\label{exer:bayesian-sensitivity-rare-failure}
+In Example~\ref{ex:bayesian-sensitivity-rare-record}, find both
+posteriors after a failure. Compute the integral on the left of
+\eqref{eq:bayesian-prior-sensitivity-average} by summing over the
+two records.
+\end{exercise}
+
+\begin{exercise}[Scaling a likelihood]
+\label{exer:bayesian-sensitivity-scale}
+Show that replacing $\ell$ by $c\ell$ for $c>0$ leaves both the
+reweighted law and the bound \eqref{eq:bayesian-prior-sensitivity-fixed}
+unchanged, with the bound on $\ell$ scaled by $c$.
+Find $B_\ell\pi$ when $\ell$ is a positive constant.
+\end{exercise}
+
+\begin{exercise}[A uniform bound across two priors]
+\label{exer:bayesian-sensitivity-likelihood-bounds}
+Suppose $0<L\leq\ell\leq K<\infty$. Deduce from
+\eqref{eq:bayesian-prior-sensitivity-fixed} a bound on posterior
+distance using $K/L$ and prior distance. Show that $K/L$ is the
+smallest constant that works for all such likelihood functions
+and priors by using two labels and letting $\varepsilon\downarrow0$.
+\end{exercise}
+
+\begin{exercise}[An unbounded weight at a fixed record]
+\label{exer:bayesian-sensitivity-unbounded-weight}
+On $\Theta=\{0,1,2,\ldots\}$ let $\ell(0)=1$ and $\ell(j)=j^2$
+for $j\geq1$. Take $\pi=\delta_0$ and
+$\rho_j=(1-1/j)\delta_0+(1/j)\delta_j$ for $j\geq2$.
+Compute the prior and reweighted distances. Compare their limits.
+\end{exercise}
+
+\begin{exercise}[Sensitivity of a bounded posterior mean]
+\label{exer:bayesian-sensitivity-bounded-target}
+If a measurable target $g$ lies in $[s,t]$, bound the absolute
+difference of its two posterior means using posterior total
+variation. Combine this with the fixed-record bound.
+Can equality hold in the first bound for a two-point target?
+\end{exercise}
+
+\begin{exercise}[Sensitivity of a predictive law]
+\label{exer:bayesian-sensitivity-predictive}
+Let $Q$ be a common sampling kernel for a future observation.
+Prove that mixing $Q$ against two posterior laws gives
+predictive laws at total variation distance at most that
+between the posteriors. Extend the bound to a block with kernel
+$Q_\theta^{\otimes k}$.
+\end{exercise}
+
+\begin{exercise}[The probability of a large posterior change]
+\label{exer:bayesian-sensitivity-probability-large}
+Under Theorem~\ref{thm:bayesian-prior-sensitivity-average}, let
+$X\sim M_\pi$. For $t>0$, bound $M_\pi\{x:\Delta(x)>t\}$ in terms
+of $t$ and $d_{\mathrm{TV}}(\pi,\rho)$. Obtain the corresponding
+bound under $M_\rho$.
+\end{exercise}
+
+\begin{exercise}[Updating a mixture of two priors]
+\label{exer:bayesian-sensitivity-mixture-odds}
+Let $\pi$ and $\rho$ have positive finite normalizers $a$ and
+$b$ under $\ell$, and let $0<\varepsilon<1$.
+Show that $B_\ell((1-\varepsilon)\pi+\varepsilon\rho)$ is a
+mixture of $B_\ell\pi$ and $B_\ell\rho$. Find the updated
+weight of $B_\ell\rho$, then express the ratio of the two
+updated weights in terms of the original weights and $b/a$.
+\end{exercise}
+
 % BEGIN NOTATION INDEX
 \chapter*{Notation index}
 \label{chap:notation-index}
