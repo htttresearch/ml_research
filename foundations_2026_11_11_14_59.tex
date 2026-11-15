@@ -12831,6 +12831,225 @@ error probability at tolerance $1/3$ on $\{0\}\cup[\delta_n,1]$
 to tend to zero.
 \end{exercise}
 
+\subsection{Continuous transformations of estimators}
+\label{subsec:asymptotic-continuous-transformations}
+
+Let $(E,d_E)$ and $(F,d_F)$ be metric spaces with their Borel
+sigma algebras. Let $g:\Theta\to E$ be a target and $T_n$ an
+$E$-valued measurable estimator in the experiment at stage $n$.
+Use Definition~\ref{def:asymptotic-consistency} with $d_E(T_n,g(\theta))$
+in place of the absolute error. For a Borel map $h:E\to F$,
+the estimator $h(T_n)$ of $h(g(\theta))$ is called a
+\emph{plug-in estimator}.
+
+\begin{theorem}[Continuity preserves consistency at a fixed label]
+\label{thm:asymptotic-consistency-continuous-map}
+If $T_n$ is consistent at $\theta$ and $h$ is continuous at
+$g(\theta)$, then $h(T_n)$ is consistent at $\theta$ for the
+target $h\circ g$.
+\end{theorem}
+\begin{proof}
+Put $t=g(\theta)$. For every $\varepsilon>0$, continuity gives
+$\delta>0$ such that $d_E(u,t)\leq\delta$ implies
+$d_F(h(u),h(t))\leq\varepsilon$. Thus
+\[
+P_{n,\theta}\{d_F(h(T_n),h(g(\theta)))>\varepsilon\}
+\leq P_{n,\theta}\{d_E(T_n,g(\theta))>\delta\},
+\]
+and the right side tends to zero.
+\end{proof}
+
+\begin{definition}[Modulus for comparison with the target range]
+\label{def:asymptotic-transform-modulus}
+\indexnotation{\omega_{h,K}(r)}{Modulus of \(h\) for comparisons with points in \(K\).}
+For a nonempty $K\subseteq E$ and $r>0$ define
+\[
+\omega_{h,K}(r)
+=\sup_{\substack{t\in K,\ u\in E\\ d_E(u,t)\leq r}}
+d_F(h(u),h(t)).
+\]
+It may be infinite. Only the target point $t$ needs to be in $K$.
+\end{definition}
+
+\begin{proposition}[Uniform consistency after transformation]
+\label{prop:asymptotic-consistency-uniform-map}
+Let $S\subseteq\Theta$ be nonempty and set $K=g(S)$.
+For any $\varepsilon,\delta>0$ with
+$\omega_{h,K}(\delta)\leq\varepsilon$,
+\begin{equation}
+\begin{split}
+&\sup_{\theta\in S}P_{n,\theta}\{d_F(h(T_n),h(g(\theta)))>\varepsilon\}\\
+&\qquad\leq \sup_{\theta\in S}P_{n,\theta}\{d_E(T_n,g(\theta))>\delta\}.
+\end{split}
+\label{eq:asymptotic-consistency-uniform-map}
+\end{equation}
+In particular, if $T_n$ is uniformly consistent on $S$ and
+$\omega_{h,K}(r)\to0$ as $r\downarrow0$, then $h(T_n)$ is
+uniformly consistent on $S$. The modulus condition holds
+if $h$ is uniformly continuous on $E$, or if $K$ is compact
+and $h$ is continuous at each point of $K$ as a map on $E$.
+\end{proposition}
+\begin{proof}
+The same event inclusion as in
+Theorem~\ref{thm:asymptotic-consistency-continuous-map} holds
+with this $\delta$ for every $\theta\in S$. Taking the
+supremum gives \eqref{eq:asymptotic-consistency-uniform-map}.
+Uniform continuity on $E$ gives the modulus condition
+directly. For the compact case, if the condition fails, there
+are $t_j\in K$ and $u_j\in E$ with $d_E(u_j,t_j)\leq1/j$ and
+$d_F(h(u_j),h(t_j))$ bounded below by a positive constant.
+Along a subsequence $t_j$ converges to some $t\in K$, so
+$u_j$ converges to $t$ as well. Continuity at $t$ forces the
+image distances to tend to zero, a contradiction.
+\end{proof}
+
+If $h$ is a Borel map defined only on a Borel subset $D\subseteq E$,
+one may assign a fixed value in $F$ outside $D$. If $g(\theta)$ lies
+in the interior of $D$ and $h$ is continuous there, the extension
+is continuous at $g(\theta)$. For any $g(\theta)\in D$, two Borel
+extensions agree when $T_n\in D$, so their error probabilities
+differ by at most $P_{n,\theta}(T_n\notin D)$.
+
+\begin{example}[Estimating a Bernoulli variance]
+\label{ex:asymptotic-transform-bernoulli-variance}
+Let $\bar X_n$ be the empirical frequency for Bernoulli trials.
+For $u,v\in[0,1]$,
+\[
+|u(1-u)-v(1-v)|=|u-v||1-u-v|\leq |u-v|.
+\]
+Thus the probability that $\bar X_n(1-\bar X_n)$ differs from
+$p(1-p)$ by more than $\varepsilon$ is bounded above by that
+for the frequency at the same tolerance. The bound is
+$1/(4n\varepsilon^2)$ uniformly on $[0,1]$ by
+Example~\ref{ex:asymptotic-consistency-bernoulli}.
+\end{example}
+
+\begin{example}[Log odds from a smoothed frequency]
+\label{ex:asymptotic-transform-bernoulli-log-odds}
+Put $S_n=\sum_{i=1}^n X_i$ and $T_n=(S_n+1)/(n+2)$ for
+Bernoulli trials. Since $|T_n-\bar X_n|\leq1/(n+2)$, this
+estimator is uniformly consistent for $p$. It lies in $(0,1)$,
+so $h(T_n)$ is defined for $h(p)=\log(p/(1-p))$.
+Continuity gives pointwise consistency on $(0,1)$, and
+compactness gives uniform consistency on $[a,1-a]$ for
+$0<a<1/2$. Over the full interior, take $p_n=1/n^2$ for
+$n\geq2$. On the all-failure record,
+\[
+h(T_n)=-\log(n+1),\qquad h(p_n)=-\log(n^2-1).
+\]
+Their difference is $\log(n-1)$, and the record has
+probability $(1-1/n^2)^n\geq1-1/n$. For any fixed positive
+tolerance, the error probability at $p_n$ tends to one.
+\end{example}
+
+\begin{example}[Variance from two sample moments]
+\label{ex:asymptotic-transform-sample-variance}
+For an iid real sample from a law $P$ with finite second
+moment, the weak law of large numbers gives
+\[
+\bar X_n\longrightarrow\mathbb E_P X,\qquad
+\frac1n\sum_{i=1}^n X_i^2\longrightarrow\mathbb E_P X^2
+\]
+in probability. The vector of these moments converges in
+probability to the vector of limits, since the event that its
+maximum coordinate error exceeds $\varepsilon$ is the union
+of the two coordinate error events. Apply $(u,v)\mapsto v-u^2$
+to obtain consistency of $n^{-1}\sum_i(X_i-\bar X_n)^2$
+for $\operatorname{Var}_P(X)$. Taking the square root also
+gives consistency for the standard deviation, including at
+variance zero.
+\end{example}
+
+\begin{example}[Squaring a uniformly consistent mean]
+\label{ex:asymptotic-transform-square-not-uniform}
+For iid $N(\theta,1)$ observations with $\theta\in\R$, the
+distribution of $\bar X_n-\theta$ is $N(0,1/n)$ at every
+label, so $\bar X_n$ is uniformly consistent. The estimator
+$\bar X_n^2$ is consistent for $\theta^2$ at each fixed label.
+At $\theta_n=\sqrt n$, its error has the law of $2Z+Z^2/n$
+for $Z\sim N(0,1)$, by writing $\bar X_n=\sqrt n+Z/\sqrt n$
+in distribution. For any $\varepsilon>0$, the probability
+that the absolute error exceeds $\varepsilon$ is at least
+$\mathbb P(Z>\varepsilon/2)>0$. This excludes uniform
+consistency over $\R$.
+\end{example}
+
+\begin{exercise}[Combining coordinate estimates]
+\label{exer:asymptotic-transform-vector-assembly}
+Suppose $T_{n,j}$ is uniformly consistent for $g_j$ on $S$
+for each $j=1,\ldots,k$, with fixed $k$. Show that the vector
+is uniformly consistent under the maximum norm and under
+the Euclidean norm. Give the argument for pointwise consistency
+as well.
+\end{exercise}
+
+\begin{exercise}[A square root at zero]
+\label{exer:asymptotic-transform-square-root}
+For $u,v\geq0$ prove $|\sqrt u-\sqrt v|\leq\sqrt{|u-v|}$.
+Deduce a bound on the error probability for $\sqrt{T_n}$ at
+tolerance $\varepsilon$ in terms of the error probability
+for a nonnegative $T_n$ at tolerance $\varepsilon^2$.
+\end{exercise}
+
+\begin{exercise}[Estimating a ratio]
+\label{exer:asymptotic-transform-ratio}
+Suppose $A_n$ and $B_n$ consistently estimate $a(\theta)$
+and $b(\theta)$, respectively, with $b(\theta)\ne0$.
+Use $A_n/B_n$ on $\{B_n\ne0\}$ and zero elsewhere.
+Prove pointwise consistency for $a/b$. If both original
+estimators are uniformly consistent on $S$, $\sup_S|a|<\infty$,
+and $\inf_S|b|>0$, prove uniform consistency of the ratio on $S$.
+\end{exercise}
+
+\begin{exercise}[Absolute and relative error after exponentiation]
+\label{exer:asymptotic-transform-exponential}
+In the normal location model of
+Example~\ref{ex:asymptotic-transform-square-not-uniform},
+estimate $e^\theta$ by $e^{\bar X_n}$. Prove uniform consistency
+in absolute error on each bounded parameter interval. Find a
+sequence of labels on which uniform consistency in absolute
+error over $\R$ fails. Prove uniform consistency in relative
+error over $\R$ by considering $e^{\bar X_n-\theta}$.
+\end{exercise}
+
+\begin{exercise}[A discontinuous threshold]
+\label{exer:asymptotic-transform-normal-threshold}
+For iid $N(\theta,1)$ observations let
+$T_n=\mathbf 1_{\{\bar X_n>0\}}$. Find its error probability
+at $\theta=0$ for the target $\mathbf 1_{\{\theta>0\}}$.
+Show consistency at each $\theta\ne0$ and identify the
+hypothesis of the transformation theorem that fails at zero.
+\end{exercise}
+
+\begin{exercise}[Uniform consistency of the sample variance]
+\label{exer:asymptotic-transform-variance-uniform}
+Let $X_1,\ldots,X_n$ be iid from a class of laws with
+$\sup_P\mathbb E_P[X^4]<\infty$. Use Chebyshev's inequality
+for both raw sample moments and bound the set of their
+population values. Show that the plug-in variance estimator
+in Example~\ref{ex:asymptotic-transform-sample-variance}
+is uniformly consistent on the class.
+\end{exercise}
+
+\begin{exercise}[Agreement on an event]
+\label{exer:asymptotic-transform-agreement}
+Fix $0<a<1/2$ and consider $p\in[a,1-a]$ in the Bernoulli
+model. From $\bar X_n$ construct one estimator that reports
+its log odds when $0<\bar X_n<1$ and reports zero otherwise.
+Construct a second estimator that clips $\bar X_n$ to
+$[a/2,1-a/2]$ before taking log odds. Show that the two estimators
+agree with probability tending to one uniformly in $p$,
+and use this to prove uniform consistency of both.
+\end{exercise}
+
+\begin{exercise}[A transformation that varies with the sample size]
+\label{exer:asymptotic-transform-varying-map}
+Let $h_n:E\to F$ be Borel functions with
+$\sup_{u\in E}d_F(h_n(u),h(u))\to0$. Show that consistency of
+$h(T_n)$ for $h\circ g$ implies the corresponding consistency
+of $h_n(T_n)$, both pointwise and uniformly.
+\end{exercise}
+
 % BEGIN NOTATION INDEX
 \chapter*{Notation index}
 \label{chap:notation-index}
