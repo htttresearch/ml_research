@@ -12589,6 +12589,248 @@ $T\to\infty$ and the limit of its posterior in total variation.
 Compare these limits with those obtained using $d\theta$.
 \end{exercise}
 
+\chapter{Consistency and asymptotic inference}
+\label{chap:asymptotic-inference}
+\notationgroup{Asymptotic inference}
+
+\section{Consistency, transformations, and the delta method}
+\label{sec:asymptotic-consistency-transformations}
+
+\subsection{Pointwise and uniform consistency}
+\label{subsec:asymptotic-pointwise-uniform-consistency}
+
+For each $n\geq1$ let $(\mathsf X_n,\mathcal A_n,(P_{n,\theta})_{\theta\in\Theta})$
+be an experiment with the same parameter set $\Theta$ and record $X^{(n)}$.
+For a fixed target $g:\Theta\to\R$, let $\widehat g_n:\mathsf X_n\to\R$
+be a point estimator. Inside a probability or expectation at stage $n$,
+we abbreviate $\widehat g_n(X^{(n)})$ by $\widehat g_n$.
+In the iid case $P_{n,\theta}=P_\theta^{\otimes n}$ and
+$X^{(n)}=(X_1,\dots,X_n)$. The definitions below compare
+probabilities at each $n$ and require no joint law of the records
+across different $n$.
+
+\begin{definition}[Pointwise and uniform consistency]
+\label{def:asymptotic-consistency}
+\indexnotation{e_n(\theta,\varepsilon)}{Probability of estimation error exceeding \(\varepsilon\).}
+For $\varepsilon>0$ put
+\[
+e_n(\theta,\varepsilon)=P_{n,\theta}\{|\widehat g_n-g(\theta)|>\varepsilon\}.
+\]
+The estimator sequence is \emph{consistent at $\theta$} if
+$e_n(\theta,\varepsilon)\to0$ for every $\varepsilon>0$.
+It is \emph{pointwise consistent} on $S\subseteq\Theta$ if it
+is consistent at every $\theta\in S$. It is \emph{uniformly
+consistent} on a nonempty $S$ if
+\[
+\sup_{\theta\in S} e_n(\theta,\varepsilon)\longrightarrow0
+\qquad\text{for every }\varepsilon>0.
+\]
+Without qualification, consistency means pointwise consistency on $\Theta$.
+\end{definition}
+
+\begin{proposition}[A squared risk criterion]
+\label{prop:asymptotic-consistency-mse}
+Write $\operatorname{MSE}_{n,\theta}(\widehat g_n)$ for the
+mean squared error under $P_{n,\theta}$. For every $\varepsilon>0$,
+\[
+e_n(\theta,\varepsilon)
+\leq \frac{\operatorname{MSE}_{n,\theta}(\widehat g_n)}{\varepsilon^2}.
+\]
+Thus convergence of mean squared error to zero at $\theta$
+implies consistency there. If the supremum of the mean
+squared errors on $S$ tends to zero, the sequence is uniformly
+consistent on $S$.
+\end{proposition}
+\begin{proof}
+Apply Markov's inequality to $(\widehat g_n-g(\theta))^2$.
+The uniform assertion follows by taking the supremum over $S$.
+\end{proof}
+
+\begin{proposition}[Consistency requires separation of sampling laws]
+\label{prop:asymptotic-consistency-separation}
+If $|g(\theta)-g(\vartheta)|>2\varepsilon$, then for each $n$,
+\begin{equation}
+e_n(\theta,\varepsilon)+e_n(\vartheta,\varepsilon)
+\geq 1-d_{\mathrm{TV}}(P_{n,\theta},P_{n,\vartheta}).
+\label{eq:asymptotic-consistency-two-point}
+\end{equation}
+Pointwise consistency therefore requires
+$d_{\mathrm{TV}}(P_{n,\theta},P_{n,\vartheta})\to1$ for every fixed
+pair with distinct target values. In an iid experiment it
+requires identifiability of $g$ in the single observation model.
+Uniform consistency on $S$ requires the same convergence of the
+distances for any sequences $\theta_n,\vartheta_n\in S$ whose
+target values stay separated by a positive constant.
+\end{proposition}
+\begin{proof}
+Let $A_n=\{|\widehat g_n-g(\theta)|\leq\varepsilon\}$. The target
+separation implies that every record in $A_n$ has error greater
+than $\varepsilon$ at $\vartheta$. The sum of the error probabilities
+is at least
+\[
+1-P_{n,\theta}(A_n)+P_{n,\vartheta}(A_n).
+\]
+The definition of total variation bounds the difference of the
+two probabilities. This proves \eqref{eq:asymptotic-consistency-two-point}.
+For fixed targets with distinct values, choose
+$\varepsilon<|g(\theta)-g(\vartheta)|/2$ and use consistency.
+If $P_\theta=P_\vartheta$ in the iid case, all product laws
+agree, so the target values must agree by the same bound. This is
+identifiability in Definition~\ref{def:identifiability}.
+For varying pairs, each error probability is bounded by the
+supremum on $S$.
+\end{proof}
+
+\begin{example}[Uniform consistency of the Bernoulli frequency]
+\label{ex:asymptotic-consistency-bernoulli}
+For iid Bernoulli trials with parameter $p\in[0,1]$,
+$\bar X_n=n^{-1}\sum_{i=1}^nX_i$ has mean $p$ and
+variance $p(1-p)/n$. Hence
+\[
+\sup_{p\in[0,1]}P_{n,p}(|\bar X_n-p|>\varepsilon)
+\leq \frac{1}{4n\varepsilon^2}.
+\]
+Thus the frequency is uniformly consistent, including at
+$p=0$ and $p=1$.
+\end{example}
+
+\begin{example}[An endpoint estimator on bounded and unbounded sets]
+\label{ex:asymptotic-consistency-uniform-endpoint}
+For iid observations uniform on $[0,\theta]$, $\theta>0$,
+take $M_n=\max_{i\leq n}X_i$. If $\theta\leq\varepsilon$ then
+$P_{n,\theta}(|M_n-\theta|>\varepsilon)=0$. If
+$\theta>\varepsilon$, independence gives
+\[
+P_{n,\theta}(|M_n-\theta|>\varepsilon)
+=P_{n,\theta}(M_n<\theta-\varepsilon)
+=(1-\varepsilon/\theta)^n .
+\]
+This tends to zero at each fixed $\theta$. On $0<\theta\leq b$
+with $b>\varepsilon$, the supremum is $(1-\varepsilon/b)^n$,
+so consistency is uniform on each such bounded set of endpoints.
+Over all $\theta>0$ the supremum is one for every $n$ because the
+probability tends to one as $\theta\to\infty$ with $n$ fixed.
+\end{example}
+
+\begin{example}[Consistency with mean squared error bounded away from zero]
+\label{ex:asymptotic-consistency-rare-spike}
+For iid $N(\theta,1)$ observations and $n\geq2$, let
+$D=(X_1-X_2)/\sqrt 2$ and $A_n=\{\Phi(D)\leq 1/n\}$, where
+$\Phi$ is the standard normal distribution function.
+The variable $D$ is standard normal under each label, so
+$P_{n,\theta}(A_n)=1/n$. Set
+$\widehat g_n=\bar X_n+\sqrt n\,\mathbf 1_{A_n}$ for $n\geq2$
+and $\widehat g_1=X_1$.
+Outside $A_n$ this equals $\bar X_n$, giving
+\[
+P_{n,\theta}(|\widehat g_n-\theta|>\varepsilon)
+\leq \frac{1}{n\varepsilon^2}+\frac1n .
+\]
+Thus the estimator is uniformly consistent. The vector
+$(\bar X_n,D)$ is jointly Gaussian, and its covariance is
+$(1-1)/(n\sqrt2)=0$ by independence of the observations.
+Thus $\bar X_n$ and $D$ are independent. The cross term in the
+mean squared error vanishes because $\bar X_n-\theta$ has mean zero.
+Consequently the mean squared error is $1/n+nP_{n,\theta}(A_n)=1/n+1$.
+\end{example}
+
+\begin{example}[A target with no uniformly consistent estimator]
+\label{ex:asymptotic-consistency-bernoulli-jump}
+For Bernoulli trials consider $g(p)=\mathbf 1_{\{p>0\}}$ on
+$[0,1]$. Reporting one if any success occurs is pointwise
+consistent: it is exact at zero and has error probability
+$(1-p)^n$ at each $p>0$. To test uniform consistency, compare
+$p=0$ with $p_n=1/n^2$ for $n\geq2$. The first sampling law
+is concentrated on the all-zero record. For the second law,
+the probability of any success is
+\[
+d_{\mathrm{TV}}(P_{n,0},P_{n,p_n})
+=1-(1-p_n)^n\leq np_n=1/n .
+\]
+The equality follows since the total variation distance from a
+point mass equals the mass outside that point under the other
+law. At tolerance $\varepsilon=1/3$, the target values are
+separated by more than $2\varepsilon$. Bound
+\eqref{eq:asymptotic-consistency-two-point} makes the supremum of the
+error probabilities at least $(1-1/n)/2$ for every estimator.
+\end{example}
+
+\begin{exercise}[Uniformity on a finite parameter set]
+\label{exer:asymptotic-consistency-finite-uniform}
+Prove that pointwise consistency on a nonempty finite set $S$
+implies uniform consistency there. Can the same argument be
+applied to the countably infinite set $\{1,2,\dots\}$ in
+Example~\ref{ex:asymptotic-consistency-uniform-endpoint}?
+\end{exercise}
+
+\begin{exercise}[A fixed amount of smoothing]
+\label{exer:asymptotic-consistency-bernoulli-smoothing}
+For iid Bernoulli trials let $S_n=\sum_i X_i$ and
+$\widehat p_n=(S_n+a)/(n+a+b)$ with fixed $a,b>0$.
+Compute its bias and variance. Show that its mean squared error
+tends to zero uniformly on $[0,1]$.
+\end{exercise}
+
+\begin{exercise}[An unbiased estimator using one observation]
+\label{exer:asymptotic-consistency-unbiased-one}
+For iid $N(\theta,1)$ observations take $\widehat g_n=X_1$
+at every $n$. Verify unbiasedness and determine the error
+probability at any $\varepsilon>0$. Compare it with the error
+probability of $\bar X_n$ in the same model.
+\end{exercise}
+
+\begin{exercise}[Relative error for an endpoint]
+\label{exer:asymptotic-consistency-endpoint-relative}
+For $M_n$ in Example~\ref{ex:asymptotic-consistency-uniform-endpoint},
+compute
+\[
+\sup_{\theta>0}P_{n,\theta}(|M_n/\theta-1|>\varepsilon)
+\]
+for every $\varepsilon>0$. Explain how relative and absolute
+error give different uniform conclusions.
+\end{exercise}
+
+\begin{exercise}[A characterization by varying labels]
+\label{exer:asymptotic-consistency-varying-labels}
+Prove that uniform consistency on a nonempty $S$ is equivalent
+to $e_n(\theta_n,\varepsilon)\to0$ for every sequence
+$\theta_n\in S$ and every $\varepsilon>0$. When constructing a
+sequence, the supremum need not be attained. For the endpoint
+example, compute the limiting error probability along $\theta_n=n$
+at a fixed tolerance $\varepsilon>0$.
+\end{exercise}
+
+\begin{exercise}[Consistent estimation on two labels]
+\label{exer:asymptotic-consistency-two-labels}
+Let $\Theta=\{\theta_0,\theta_1\}$ with $g(\theta_0)\ne g(\theta_1)$.
+Show that a consistent estimator sequence exists if and only if
+$d_{\mathrm{TV}}(P_{n,\theta_0},P_{n,\theta_1})\to1$. For the
+converse, use the sets attaining total variation in
+Proposition~\ref{prop:total-variation-density} to choose which
+of the two values to report.
+\end{exercise}
+
+\begin{exercise}[A redundant Bernoulli label]
+\label{exer:asymptotic-consistency-redundant-bernoulli}
+Use the parametrization with success probability $q^2$ for
+$q\in[-1,1]$ in Example~\ref{ex:redundant-labels}.
+Show that $q$ has no pointwise consistent estimator on $[-1,1]$.
+Construct a uniformly consistent estimator of $|q|$ using the
+empirical frequency and $|\sqrt u-\sqrt v|\leq\sqrt{|u-v|}$
+for $u,v\geq0$.
+\end{exercise}
+
+\begin{exercise}[Moving away from the Bernoulli boundary]
+\label{exer:asymptotic-consistency-bernoulli-away-from-zero}
+In Example~\ref{ex:asymptotic-consistency-bernoulli-jump}, restrict
+the labels to $\{0\}\cup[\delta,1]$ for fixed $0<\delta<1$.
+Show that the same rule is uniformly consistent there. More
+generally, for deterministic $0<\delta_n<1$, find a necessary
+and sufficient condition on $(\delta_n)$ for the supremum of the
+error probability at tolerance $1/3$ on $\{0\}\cup[\delta_n,1]$
+to tend to zero.
+\end{exercise}
+
 % BEGIN NOTATION INDEX
 \chapter*{Notation index}
 \label{chap:notation-index}
