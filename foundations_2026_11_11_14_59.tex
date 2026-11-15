@@ -12357,6 +12357,238 @@ weight of $B_\ell\rho$, then express the ratio of the two
 updated weights in terms of the original weights and $b/a$.
 \end{exercise}
 
+\subsection{Improper priors and posterior propriety}
+\label{subsec:bayesian-improper-priors}
+
+\begin{definition}[Improper prior and proper posterior]
+\label{def:bayesian-improper-prior}
+\indexnotation{Z_\nu(x),\ \Pi_\nu(x,\cdot)}{Normalizer and posterior from a prior measure \(\nu\).}
+An \emph{improper prior} is a nonzero $\sigma$-finite measure
+$\nu$ on the parameter space with $\nu(\Theta)=\infty$.
+For a dominated experiment with a jointly measurable density
+$f(\theta,x)$ relative to a $\sigma$-finite measure $\mu$,
+put
+\[
+Z_\nu(x)=\int_\Theta f(\theta,x)\,\nu(d\theta).
+\]
+At records with $0<Z_\nu(x)<\infty$, the \emph{generalized
+posterior} is the probability law
+\begin{equation}
+\Pi_\nu(x,A)=\frac{\int_A f(\theta,x)\,\nu(d\theta)}{Z_\nu(x)}
+\qquad(A\in\mathcal T).
+\label{eq:bayesian-improper-posterior}
+\end{equation}
+The posterior is called \emph{proper} at such records.
+\end{definition}
+
+\begin{proposition}[Normalization and the observation marginal]
+\label{prop:bayesian-improper-normalization}
+A positive scalar multiple of $f(\theta,x)\,\nu(d\theta)$ is a
+probability law exactly when $0<Z_\nu(x)<\infty$. The set $D$
+of such records is measurable and \eqref{eq:bayesian-improper-posterior}
+defines a probability kernel on $D$ with its trace sigma algebra.
+Multiplying $\nu$ by a finite positive constant leaves this
+kernel unchanged.
+
+The joint measure $J_\nu$ with density $f(\theta,x)$ relative
+to $\nu\otimes\mu$ is $\sigma$-finite. Its observation marginal is
+\[
+M_\nu(B)=\int_B Z_\nu(x)\,\mu(dx)\qquad(B\in\mathcal A).
+\]
+This marginal is $\sigma$-finite exactly when $Z_\nu$ is finite
+$\mu$-almost everywhere. For $A\in\mathcal T$ and measurable $B\subseteq D$,
+\begin{equation}
+J_\nu(A\times B)=\int_B \Pi_\nu(x,A)\,M_\nu(dx).
+\label{eq:bayesian-improper-disintegration}
+\end{equation}
+If $M_\nu$ is $\sigma$-finite, this identity holds for all $B\in\mathcal A$
+after extending the kernel by a fixed probability law on $D^{\mathrm c}$.
+\end{proposition}
+\begin{proof}
+The total mass of $f(\theta,x)\,\nu(d\theta)$ is $Z_\nu(x)$,
+so its reciprocal is the only possible normalizing factor
+when the mass is positive and finite. Tonelli gives
+measurability of the numerator and denominator as functions
+of $x$. The kernel property follows by normalization, and
+scaling the prior multiplies both integrals by the same constant.
+
+For a parameter set $A$ with $\nu(A)<\infty$, Tonelli gives
+$J_\nu(A\times\mathsf X)=\nu(A)$ since
+$\int f(\theta,x)\,\mu(dx)=1$ for each $\theta$. A countable
+cover by such sets gives $\sigma$-finiteness. Integrating first
+over $\theta$ gives the formula for $M_\nu$. If $Z_\nu$ is finite
+almost everywhere, intersect sets of finite $\mu$-measure in
+a countable cover with $\{Z_\nu\leq j\}$ for positive integers
+$j$. The resulting sets have finite $M_\nu$-measure and cover
+the space up to a single $M_\nu$-null set. Conversely, every
+set of finite $M_\nu$-measure meets $\{Z_\nu=\infty\}$ in a
+$\mu$-null set. Such sets cannot cover $\{Z_\nu=\infty\}$ if
+it has positive $\mu$-measure. Finally,
+\eqref{eq:bayesian-improper-disintegration} follows by cancelling
+$Z_\nu(x)$ on $B\subseteq D$. In the $\sigma$-finite case, $D^{\mathrm c}$
+has zero $M_\nu$-measure, and its inverse image under the observation
+projection has zero $J_\nu$-measure.
+\end{proof}
+
+For an improper prior the total masses of $J_\nu$ and $M_\nu$
+are infinite. The kernel can still be proper at every record.
+Its normalizers scale with $\nu$, which matters whenever a
+comparison uses the normalizers themselves.
+
+\begin{proposition}[Exhaustion by proper priors]
+\label{prop:bayesian-improper-prior-exhaustion}
+Let $E_j\uparrow\Theta$ be measurable sets with
+$0<\nu(E_j)<\infty$, and use the proper priors
+$\pi_j=\nu(\cdot\cap E_j)/\nu(E_j)$. Fix $x$ with
+$0<Z_\nu(x)<\infty$. For all large $j$ the density update
+under $\pi_j$ is defined at $x$, and its distance from the
+generalized posterior is
+\begin{equation}
+d_{\mathrm{TV}}\bigl(\Pi_{\pi_j}(x,\cdot),\Pi_\nu(x,\cdot)\bigr)
+=1-\Pi_\nu(x,E_j)\longrightarrow 0.
+\label{eq:bayesian-improper-truncation-tv}
+\end{equation}
+\end{proposition}
+\begin{proof}
+By monotone convergence, $\int_{E_j} f(\theta,x)\,\nu(d\theta)$
+increases to $Z_\nu(x)>0$, so it is positive eventually.
+Applying Proposition~\ref{prop:posterior-from-densities} to
+$\pi_j$ cancels the factor $1/\nu(E_j)$ and gives
+$\Pi_\nu(x,\cdot\cap E_j)/\Pi_\nu(x,E_j)$. Relative to
+$\Pi_\nu(x,\cdot)$ its density is $\mathbf 1_{E_j}/q_j$,
+where $q_j=\Pi_\nu(x,E_j)$. The integral of the absolute
+difference of this density from one is $(1-q_j)+(1-q_j)$.
+The total variation formula in Proposition~\ref{prop:total-variation-density}
+gives \eqref{eq:bayesian-improper-truncation-tv}.
+\end{proof}
+
+\begin{example}[A flat prior for a normal mean]
+\label{ex:bayesian-improper-flat-normal}
+Use Lebesgue measure $d\theta$ on $\R$ and let $n\geq1$ observations
+be iid $N(\theta,\sigma^2)$ at label $\theta$, with known $\sigma^2>0$.
+For each record $x$, the identity
+\[
+\sum_{i=1}^n(x_i-\theta)^2
+=\sum_{i=1}^n(x_i-\bar x)^2+n(\theta-\bar x)^2
+\]
+makes the likelihood a positive finite multiple of the
+$N(\bar x,\sigma^2/n)$ density as a function of $\theta$.
+Thus the generalized posterior is $N(\bar x,\sigma^2/n)$.
+In the one-observation case the likelihood already integrates
+to one over $\theta$ for each $x$. The observation marginal
+is Lebesgue measure on $\R$.
+\end{example}
+
+\begin{example}[Propriety can depend on the observed count]
+\label{ex:bayesian-improper-bernoulli-two-ends}
+For a Bernoulli rate $p\in(0,1)$ use
+$\nu(dp)=dp/[p(1-p)]$. For an iid record of length $n\geq1$
+with $s$ successes, the unnormalized posterior density is
+$p^{s-1}(1-p)^{n-s-1}$. If $0<s<n$, its integral is
+$B(s,n-s)$ and the posterior is $\operatorname{Beta}(s,n-s)$.
+If $s=0$, the integral diverges near zero because the integrand
+is bounded below there by a positive multiple of $1/p$.
+If $s=n$, it diverges near one by the same argument with
+$1-p$ in place of $p$. The extreme counts have positive
+probability at every $p\in(0,1)$.
+\end{example}
+
+\begin{example}[The scale of the prior changes a marginal comparison]
+\label{ex:bayesian-improper-scale-comparison}
+Compare one observation under a fixed $N(0,1)$ law and under
+the $N(\theta,1)$ family. Write $\varphi$ for the standard
+normal density. The first model gives observation density
+$\varphi(x)$. In the second model the prior measure $c\,d\theta$
+with $c>0$ gives $Z_\nu(x)=c$ and generalized posterior
+$N(x,1)$ by Example~\ref{ex:bayesian-improper-flat-normal}.
+The ratio of the integrated likelihoods is $c/\varphi(x)$.
+Thus this ratio depends on the arbitrary scale even though
+all choices of $c$ give the same posterior within the second model.
+\end{example}
+
+\begin{example}[Truncations that spread out without a limit]
+\label{ex:bayesian-improper-uninformative-truncations}
+Take $\Theta=\R$, $\nu(d\theta)=d\theta$, and an observation
+identically zero at every parameter. At zero the likelihood
+relative to counting measure is constant one, so $Z_\nu(0)=\infty$.
+Uniform priors on $[-j,j]$ give uniform posteriors on those
+same intervals. These posteriors have no weak probability
+limit. Indeed, their integrals of the bounded continuous
+function $h(\theta)=e^{-\theta^2}$ tend to zero, as they are
+bounded by $\int_\R h(\theta)\,d\theta/(2j)$. Every probability
+law on $\R$ gives the strictly positive $h$ a positive integral.
+\end{example}
+
+\begin{exercise}[A flat normal prior with a finite truncation]
+\label{exer:bayesian-improper-normal-truncation}
+In Example~\ref{ex:bayesian-improper-flat-normal} use the prior
+uniform on $[-T,T]$ with $T>0$. Express the distance of its
+posterior from $N(\bar x,\sigma^2/n)$ using the two normal tail
+probabilities, and check its limit as $T\to\infty$.
+\end{exercise}
+
+\begin{exercise}[An improper prior at one endpoint]
+\label{exer:bayesian-improper-bernoulli-one-end}
+Replace the prior measure in
+Example~\ref{ex:bayesian-improper-bernoulli-two-ends} by
+$dp/p$ on $(0,1)$. For each possible $s$, determine whether
+the posterior is proper and identify its law when it is.
+\end{exercise}
+
+\begin{exercise}[A Poisson count]
+\label{exer:bayesian-improper-poisson-count}
+At rate $\lambda>0$, observe one Poisson count and use prior
+measure $d\lambda/\lambda$. Show that the normalizer is infinite
+at count zero and equals $1/k$ at count $k\geq1$. For positive
+counts identify the normalized density, and decide whether
+the observation marginal measure is $\sigma$-finite.
+\end{exercise}
+
+\begin{exercise}[A record with zero normalizer]
+\label{exer:bayesian-improper-zero-normalizer}
+Take $\Theta=(0,\infty)$ with Lebesgue prior measure. Observe
+a bit whose probability of success is
+$\mathbf 1_{\{\theta\leq1\}}e^{-\theta}$. Use counting measure on the observation space, which also
+contains a third record with probability zero at all labels. Find the normalizer at each of the three
+records, and specify the records where a proper posterior results.
+\end{exercise}
+
+\begin{exercise}[Two density versions at a null record]
+\label{exer:bayesian-improper-density-version}
+In the one-observation case of
+Example~\ref{ex:bayesian-improper-flat-normal}, modify the normal
+density by setting $f(\theta,0)=1$ for all $\theta$. Show that it
+remains a jointly measurable density for the same experiment.
+Compare the two normalizers at $x=0$ and away from zero.
+\end{exercise}
+
+\begin{exercise}[An uninformative first observation]
+\label{exer:bayesian-improper-delayed-propriety}
+Take Lebesgue prior measure on $\R$. An initial observation
+is identically zero, and a subsequent observation has law
+$N(\theta,1)$ at label $\theta$. Compute the normalizing
+constants after the first record and after both records.
+When does a proper posterior first exist?
+\end{exercise}
+
+\begin{exercise}[Updating again after propriety]
+\label{exer:bayesian-improper-sequential-update}
+For nonnegative measurable likelihoods $\ell_1,\ell_2$,
+suppose both $\int\ell_1\,d\nu$ and $\int\ell_1\ell_2\,d\nu$
+are positive and finite. Prove that normalizing
+$\ell_1\,d\nu$ and then updating with $\ell_2$ gives the same
+law as normalizing $\ell_1\ell_2\,d\nu$ directly.
+\end{exercise}
+
+\begin{exercise}[Diffuse priors in a marginal comparison]
+\label{exer:bayesian-improper-diffuse-model-comparison}
+In Example~\ref{ex:bayesian-improper-scale-comparison}, use a
+proper prior uniform on $[-T,T]$ in the second model. For
+fixed $x$, compute the limit of its marginal density as
+$T\to\infty$ and the limit of its posterior in total variation.
+Compare these limits with those obtained using $d\theta$.
+\end{exercise}
+
 % BEGIN NOTATION INDEX
 \chapter*{Notation index}
 \label{chap:notation-index}
